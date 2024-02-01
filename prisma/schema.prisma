@@ -17,10 +17,61 @@ enum UserRole {
   CLIENT
 }
 
+enum TaskStatus {
+  MODIFIED
+  CREATED
+  WORKING
+  COMPLETED
+  VERIFYCOMPLETED
+  REJECTED
+  VERIFYREJECTED
+}
+
+enum Dep {
+  VIDEOPROD
+  DESIGNPROD
+  CONTENTPROD
+}
+
 model User {
+  id            String   @id @default(uuid())
+  username      String  
+  email         String   @unique
+  password      String   @db.VarChar(64)
+  role          UserRole
+  executorTasks Task[] @relation("executorUser")
+  clientTasks   Task[] @relation("clientUser")
+  @@unique([id, username])
+}
+
+model BrifVideo {
   id       String   @id @default(uuid())
-  username String
-  email    String   @unique
-  password String   @db.VarChar(64)
-  role     UserRole
+}
+
+model BrifPhoto {
+  id       String   @id @default(uuid())
+}
+
+model BrifDesign {
+  id       String   @id @default(uuid())
+}
+
+model BrifPost {
+  id       String   @id @default(uuid())
+}
+
+model Task {
+  id           String     @id @default(uuid())
+  name         String
+  status       TaskStatus
+  createdAt    DateTime   @default(now())
+  deadline     DateTime?
+  description  String
+  executor     User?      @relation("executorUser", fields: [executorId, executorName], references: [id, username])
+  executorId   String?    @unique
+  executorName String?
+  client       User       @relation("clientUser", fields: [clientId, clientName], references: [id, username])
+  clientId     String     @unique
+  clientName   String
+  departament  Dep
 }

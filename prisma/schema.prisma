@@ -15,63 +15,99 @@ enum UserRole {
   LEADER
   EXECUTOR
   CLIENT
+  NOTDEFINED
 }
 
 enum TaskStatus {
   MODIFIED
   CREATED
-  WORKING
+  INWORK
   COMPLETED
   VERIFYCOMPLETED
   REJECTED
-  VERIFYREJECTED
+  REJECTEDBYLEAD
+  REJECTEDBYADMIN
 }
 
-enum Dep {
-  VIDEOPROD
-  DESIGNPROD
-  CONTENTPROD
+model Departament {
+  id         String             @id @default(uuid())
+  name       String             @unique
+  leader     User               @relation("leaderDep", fields: [leaderId, leaderName], references: [id, username])
+  leaderId   String
+  leaderName String
+  task       Task[]
+  members    User[]             @relation("membersDep")
+  memberId   String[]
+  memberName String[]
+  qTemplates QuestionTemplate[]
+
+  @@unique([leaderId, leaderName])
+  @@unique([id, name])
 }
 
 model User {
-  id            String   @id @default(uuid())
-  username      String  
-  email         String   @unique
-  password      String   @db.VarChar(64)
+  id            String       @id @default(uuid())
+  username      String
+  email         String       @unique
+  password      String       @db.VarChar(64)
   role          UserRole
-  executorTasks Task[] @relation("executorUser")
-  clientTasks   Task[] @relation("clientUser")
+  executorTasks Task[]       @relation("executorUser")
+  clientTasks   Task[]       @relation("clientUser")
+  isLeader      Departament? @relation("leaderDep")
+  departament   Departament? @relation("membersDep", fields: [depId, depName], references: [id, name])
+  depId         String?
+  depName       String?
+
   @@unique([id, username])
 }
 
-model BrifVideo {
-  id       String   @id @default(uuid())
-}
-
-model BrifPhoto {
-  id       String   @id @default(uuid())
-}
-
-model BrifDesign {
-  id       String   @id @default(uuid())
-}
-
-model BrifPost {
-  id       String   @id @default(uuid())
-}
-
 model Task {
-  id           String     @id @default(uuid())
+  id           String      @id @default(uuid())
   name         String
   status       TaskStatus
-  createdAt    DateTime   @default(now())
+  createdAt    DateTime    @default(now())
   deadline     DateTime?
   description  String
-  executor     User?      @relation("executorUser", fields: [executorId, executorName], references: [id, username])
-  executorId   String?    @unique
+  executor     User?       @relation("executorUser", fields: [executorId, executorName], references: [id, username])
+  executorId   String?     @unique
   executorName String?
-  client       User       @relation("clientUser", fields: [clientId, clientName], references: [id, username])
-  clientId     String     @unique
+  client       User        @relation("clientUser", fields: [clientId, clientName], references: [id, username])
+  clientId     String      @unique
   clientName   String
-  departament  Dep
+  departament  Departament @relation(fields: [depId, depName], references: [id, name])
+  depId        String
+  depName      String
+  brif         Brif        @relation(fields: [brifId], references: [id])
+  brifId       String      @unique
+}
+
+model QuestionTemplate {
+  id          String         @id @default(uuid())
+  text        String[]
+  departament Departament    @relation(fields: [depName], references: [name])
+  depName     String
+  questions   BrifQuestion[]
+
+  @@unique([id, text])
+}
+
+model BrifQuestion {
+  id           String           @id @default(uuid())
+  template     QuestionTemplate @relation(fields: [templateId, templateText], references: [id, text])
+  brif         Brif             @relation(fields: [templateText, answer], references: [qNames, qAnswers])
+  templateId   String
+  templateText String[]
+  answer       String
+
+  @@unique([id, answer])
+}
+
+model Brif {
+  id        String         @id @default(uuid())
+  questions BrifQuestion[]
+  qNames    String
+  qAnswers  String[]
+  task      Task?
+
+  @@unique([qNames, qAnswers])
 }

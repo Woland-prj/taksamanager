@@ -30,14 +30,14 @@ enum TaskStatus {
 }
 
 model Departament {
-  id         String             @id @default(uuid())
+  id         String             @id @default(uuid()) @db.Uuid()
   name       String             @unique
   leader     User               @relation("leaderDep", fields: [leaderId, leaderName], references: [id, username])
-  leaderId   String
+  leaderId   String             @db.Uuid()
   leaderName String
   task       Task[]
-  members    User[]             @relation("membersDep")
-  memberId   String[]
+  members    Profile[]          @relation("membersDep")
+  memberId   String[]           @db.Uuid()
   memberName String[]
   qTemplates QuestionTemplate[]
 
@@ -45,8 +45,24 @@ model Departament {
   @@unique([id, name])
 }
 
+model Profile {
+  id          String       @id @default(uuid()) @db.Uuid()
+  email       String       @unique
+  username    String
+  password    String       @db.VarChar(64)
+  role        UserRole
+  departament Departament? @relation("membersDep", fields: [depId, depName], references: [id, name])
+  depId       String?      @db.Uuid()
+  depName     String?
+  User        User[]
+
+  @@unique([id, username, email, password, role, depId, depName])
+}
+
 model User {
-  id            String       @id @default(uuid())
+  id            String       @id @default(uuid()) @db.Uuid()
+  profile       Profile?     @relation(fields: [profileId, username, email, password, role, depId, depName], references: [id, username, email, password, role, depId, depName])
+  profileId     String       @db.Uuid()
   username      String
   email         String       @unique
   password      String       @db.VarChar(64)
@@ -54,36 +70,35 @@ model User {
   executorTasks Task[]       @relation("executorUser")
   clientTasks   Task[]       @relation("clientUser")
   isLeader      Departament? @relation("leaderDep")
-  departament   Departament? @relation("membersDep", fields: [depId, depName], references: [id, name])
-  depId         String?
+  depId         String?      @db.Uuid()
   depName       String?
 
   @@unique([id, username])
 }
 
 model Task {
-  id           String      @id @default(uuid())
+  id           String      @id @default(uuid()) @db.Uuid()
   name         String
   status       TaskStatus
   createdAt    DateTime    @default(now())
   deadline     DateTime?
   description  String
   executor     User?       @relation("executorUser", fields: [executorId, executorName], references: [id, username])
-  executorId   String?     @unique
+  executorId   String?     @unique @db.Uuid()
   executorName String?
   client       User        @relation("clientUser", fields: [clientId, clientName], references: [id, username])
-  clientId     String      @unique
+  clientId     String      @unique @db.Uuid()
   clientName   String
   departament  Departament @relation(fields: [depId, depName], references: [id, name])
-  depId        String
+  depId        String      @db.Uuid()
   depName      String
   brif         Brif        @relation(fields: [brifId], references: [id])
-  brifId       String      @unique
+  brifId       String      @unique @db.Uuid()
 }
 
 model QuestionTemplate {
-  id          String         @id @default(uuid())
-  text        String[]
+  id          String         @id @default(uuid()) @db.Uuid()
+  text        String
   departament Departament    @relation(fields: [depName], references: [name])
   depName     String
   questions   BrifQuestion[]
@@ -92,22 +107,19 @@ model QuestionTemplate {
 }
 
 model BrifQuestion {
-  id           String           @id @default(uuid())
+  id           String           @id @default(uuid()) @db.Uuid()
   template     QuestionTemplate @relation(fields: [templateId, templateText], references: [id, text])
-  brif         Brif             @relation(fields: [templateText, answer], references: [qNames, qAnswers])
-  templateId   String
-  templateText String[]
+  brif         Brif             @relation(fields: [brifId], references: [id])
+  brifId       String           @db.Uuid()
+  templateId   String           @db.Uuid()
+  templateText String
   answer       String
 
   @@unique([id, answer])
 }
 
 model Brif {
-  id        String         @id @default(uuid())
+  id        String         @id @default(uuid()) @db.Uuid()
   questions BrifQuestion[]
-  qNames    String
-  qAnswers  String[]
   task      Task?
-
-  @@unique([qNames, qAnswers])
 }

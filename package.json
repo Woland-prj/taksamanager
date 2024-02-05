@@ -6,7 +6,7 @@
 	"private": true,
 	"devDependencies": {
 		"concurrently": "^8.2.2",
-		"prisma": "^5.8.1"
+		"prisma": "5.8.1"
 	},
   "dependencies": {
     "@nestjs/mapped-types": "*",

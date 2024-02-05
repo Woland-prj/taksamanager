@@ -5,13 +5,21 @@
 	"license": "MIT",
 	"private": true,
 	"devDependencies": {
+		"@types/bcrypt": "^5.0.2",
 		"concurrently": "^8.2.2",
 		"prisma": "5.8.1"
 	},
-  "dependencies": {
-    "@nestjs/mapped-types": "*",
+	"dependencies": {
+		"@nestjs/common": "^10.3.1",
+		"@nestjs/mapped-types": "*",
+		"@nestjs/swagger": "^7.2.0",
 		"@prisma/client": "^5.8.1",
-		"dotenv": "^16.4.1"
+		"bcrypt": "^5.1.1",
+		"class-transformer": "^0.5.1",
+		"class-validator": "^0.14.1",
+		"dotenv": "^16.4.1",
+		"reflect-metadata": "^0.2.1",
+		"rxjs": "^7.8.1"
 	},
 	"scripts": {
 		"dev:client": "yarn --cwd client dev",

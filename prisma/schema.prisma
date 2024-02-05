@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions"]
+  previewFeatures = ["postgresqlExtensions", "relationJoins"]
 }
 
 datasource db {
@@ -50,11 +50,11 @@ model Profile {
   email       String       @unique
   username    String
   password    String       @db.VarChar(64)
-  role        UserRole
+  role        UserRole     @default(NOTDEFINED)
   departament Departament? @relation("membersDep", fields: [depId, depName], references: [id, name])
   depId       String?      @db.Uuid()
   depName     String?
-  User        User[]
+  User        User?
 
   @@unique([id, username, email, password, role, depId, depName])
 }
@@ -73,6 +73,7 @@ model User {
   depId         String?      @db.Uuid()
   depName       String?
 
+  @@unique([profileId, username, email, password, role, depId, depName])
   @@unique([id, username])
 }
 

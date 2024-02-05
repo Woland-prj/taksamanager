@@ -8,8 +8,10 @@
 		"concurrently": "^8.2.2",
 		"prisma": "^5.8.1"
 	},
-	"dependencies": {
-		"@prisma/client": "^5.8.1"
+  "dependencies": {
+    "@nestjs/mapped-types": "*",
+		"@prisma/client": "^5.8.1",
+		"dotenv": "^16.4.1"
 	},
 	"scripts": {
 		"dev:client": "yarn --cwd client dev",

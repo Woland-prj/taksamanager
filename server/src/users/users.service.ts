@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { UserRole } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -13,14 +14,18 @@ export class UsersService {
 
 	async create(createUserDto: CreateUserDto) {
 		const passSalt = await this.hash.genSalt()
-		const hashedPass = await this.hash.genHash(createUserDto.password, passSalt)
+		const hashedPass = (await this.hash.genHash(
+			createUserDto.password,
+			passSalt
+		)) as string
 		return this.prisma.user.create({
 			data: {
 				profile: {
 					create: {
 						email: createUserDto.email,
 						password: hashedPass,
-						username: createUserDto.username
+						username: createUserDto.username,
+						role: UserRole.NOTDEFINED
 					}
 				}
 			},
@@ -34,15 +39,27 @@ export class UsersService {
 		return `This action returns all users`
 	}
 
-	findOne(id: number) {
-		return `This action returns a #${id} user`
+	findOne(id: string) {
+		return this.prisma.user.findUnique({
+			where: {
+				id: id
+			}
+		})
 	}
 
-	update(id: number, updateUserDto: UpdateUserDto) {
+	update(id: string, updateUserDto: UpdateUserDto) {
 		return `This action updates a #${id} user`
 	}
 
-	remove(id: number) {
+	remove(id: string) {
 		return `This action removes a #${id} user`
+	}
+
+	findByEmail(email: string) {
+		return this.prisma.user.findUnique({
+			where: {
+				email: email
+			}
+		})
 	}
 }

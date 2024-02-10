@@ -1,4 +1,4 @@
-import { VersioningType } from '@nestjs/common'
+import { ValidationPipe, VersioningType } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { config } from 'dotenv'
@@ -13,17 +13,16 @@ async function bootstrap() {
 	app.enableVersioning({
 		type: VersioningType.URI
 	})
+	app.useGlobalPipes(new ValidationPipe())
 
 	const docConfig = new DocumentBuilder()
 		.setTitle('Taksamanager')
-		.setDescription(
-			'Taksamanager Application Program Interface (API) description'
-		)
+		.setDescription('Taksamanager API description')
 		.setVersion('1.0')
 		.addTag('CRUD users operations')
 		.build()
 	const document = SwaggerModule.createDocument(app, docConfig)
-	SwaggerModule.setup('api', app, document)
+	SwaggerModule.setup('api/v1', app, document)
 
 	await app.listen(process.env.SERVER_PORT)
 }

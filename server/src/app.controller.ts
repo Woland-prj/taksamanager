@@ -1,11 +1,11 @@
-import { Controller, Post, Request, UseGuards } from '@nestjs/common'
-import { AuthGuard } from '@nestjs/passport'
+import { Controller, Get, Request, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from './auth/jwt-auth.guard'
 
 @Controller({ version: '1' })
 export class AppController {
-	@UseGuards(AuthGuard('local'))
-	@Post('auth/login')
-	async login(@Request() req) {
+	@UseGuards(JwtAuthGuard)
+	@Get('profile')
+	getProfile(@Request() req) {
 		return req.user
 	}
 }

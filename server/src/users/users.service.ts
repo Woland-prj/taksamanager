@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { UserRole } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -18,6 +18,16 @@ export class UsersService {
 			createUserDto.password,
 			passSalt
 		)) as string
+		const candidate = await this.prisma.user.findUnique({
+			where: {
+				email: createUserDto.email
+			}
+		})
+		if (candidate)
+			throw new HttpException(
+				`User with email ${createUserDto.email} already exist`,
+				HttpStatus.CONFLICT
+			)
 		return this.prisma.user.create({
 			data: {
 				profile: {

@@ -45,6 +45,11 @@ model Departament {
   @@unique([id, name])
 }
 
+model JwtToken {
+  userId      String       @id @db.Uuid()
+  token       String       @unique
+}
+
 model Profile {
   id          String       @id @default(uuid()) @db.Uuid()
   email       String       @unique

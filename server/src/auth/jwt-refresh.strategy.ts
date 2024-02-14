@@ -9,7 +9,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
 ) {
 	constructor() {
 		super({
-			jwtFromRequest: ExtractJwt.fromHeader('Cookie'),
+			jwtFromRequest: ExtractJwt.fromHeader('cookie'),
 			ignoreExpiration: false,
 			secretOrKey: process.env.JWT_SECRET_REFRESH
 		})

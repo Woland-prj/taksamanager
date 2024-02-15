@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
-import { ExtractJwt, Strategy } from 'passport-jwt'
+import { Strategy } from 'passport-jwt'
+import { TokenService } from './token.service'
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
 	Strategy,
 	'jwt-refresh'
 ) {
-	constructor() {
+	constructor(private tokenService: TokenService) {
 		super({
-			jwtFromRequest: ExtractJwt.fromHeader('cookie'),
+			jwtFromRequest: tokenService.getTokenFromCookie,
 			ignoreExpiration: false,
 			secretOrKey: process.env.JWT_SECRET_REFRESH
 		})

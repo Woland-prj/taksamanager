@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common'
+import * as cookie from 'cookie'
+import { Request } from 'express'
 import { PrismaService } from 'src/prisma/prisma.service'
 
 @Injectable()
@@ -12,7 +14,7 @@ export class TokenService {
 			}
 		})
 		suspectedOwner
-			? this.prismaService.jwtToken.update({
+			? await this.prismaService.jwtToken.update({
 					where: {
 						userId: userId
 					},
@@ -20,11 +22,29 @@ export class TokenService {
 						token: token
 					}
 				})
-			: this.prismaService.jwtToken.create({
+			: await this.prismaService.jwtToken.create({
 					data: {
 						userId: userId,
 						token: token
 					}
 				})
+	}
+
+	async findToken(token: string) {
+		const tokenData = await this.prismaService.jwtToken.findUnique({
+			where: {
+				token: token
+			}
+		})
+		return tokenData
+	}
+
+	getTokenFromCookie(req: Request): string | null {
+		let token = null
+		const cookies = cookie.parse(req.headers.cookie)
+		if (cookies) {
+			token = cookies.refreshJwt as string
+		}
+		return token
 	}
 }

@@ -20,12 +20,20 @@ CREATE TABLE "Departament" (
 );
 
 -- CreateTable
+CREATE TABLE "JwtToken" (
+    "userId" UUID NOT NULL,
+    "token" TEXT NOT NULL,
+
+    CONSTRAINT "JwtToken_pkey" PRIMARY KEY ("userId")
+);
+
+-- CreateTable
 CREATE TABLE "Profile" (
     "id" UUID NOT NULL,
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" VARCHAR(64) NOT NULL,
-    "role" "UserRole" NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'NOTDEFINED',
     "depId" UUID,
     "depName" TEXT,
 
@@ -102,6 +110,9 @@ CREATE UNIQUE INDEX "Departament_leaderId_leaderName_key" ON "Departament"("lead
 CREATE UNIQUE INDEX "Departament_id_name_key" ON "Departament"("id", "name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "JwtToken_token_key" ON "JwtToken"("token");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Profile_email_key" ON "Profile"("email");
 
 -- CreateIndex
@@ -109,6 +120,9 @@ CREATE UNIQUE INDEX "Profile_id_username_email_password_role_depId_depName_key" 
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_profileId_username_email_password_role_depId_depName_key" ON "User"("profileId", "username", "email", "password", "role", "depId", "depName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_id_username_key" ON "User"("id", "username");

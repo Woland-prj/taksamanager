@@ -4,7 +4,7 @@ import { AuthService } from './auth.service'
 import { refreshCookieData } from './constansts'
 import { JwtRefreshAuthGuard } from './jwt-refresh-auth.guard'
 import { LocalAuthGuard } from './local-auth.guard'
-import { ValidateRequest } from './types/request.types'
+import { ValidatedRequest } from './types/request.types'
 
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {
@@ -13,7 +13,7 @@ export class AuthController {
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
 	async login(
-		@Req() req: ValidateRequest,
+		@Req() req: ValidatedRequest,
 		@Res({ passthrough: true }) res: Response
 	) {
 		const tokens = await this.authService.login(req.user)
@@ -28,7 +28,7 @@ export class AuthController {
 	@UseGuards(JwtRefreshAuthGuard)
 	@Get('refresh')
 	async refresh(
-		@Req() req: ValidateRequest,
+		@Req() req: ValidatedRequest,
 		@Res({ passthrough: true }) res: Response
 	) {
 		const tokens = await this.authService.refresh(req.user, req)

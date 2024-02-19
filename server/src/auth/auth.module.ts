@@ -9,16 +9,17 @@ import { JwtAccessStrategy } from './jwt-access.strategy'
 import { JwtRefreshStrategy } from './jwt-refresh.strategy'
 import { LocalStrategy } from './local.strategy'
 import { TokenService } from './token.service'
-import { MailService } from './mail.service'
+import { MailService } from '../mail/mail.service'
+import { MailModule } from '../mail/mail.module'
 
 @Module({
-	imports: [UsersModule, PassportModule, JwtModule],
+	imports: [UsersModule, PassportModule, JwtModule, MailModule],
 	controllers: [AuthController],
 	providers: [
 		AuthService,
 		PrismaService,
 		TokenService,
-    MailService,
+		MailService,
 		LocalStrategy,
 		JwtAccessStrategy,
 		JwtRefreshStrategy

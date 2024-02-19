@@ -46,8 +46,8 @@ model Departament {
 }
 
 model JwtToken {
-  userId      String       @unique @db.Uuid()
-  token       String       @unique
+  userId String @unique @db.Uuid()
+  token  String @unique
 }
 
 model Profile {
@@ -60,6 +60,7 @@ model Profile {
   depId       String?      @db.Uuid()
   depName     String?
   User        User?
+  actLink     String       @unique() @db.Uuid()
 
   @@unique([id, username, email, password, role, depId, depName])
 }

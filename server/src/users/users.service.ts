@@ -4,21 +4,23 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
+import { MailService } from 'src/mail/mail.service'
 
 @Injectable()
 export class UsersService {
 	constructor(
-		private prisma: PrismaService,
-		private hash: HashService
+		private prismaService: PrismaService,
+		private hashService: HashService,
+		private mailService: MailService
 	) {}
 
 	async create(createUserDto: CreateUserDto) {
-		const passSalt = await this.hash.genSalt()
-		const hashedPass = (await this.hash.genHash(
+		const passSalt = await this.hashService.genSalt()
+		const hashedPass = (await this.hashService.genHash(
 			createUserDto.password,
 			passSalt
 		)) as string
-		const candidate = await this.prisma.user.findUnique({
+		const candidate = await this.prismaService.user.findUnique({
 			where: {
 				email: createUserDto.email
 			}
@@ -28,7 +30,11 @@ export class UsersService {
 				`User with email ${createUserDto.email} already exist`,
 				HttpStatus.CONFLICT
 			)
-		return this.prisma.user.create({
+		this.mailService.sendActivationMail(
+			createUserDto.email,
+			`http:\\${process.env.API_HOST}:${process.env.SERVER_PORT}\${}`
+		)
+		return this.prismaService.user.create({
 			data: {
 				profile: {
 					create: {
@@ -50,7 +56,7 @@ export class UsersService {
 	}
 
 	findOne(id: string) {
-		return this.prisma.user.findUnique({
+		return this.prismaService.user.findUnique({
 			where: {
 				id: id
 			}
@@ -66,7 +72,7 @@ export class UsersService {
 	}
 
 	findByEmail(email: string) {
-		return this.prisma.user.findUnique({
+		return this.prismaService.user.findUnique({
 			where: {
 				email: email
 			}

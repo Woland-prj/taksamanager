@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
 import { MailService } from 'src/mail/mail.service'
+import { v4 as uuidv4 } from 'uuid'
 
 @Injectable()
 export class UsersService {
@@ -30,9 +31,10 @@ export class UsersService {
 				`User with email ${createUserDto.email} already exist`,
 				HttpStatus.CONFLICT
 			)
+		const activationLinkId: string = uuidv4()
 		this.mailService.sendActivationMail(
 			createUserDto.email,
-			`http:\\${process.env.API_HOST}:${process.env.SERVER_PORT}\${}`
+			`http:\\\\${process.env.API_HOST}:${process.env.SERVER_PORT}\\${activationLinkId}`
 		)
 		return this.prismaService.user.create({
 			data: {
@@ -41,7 +43,8 @@ export class UsersService {
 						email: createUserDto.email,
 						password: hashedPass,
 						username: createUserDto.username,
-						role: UserRole.NOTDEFINED
+						role: UserRole.NOTDEFINED,
+						actLink: activationLinkId
 					}
 				}
 			},

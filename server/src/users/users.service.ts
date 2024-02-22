@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import {
+	ForbiddenException,
+	HttpException,
+	HttpStatus,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common'
 import { UserRole } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -6,6 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
 import { MailService } from 'src/mail/mail.service'
 import { v4 as uuidv4 } from 'uuid'
+import { profile } from 'console'
 
 @Injectable()
 export class UsersService {
@@ -32,11 +39,12 @@ export class UsersService {
 				HttpStatus.CONFLICT
 			)
 		const activationLinkId: string = uuidv4()
+		// FIX: Проверка на то, что такого email не существует
 		this.mailService.sendActivationMail(
 			createUserDto.email,
-			`http:\\\\${process.env.API_HOST}:${process.env.SERVER_PORT}\\${activationLinkId}`
+			`${process.env.VALIDATION_URL_PREFIX}/${activationLinkId}`
 		)
-		return this.prismaService.user.create({
+		return await this.prismaService.user.create({
 			data: {
 				profile: {
 					create: {
@@ -78,6 +86,28 @@ export class UsersService {
 		return this.prismaService.user.findUnique({
 			where: {
 				email: email
+			}
+		})
+	}
+
+	async validateEmail(actLinkUuid: string) {
+		const profileData = await this.prismaService.profile.findUnique({
+			where: {
+				actLink: actLinkUuid
+			}
+		})
+		if (!profileData) {
+			throw new NotFoundException()
+		}
+		if (profileData.isActivated) {
+			throw new ForbiddenException()
+		}
+		return this.prismaService.profile.update({
+			where: {
+				id: profileData.id
+			},
+			data: {
+				isActivated: true
 			}
 		})
 	}

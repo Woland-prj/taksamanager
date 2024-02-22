@@ -59,8 +59,9 @@ model Profile {
   departament Departament? @relation("membersDep", fields: [depId, depName], references: [id, name])
   depId       String?      @db.Uuid()
   depName     String?
-  User        User?
+  user        User?
   actLink     String       @unique() @db.Uuid()
+  isActivated Boolean      @default(false)
 
   @@unique([id, username, email, password, role, depId, depName])
 }

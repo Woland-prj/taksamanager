@@ -16,7 +16,7 @@ export class MailService {
 		})
 	}
 	async sendActivationMail(to: string, link: string) {
-		// TODO: обработка ошибок не существующего email
+		// TODO обработка ошибок не существующего email
 		await this.transporter.sendMail({
 			from: process.env.SMTP_USER,
 			to: to,

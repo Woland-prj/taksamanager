@@ -99,12 +99,18 @@ export class UsersService {
 			}
 		})
 		if (!profileData) {
-			throw new NotFoundException()
+			throw new HttpException(
+				{
+					status: HttpStatus.NOT_FOUND,
+					error: 'Theris no account with this link uuid'
+				},
+				HttpStatus.NOT_FOUND
+			)
 		}
 		if (profileData.isActivated) {
 			throw new ForbiddenException()
 		}
-		return this.prismaService.profile.update({
+		await this.prismaService.profile.update({
 			where: {
 				id: profileData.id
 			},

@@ -29,5 +29,5 @@
     "install:client": "yarn --cwd client",
     "install:server": "yarn --cwd server", 
     "install": "concurrently \"yarn install:client\" \"yarn install:server\""
- }
+  }
 }

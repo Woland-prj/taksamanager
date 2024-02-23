@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common'
 import { UserRole } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { CreateUserDto } from './dto/create-user.dto'
+import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
 import { MailService } from 'src/mail/mail.service'
@@ -22,7 +22,7 @@ export class UsersService {
 		private mailService: MailService
 	) {}
 
-	async create(createUserDto: CreateUserDto) {
+	async create(createUserDto: CreateUserReqDto): Promise<CreateUserResDto> {
 		const passSalt = await this.hashService.genSalt()
 		const hashedPass = (await this.hashService.genHash(
 			createUserDto.password,
@@ -44,22 +44,24 @@ export class UsersService {
 			createUserDto.email,
 			`${process.env.VALIDATION_URL_PREFIX}/${activationLinkId}`
 		)
-		return await this.prismaService.user.create({
-			data: {
-				profile: {
-					create: {
-						email: createUserDto.email,
-						password: hashedPass,
-						username: createUserDto.username,
-						role: UserRole.NOTDEFINED,
-						actLink: activationLinkId
+		const { id, profileId, username, email, ...other } =
+			await this.prismaService.user.create({
+				data: {
+					profile: {
+						create: {
+							email: createUserDto.email,
+							password: hashedPass,
+							username: createUserDto.username,
+							role: UserRole.NOTDEFINED,
+							actLink: activationLinkId
+						}
 					}
+				},
+				include: {
+					profile: true
 				}
-			},
-			include: {
-				profile: true
-			}
-		})
+			})
+		return { id, profileId, username, email }
 	}
 
 	findAll() {

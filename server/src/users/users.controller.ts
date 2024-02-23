@@ -1,34 +1,78 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Body, Controller, HttpCode, Param, Patch, Post } from '@nestjs/common'
+import {
+	ApiBody,
+	ApiCreatedResponse,
+	ApiForbiddenResponse,
+	ApiNoContentResponse,
+	ApiNotFoundResponse,
+	ApiOperation,
+	ApiResponse,
+	ApiTags
+} from '@nestjs/swagger'
+import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
+import { UsersService } from './users.service'
 
+@ApiTags('CRUD users operations')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+	constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+	@Post()
+	@ApiOperation({ summary: 'Create profile instance and user instance' })
+	@ApiBody({ type: CreateUserReqDto })
+	@ApiCreatedResponse({
+		description: 'User and his profile was successfully created.',
+		type: CreateUserResDto
+	})
+	@ApiResponse({
+		status: 409,
+		description: 'User with email "email" already exist.'
+	})
+	@ApiResponse({
+		status: 400,
+		description:
+			'[ "email must be an email" | "password should not be empty" | "username should not be empty" ]'
+	})
+	create(@Body() createUserDto: CreateUserReqDto) {
+		return this.usersService.create(createUserDto)
+	}
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
+	@Patch('/activate/:linkUuid')
+	@HttpCode(204)
+	@ApiOperation({
+		summary:
+			'Set activated status for user pofile, after that becomes inactive and returns a forbidden satuscode.'
+	})
+	@ApiNoContentResponse({
+		description: 'Account activated successfully.'
+	})
+	@ApiNotFoundResponse({
+		description: 'Theris no account with this link uuid.'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden.'
+	})
+	async validateEmail(@Param('linkUuid') linkUuid: string) {
+		await this.usersService.validateEmail(linkUuid)
+	}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
+	// @Get()
+	// findAll() {
+	// 	return this.usersService.findAll()
+	// }
+	//
+	// @Get(':id')
+	// findOne(@Param('id') id: string) {
+	// 	return this.usersService.findOne(id)
+	// }
+	//
+	// @Patch(':id')
+	// update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+	// 	return this.usersService.update(id, updateUserDto)
+	// }
+	//
+	// @Delete(':id')
+	// remove(@Param('id') id: string) {
+	// 	return this.usersService.remove(id)
+	// }
 }

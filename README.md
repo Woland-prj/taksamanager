@@ -2,7 +2,7 @@
 
 ## What project about
 
-A powerful task manager app for Infotech mediacenter. It is realy simple to create, administrate and implement task. 
+A powerful task manager app for Infotech mediacenter. It is realy simple to create, administrate and implement tasks. 
 
 ## Requirements
 
@@ -68,3 +68,7 @@ Or start backend and frontend separately:
 yarn dev:server
 yarn dev:client
 ````
+
+## Swagger API documenentation reference
+
+All documentation of API methods is available at [http://localhost:3200/api/v1](http://localhost::3200/api/v1).

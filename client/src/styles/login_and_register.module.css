@@ -1,0 +1,35 @@
+.login {
+    background-color: rgba(0, 156, 77, 1);
+    width: 100vw;
+    height:100vh;
+
+    display:flex;
+    position: fixed
+
+}
+.right_part{
+    position: absolute;
+    left: 146px;
+    width: 1920px;
+    height: 100vh;
+}
+.taksa{
+    position: absolute;
+    width: 555px;
+    height: 469px;
+    top: 375px;
+}
+.login_panel {
+    position: absolute;
+    width: 610px;
+    height: 705px;
+    top: 188px;
+    left: 1183px;
+
+    box-shadow: 4px 9px 50px -1px rgba(0, 0, 0, 0.4);
+    border: 2px solid;
+    border-radius: 31px;
+    border-image-source: linear-gradient(44.08deg, #FFFFFF 12.92%, rgba(255, 255, 255, 0.5) 88.98%);
+
+
+}

@@ -5,7 +5,10 @@
 
     display:flex;
     position: fixed
-
+/*денис, не пиши пжслт на абсолютах больше)) 
+* флексы -- тема
+*
+* P. S. Роман Хаснулин*/
 }
 .right_part{
     position: absolute;

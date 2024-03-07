@@ -1,0 +1,67 @@
+.main {
+	background-color: #009c4d;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	position: relative;
+}
+
+.mascot {
+	display: flex;
+	align-items: flex-end;
+	position: absolute;
+	height: 100vh;
+	z-index: 0;
+}
+
+.mascot > img {
+	height: 66.666%;
+}
+
+.curve {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	flex-direction: row;
+	position: absolute;
+	z-index: 10;
+}
+
+.curve > .imgBefore {
+	height: 100vh;
+	width: 33.333%;
+	background-color: transparent;
+}
+
+.curve > .imgAfter {
+	height: 100vh;
+	width: 100%;
+	background-color: #ffffff;
+}
+
+.text {
+	margin: 12rem /* 192px */;
+	color: #ffffff;
+	text-align: center;
+	width: 25%;
+	font-weight: 700;
+}
+
+.text > h1 {
+	font-size: 8rem /* 128px */;
+	line-height: 1;
+}
+
+.text > h2 {
+	font-size: 3rem /* 48px */;
+	line-height: 1;
+}
+
+.content {
+	position: absolute;
+	z-index: 20;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+}

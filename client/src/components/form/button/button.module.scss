@@ -1,0 +1,11 @@
+.button {
+	@apply h-16 w-full rounded-md text-lg;
+
+	&.colored {
+		@apply bg-brand text-white font-medium;
+	}
+
+	&.plain {
+		@apply bg-transparent text-darkGreen font-medium text-left;
+	}
+}

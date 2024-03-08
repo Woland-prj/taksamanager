@@ -2,17 +2,15 @@ import {
 	ForbiddenException,
 	HttpException,
 	HttpStatus,
-	Injectable,
-	NotFoundException
+	Injectable
 } from '@nestjs/common'
 import { UserRole } from '@prisma/client'
+import { MailService } from 'src/mail/mail.service'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { v4 as uuidv4 } from 'uuid'
 import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
-import { MailService } from 'src/mail/mail.service'
-import { v4 as uuidv4 } from 'uuid'
-import { profile } from 'console'
 
 @Injectable()
 export class UsersService {

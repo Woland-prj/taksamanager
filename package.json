@@ -10,6 +10,8 @@
 		"prisma": "^5.10.2"
 	},
 	"dependencies": {
+		"@googleapis/forms": "^2.0.5",
+		"@googleapis/gmail": "^9.0.0",
 		"@nestjs/common": "^10.3.1",
 		"@nestjs/mapped-types": "*",
 		"@nestjs/swagger": "^7.2.0",
@@ -19,6 +21,7 @@
 		"class-validator": "^0.14.1",
 		"cookie": "^0.6.0",
 		"dotenv": "^16.4.1",
+		"googleapis": "^133.0.0",
 		"reflect-metadata": "^0.2.1",
 		"rxjs": "^7.8.1"
 	},
@@ -26,8 +29,8 @@
 		"dev:client": "yarn --cwd client dev",
 		"dev:server": "yarn --cwd server start:dev",
 		"dev": "concurrently \"yarn dev:client\" \"yarn dev:server\"",
-    "install:client": "yarn --cwd client",
-    "install:server": "yarn --cwd server", 
-    "install": "concurrently \"yarn install:client\" \"yarn install:server\""
-  }
+		"install:client": "yarn --cwd client",
+		"install:server": "yarn --cwd server",
+		"install": "concurrently \"yarn install:client\" \"yarn install:server\""
+	}
 }

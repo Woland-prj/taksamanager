@@ -35,6 +35,7 @@ model Profile {
   email       String       @unique
   username    String
   password    String       @db.VarChar(64)
+  tgUsername  String?      @unique @db.VarChar(64)
   role        UserRole     @default(NOTDEFINED)
   depId       String?      @db.Uuid
   depName     String?
@@ -43,7 +44,7 @@ model Profile {
   departament Departament? @relation("membersDep", fields: [depId, depName], references: [id, name])
   user        User?
 
-  @@unique([id, username, email, password, role, depId, depName])
+  @@unique([id, username, email, password, role, depId, depName, tgUsername])
 }
 
 model User {
@@ -52,15 +53,16 @@ model User {
   username      String
   email         String       @unique
   password      String       @db.VarChar(64)
+  tgUsername    String       @unique @db.VarChar(64)
   role          UserRole
   depId         String?      @db.Uuid
   depName       String?
   isLeader      Departament? @relation("leaderDep")
   clientTasks   Task?        @relation("clientUser")
   executorTasks Task?        @relation("executorUser")
-  profile       Profile?     @relation(fields: [profileId, username, email, password, role, depId, depName], references: [id, username, email, password, role, depId, depName])
+  profile       Profile?     @relation(fields: [profileId, username, email, password, role, depId, depName, tgUsername], references: [id, username, email, password, role, depId, depName, tgUsername])
 
-  @@unique([profileId, username, email, password, role, depId, depName])
+  @@unique([profileId, username, email, password, role, depId, depName, tgUsername])
   @@unique([id, username])
 }
 

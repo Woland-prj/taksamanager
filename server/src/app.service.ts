@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common'
+import { FormsService } from './forms/forms.service'
 
 @Injectable()
 export class AppService {
-	getHello(): string {
-		return 'Hello World!'
+	constructor(private readonly formsService: FormsService) {}
+	async getRowFormData() {
+		return await this.formsService.getFormResponses()
 	}
 }

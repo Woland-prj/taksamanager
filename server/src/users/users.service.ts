@@ -2,17 +2,15 @@ import {
 	ForbiddenException,
 	HttpException,
 	HttpStatus,
-	Injectable,
-	NotFoundException
+	Injectable
 } from '@nestjs/common'
 import { UserRole } from '@prisma/client'
+import { MailService } from 'src/mail/mail.service'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { v4 as uuidv4 } from 'uuid'
 import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
-import { MailService } from 'src/mail/mail.service'
-import { v4 as uuidv4 } from 'uuid'
-import { profile } from 'console'
 
 @Injectable()
 export class UsersService {
@@ -99,12 +97,18 @@ export class UsersService {
 			}
 		})
 		if (!profileData) {
-			throw new NotFoundException()
+			throw new HttpException(
+				{
+					status: HttpStatus.NOT_FOUND,
+					error: 'Theris no account with this link uuid'
+				},
+				HttpStatus.NOT_FOUND
+			)
 		}
 		if (profileData.isActivated) {
 			throw new ForbiddenException()
 		}
-		return this.prismaService.profile.update({
+		await this.prismaService.profile.update({
 			where: {
 				id: profileData.id
 			},

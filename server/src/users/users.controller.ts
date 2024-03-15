@@ -1,18 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, HttpCode, Param, Patch, Post } from '@nestjs/common'
 import {
-	ApiBearerAuth,
 	ApiBody,
 	ApiCreatedResponse,
+	ApiForbiddenResponse,
+	ApiNoContentResponse,
+	ApiNotFoundResponse,
 	ApiOperation,
 	ApiResponse,
 	ApiTags
 } from '@nestjs/swagger'
 import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './users.service'
-import { JwtAccessAuthGuard } from 'src/auth/jwt-access-auth.guard'
 
-@ApiBearerAuth()
 @ApiTags('CRUD users operations')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
@@ -20,6 +19,7 @@ export class UsersController {
 
 	@Post()
 	@ApiOperation({ summary: 'Create profile instance and user instance' })
+	@ApiBody({ type: CreateUserReqDto })
 	@ApiCreatedResponse({
 		description: 'User and his profile was successfully created.',
 		type: CreateUserResDto
@@ -33,14 +33,27 @@ export class UsersController {
 		description:
 			'[ "email must be an email" | "password should not be empty" | "username should not be empty" ]'
 	})
-	@ApiBody({ type: CreateUserReqDto })
 	create(@Body() createUserDto: CreateUserReqDto) {
 		return this.usersService.create(createUserDto)
 	}
 
-	@Get('/activate/:linkUuid')
-	validateEmail(@Param('linkUuid') linkUuid: string) {
-		return this.usersService.validateEmail(linkUuid)
+	@Patch('/activate/:linkUuid')
+	@HttpCode(204)
+	@ApiOperation({
+		summary:
+			'Set activated status for user pofile, after that becomes inactive and returns a forbidden satuscode.'
+	})
+	@ApiNoContentResponse({
+		description: 'Account activated successfully.'
+	})
+	@ApiNotFoundResponse({
+		description: 'Theris no account with this link uuid.'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden.'
+	})
+	async validateEmail(@Param('linkUuid') linkUuid: string) {
+		await this.usersService.validateEmail(linkUuid)
 	}
 
 	// @Get()

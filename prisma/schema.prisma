@@ -11,7 +11,12 @@ datasource db {
 
 model Departament {
   id         String             @id @default(uuid()) @db.Uuid
+  id         String             @id @default(uuid()) @db.Uuid
   name       String             @unique
+  leaderId   String             @db.Uuid
+  leaderName String
+  memberId   String[]           @db.Uuid
+  memberName String[]
   leaderId   String             @db.Uuid
   leaderName String
   memberId   String[]           @db.Uuid
@@ -20,6 +25,7 @@ model Departament {
   members    Profile[]          @relation("membersDep")
   qTemplates QuestionTemplate[]
   task       Task[]
+  task       Task[]
 
   @@unique([leaderId, leaderName])
   @@unique([id, name])
@@ -27,15 +33,22 @@ model Departament {
 
 model JwtToken {
   userId String @unique @db.Uuid
+  userId String @unique @db.Uuid
   token  String @unique
 }
 
 model Profile {
   id          String       @id @default(uuid()) @db.Uuid
+  id          String       @id @default(uuid()) @db.Uuid
   email       String       @unique
   username    String
   password    String       @db.VarChar(64)
+  tgUsername  String?      @unique @db.VarChar(64)
   role        UserRole     @default(NOTDEFINED)
+  depId       String?      @db.Uuid
+  depName     String?
+  actLink     String       @unique @db.Uuid
+  isActivated Boolean      @default(false)
   depId       String?      @db.Uuid
   depName     String?
   actLink     String       @unique @db.Uuid
@@ -43,28 +56,37 @@ model Profile {
   departament Departament? @relation("membersDep", fields: [depId, depName], references: [id, name])
   user        User?
 
-  @@unique([id, username, email, password, role, depId, depName])
+  @@unique([id, username, email, password, role, depId, depName, tgUsername])
 }
 
 model User {
   id            String       @id @default(uuid()) @db.Uuid
   profileId     String       @db.Uuid
+  id            String       @id @default(uuid()) @db.Uuid
+  profileId     String       @db.Uuid
   username      String
   email         String       @unique
   password      String       @db.VarChar(64)
+  tgUsername    String       @unique @db.VarChar(64)
   role          UserRole
+  depId         String?      @db.Uuid
+  depName       String?
   depId         String?      @db.Uuid
   depName       String?
   isLeader      Departament? @relation("leaderDep")
   clientTasks   Task?        @relation("clientUser")
   executorTasks Task?        @relation("executorUser")
   profile       Profile?     @relation(fields: [profileId, username, email, password, role, depId, depName], references: [id, username, email, password, role, depId, depName])
+  clientTasks   Task?        @relation("clientUser")
+  executorTasks Task?        @relation("executorUser")
+  profile       Profile?     @relation(fields: [profileId, username, email, password, role, depId, depName, tgUsername], references: [id, username, email, password, role, depId, depName, tgUsername])
 
-  @@unique([profileId, username, email, password, role, depId, depName])
+  @@unique([profileId, username, email, password, role, depId, depName, tgUsername])
   @@unique([id, username])
 }
 
 model Task {
+  id           String      @id @default(uuid()) @db.Uuid
   id           String      @id @default(uuid()) @db.Uuid
   name         String
   status       TaskStatus
@@ -72,23 +94,35 @@ model Task {
   deadline     DateTime?
   description  String
   executorId   String?     @unique @db.Uuid
+  executorId   String?     @unique @db.Uuid
   executorName String?
+  clientId     String      @unique @db.Uuid
   clientId     String      @unique @db.Uuid
   clientName   String
   depId        String      @db.Uuid
+  depId        String      @db.Uuid
   depName      String
+  brifId       String      @unique @db.Uuid
   brifId       String      @unique @db.Uuid
   brif         Brif        @relation(fields: [brifId], references: [id])
   client       User        @relation("clientUser", fields: [clientId, clientName], references: [id, username])
   departament  Departament @relation(fields: [depId, depName], references: [id, name])
   executor     User?       @relation("executorUser", fields: [executorId, executorName], references: [id, username])
+  client       User        @relation("clientUser", fields: [clientId, clientName], references: [id, username])
+  departament  Departament @relation(fields: [depId, depName], references: [id, name])
+  executor     User?       @relation("executorUser", fields: [executorId, executorName], references: [id, username])
+
+  @@unique([clientId, clientName])
+  @@unique([executorId, executorName])
 }
 
 model QuestionTemplate {
   id          String         @id @default(uuid()) @db.Uuid
+  id          String         @id @default(uuid()) @db.Uuid
   text        String
   depName     String
   questions   BrifQuestion[]
+  departament Departament    @relation(fields: [depName], references: [name])
   departament Departament    @relation(fields: [depName], references: [name])
 
   @@unique([id, text])
@@ -98,8 +132,13 @@ model BrifQuestion {
   id           String           @id @default(uuid()) @db.Uuid
   brifId       String           @db.Uuid
   templateId   String           @db.Uuid
+  id           String           @id @default(uuid()) @db.Uuid
+  brifId       String           @db.Uuid
+  templateId   String           @db.Uuid
   templateText String
   answer       String
+  brif         Brif             @relation(fields: [brifId], references: [id])
+  template     QuestionTemplate @relation(fields: [templateId, templateText], references: [id, text])
   brif         Brif             @relation(fields: [brifId], references: [id])
   template     QuestionTemplate @relation(fields: [templateId, templateText], references: [id, text])
 
@@ -108,8 +147,29 @@ model BrifQuestion {
 
 model Brif {
   id        String         @id @default(uuid()) @db.Uuid
+  id        String         @id @default(uuid()) @db.Uuid
   questions BrifQuestion[]
   task      Task?
+}
+
+enum UserRole {
+  ROOT
+  ADMIN
+  LEADER
+  EXECUTOR
+  CLIENT
+  NOTDEFINED
+}
+
+enum TaskStatus {
+  MODIFIED
+  CREATED
+  INWORK
+  COMPLETED
+  VERIFYCOMPLETED
+  REJECTED
+  REJECTEDBYLEAD
+  REJECTEDBYADMIN
 }
 
 enum UserRole {

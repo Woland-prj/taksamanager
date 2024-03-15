@@ -20,12 +20,7 @@ async function bootstrap() {
 		.setDescription('Taksamanager API description')
 		.setVersion('1.0')
 		.addTag('CRUD users operations')
-		.addTag('Authentication')
-		.addTag('Test endpoints')
-		.addBearerAuth()
-		.addCookieAuth('refresh_jwt')
 		.build()
-
 	const document = SwaggerModule.createDocument(app, docConfig)
 	SwaggerModule.setup('api/v1', app, document)
 

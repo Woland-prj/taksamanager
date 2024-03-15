@@ -4,24 +4,14 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { AuthService } from './auth/auth.service'
-import { FormsModule } from './forms/forms.module'
-import { FormsService } from './forms/forms.service'
+import { PrismaModule } from './prisma/prisma.module'
+import { UsersModule } from './users/users.module'
 import { MailModule } from './mail/mail.module'
 import { MailService } from './mail/mail.service'
-import { PrismaModule } from './prisma/prisma.module'
-import { TasksModule } from './tasks/tasks.module'
-import { UsersModule } from './users/users.module'
 
 @Module({
-	imports: [
-		UsersModule,
-		PrismaModule,
-		AuthModule,
-		MailModule,
-		TasksModule,
-		FormsModule
-	],
-	providers: [AppService, AuthService, JwtService, MailService, FormsService],
+	imports: [UsersModule, PrismaModule, AuthModule, MailModule],
+	providers: [AppService, AuthService, JwtService, MailService],
 	controllers: [AppController]
 })
 export class AppModule {}

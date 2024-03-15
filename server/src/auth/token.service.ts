@@ -7,7 +7,6 @@ import { PrismaService } from 'src/prisma/prisma.service'
 export class TokenService {
 	constructor(private prismaService: PrismaService) {}
 
-	// TODO: Добавить типизацию
 	async saveToken(userId: string, token: string) {
 		const suspectedOwner = await this.prismaService.jwtToken.findUnique({
 			where: {
@@ -31,7 +30,6 @@ export class TokenService {
 				})
 	}
 
-	// TODO: Добавить типизацию
 	async findToken(token: string) {
 		const tokenData = await this.prismaService.jwtToken.findUnique({
 			where: {
@@ -45,7 +43,7 @@ export class TokenService {
 		let token = null
 		const cookies = cookie.parse(req.headers.cookie)
 		if (cookies) {
-			token = cookies.refresh_jwt as string
+			token = cookies.refreshJwt as string
 		}
 		return token
 	}

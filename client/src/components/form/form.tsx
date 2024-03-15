@@ -1,20 +1,26 @@
 'use client'
 
-import { FC, useRef, useState } from 'react'
+import { FC, useState } from 'react'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
 import styles from './form.module.css'
-import { TConfirmedUser, TUnidentifiedUser } from '@/types/user'
-import { getUserFromDb } from '@/functions/getUserFromDb'
+import { TConfirmedNewUser, TJWTResponse, TLoggingInUser, TNewUser } from '@/types/login_and_register'
+import { getTokensFromDb } from '@/functions/getTokensFromDb'
+import { createUser } from '@/functions/createUser'
 
 type TFormProps = {formOption: 'register'|'login'}
 
 const Form: FC<TFormProps> = ({formOption}) => {
-	const exampleData: TConfirmedUser = {id: 'id', profileId: 'profileId',
-    	username: 'username', email: 'email@example.com'}
-	const [nameValue, setNameValue] = useState<string>('')
-	const [passValue, setPassValue] = useState<string>('')
-    const [user,  setUser] = useState<TConfirmedUser>(exampleData)
+	const exampleLogInData: TLoggingInUser = {email: 'email@example.com', password: ''}
+	const exampleRegisterData: TNewUser = {username: '', email: '', password: '',}
+	const [logInEmailValue, setLogInEmailValue] = useState<string>('')
+	const [logInPassValue, setLogInPassValue] = useState<string>('')
+
+	const [registerNameValue, setRegisterNameValue] = useState<string>('')
+	const [registerEmailValue, setRegisterEmailValue] = useState<string>('')
+	const [registerPassValue, setRegisterPassValue] = useState<string>('')
+
+    const [user,  setUser] = useState<TNewUser>(exampleLogInData)
 	return (
 		<div className={styles.form}>
 			<div className={styles.entrance} style={{fontFamily: "EuclidCircularBBold"}}>
@@ -23,26 +29,25 @@ const Form: FC<TFormProps> = ({formOption}) => {
 			{formOption == 'login' && (
 			<div className={styles.content}>
 				<Field
-					placeholder='Введите имя пользователя'
-					name='username'
-					value={nameValue}
-					setValue={setNameValue}
+					placeholder='Введите почту'
+					name='email'
+					value={logInEmailValue}
+					setValue={setLogInEmailValue}
 				/>
 				<Field
 					placeholder='Введите пароль'
 					name='pass'
-					value={passValue}
-					setValue={setPassValue}
+					value={logInPassValue}
+					setValue={setLogInPassValue}
 				/>
 				<Button
 					type={ButtonType.COLORED}
 					text={'Войти'}
 					action={() => {
 						console.log('login')
-						let user: TConfirmedUser = exampleData
-						getUserFromDb({username: nameValue,
-							email: 'mail',
-							password: passValue}, user)
+						let JWT: TJWTResponse = {access_token: '', refresh_token: ''}
+						const user: TLoggingInUser = exampleData
+						getTokensFromDb(user, JWT)
 						setUser(user)}}
 				/>
 				<Button
@@ -56,23 +61,29 @@ const Form: FC<TFormProps> = ({formOption}) => {
 				<Field
 					placeholder='Введите имя пользователя'
 					name='username'
-					value={nameValue}
-					setValue={setNameValue}
+					value={registerNameValue}
+					setValue={setRegisterNameValue}
+				/>
+				<Field
+					placeholder='Введите почту'
+					name='username'
+					value={registerEmailValue}
+					setValue={setRegisterEmailValue}
 				/>
 				<Field
 					placeholder='Введите пароль'
 					name='pass'
-					value={passValue}
-					setValue={setPassValue}
+					value={registerPassValue}
+					setValue={setRegisterPassValue}
 				/>
 				<Button
 					type={ButtonType.COLORED}
-					text={'Войти'}
-					action={() => console.log('login')}
+					text={'Зарегистрироваться'}
+					action={() => console.log('register')}
 				/>
 				<Button
 					type={ButtonType.PLAIN}
-					text={'Зарегистрироваться'}
+					text={'Войти'}
 					action={() => console.log('redirect to red page')}
 				/>
 			</div>)}

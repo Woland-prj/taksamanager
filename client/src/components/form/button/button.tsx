@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import { FC } from 'react'
-import styles from './button.module.scss'
+import styles from './button.module.css'
 
 export enum ButtonType {
 	PLAIN = 'PLAIN',

@@ -3,7 +3,7 @@
 import { FC, useRef, useState } from 'react'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
-import styles from './form.module.scss'
+import styles from './form.module.css'
 import { TConfirmedUser, TUnidentifiedUser } from '@/types/user'
 import { getUserFromDb } from '@/functions/getUserFromDb'
 
@@ -17,7 +17,9 @@ const Form: FC<TFormProps> = ({formOption}) => {
     const [user,  setUser] = useState<TConfirmedUser>(exampleData)
 	return (
 		<div className={styles.form}>
-			<h2>Вход</h2>
+			<div className={styles.entrance} style={{fontFamily: "EuclidCircularBBold"}}>
+				Вход
+			</div>
 			{formOption == 'login' && (
 			<div className={styles.content}>
 				<Field

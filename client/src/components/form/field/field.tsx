@@ -2,7 +2,7 @@
 
 import cn from 'clsx'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
-import styles from './field.module.scss'
+import styles from './field.module.css'
 
 export interface IField {
 	name: string
@@ -16,8 +16,9 @@ const Field: FC<IField> = ({ name, placeholder, value, setValue }) => {
 
 	return (
 		<>
-			<div className={styles.field}>
+			<div>
 				<input
+					className={styles.field}
 					name={name}
 					onFocus={() => setIsActive(true)}
 					onBlur={() => {
@@ -25,13 +26,14 @@ const Field: FC<IField> = ({ name, placeholder, value, setValue }) => {
 					}}
 					onChange={e => setValue(e.target.value)}
 					value={value}
+					placeholder={placeholder}
 				/>
-				<label
+				{/* <label
 					className={cn(isActive ? styles.focusedLabel : null)}
 					htmlFor={name}
 				>
 					{placeholder}
-				</label>
+				</label> */}
 			</div>
 		</>
 	)

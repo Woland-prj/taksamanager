@@ -7,6 +7,8 @@ import styles from './form.module.css'
 import { TConfirmedNewUser, TJWTResponse, TLoggingInUser, TNewUser } from '@/types/login_and_register'
 import { getTokensFromDb } from '@/functions/getTokensFromDb'
 import { createUser } from '@/functions/createUser'
+import { redirect } from 'next/navigation'
+import { redirectToPage } from '@/functions/redirectToPage'
 
 type TFormProps = {formOption: 'register'|'login'}
 
@@ -20,7 +22,9 @@ const Form: FC<TFormProps> = ({formOption}) => {
 	const [registerEmailValue, setRegisterEmailValue] = useState<string>('')
 	const [registerPassValue, setRegisterPassValue] = useState<string>('')
 
-    const [user,  setUser] = useState<TNewUser>(exampleLogInData)
+    // const [regUser,  setRegUser] = useState<TNewUser>(exampleRegisterData)
+	// const [logInUser, setLogInUser] = useState<TLoggingInUser>(exampleRegisterData)
+
 	return (
 		<div className={styles.form}>
 			<div className={styles.entrance} style={{fontFamily: "EuclidCircularBBold"}}>
@@ -48,12 +52,14 @@ const Form: FC<TFormProps> = ({formOption}) => {
 						let JWT: TJWTResponse = {access_token: '', refresh_token: ''}
 						const user: TLoggingInUser = exampleData
 						getTokensFromDb(user, JWT)
+						console.log(user, JWT)
 						setUser(user)}}
 				/>
 				<Button
 					type={ButtonType.PLAIN}
 					text={'Зарегистрироваться'}
-					action={() => console.log('redirect to red page')}
+					action={() => {console.log('redirection')
+						redirectToPage('/auth/register')}}
 				/>
 			</div>)}
             {formOption == 'register' && (
@@ -84,7 +90,7 @@ const Form: FC<TFormProps> = ({formOption}) => {
 				<Button
 					type={ButtonType.PLAIN}
 					text={'Войти'}
-					action={() => console.log('redirect to red page')}
+					action={() => redirectToPage('/auth/login')}
 				/>
 			</div>)}
 		</div>

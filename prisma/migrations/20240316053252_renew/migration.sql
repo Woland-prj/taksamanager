@@ -7,6 +7,9 @@ CREATE TYPE "UserRole" AS ENUM ('ROOT', 'ADMIN', 'EXECUTOR', 'CLIENT', 'NOTDEFIN
 -- CreateEnum
 CREATE TYPE "TaskStatus" AS ENUM ('MODIFIED', 'CREATED', 'INWORK', 'COMPLETED', 'VERIFYCOMPLETED', 'REJECTED', 'REJECTEDBYLEAD', 'REJECTEDBYADMIN');
 
+-- CreateEnum
+CREATE TYPE "TaskType" AS ENUM ('DESIGN', 'PHOTO', 'VIDEO', 'TEXT');
+
 -- CreateTable
 CREATE TABLE "Team" (
     "id" UUID NOT NULL,
@@ -28,7 +31,7 @@ CREATE TABLE "User" (
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" VARCHAR(64) NOT NULL,
-    "tgUsername" VARCHAR(64) NOT NULL,
+    "tgUsername" VARCHAR(64),
     "role" "UserRole" NOT NULL,
     "actLink" UUID NOT NULL,
     "isActivated" BOOLEAN NOT NULL DEFAULT false,
@@ -43,12 +46,11 @@ CREATE TABLE "Task" (
     "name" TEXT NOT NULL,
     "status" "TaskStatus" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deadline" TIMESTAMP(3),
-    "description" TEXT NOT NULL,
+    "deadline" TIMESTAMP(3) NOT NULL,
     "executorId" UUID,
     "executorName" TEXT,
-    "clientId" UUID NOT NULL,
-    "clientName" TEXT NOT NULL,
+    "clientId" UUID,
+    "clientName" TEXT,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );
@@ -67,6 +69,7 @@ CREATE TABLE "TaskQuestion" (
     "id" UUID NOT NULL,
     "questionText" TEXT NOT NULL,
     "answerText" TEXT NOT NULL,
+    "taskId" UUID NOT NULL,
 
     CONSTRAINT "TaskQuestion_pkey" PRIMARY KEY ("id")
 );
@@ -105,7 +108,10 @@ CREATE UNIQUE INDEX "QuestionTemplate_qid_key" ON "QuestionTemplate"("qid");
 ALTER TABLE "User" ADD CONSTRAINT "User_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Task" ADD CONSTRAINT "Task_clientId_clientName_fkey" FOREIGN KEY ("clientId", "clientName") REFERENCES "User"("id", "username") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Task" ADD CONSTRAINT "Task_clientId_clientName_fkey" FOREIGN KEY ("clientId", "clientName") REFERENCES "User"("id", "username") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Task" ADD CONSTRAINT "Task_executorId_executorName_fkey" FOREIGN KEY ("executorId", "executorName") REFERENCES "User"("id", "username") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TaskQuestion" ADD CONSTRAINT "TaskQuestion_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

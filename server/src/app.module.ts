@@ -8,6 +8,7 @@ import { FormsModule } from './forms/forms.module'
 import { FormsService } from './forms/forms.service'
 import { MailModule } from './mail/mail.module'
 import { MailService } from './mail/mail.service'
+import { PollingModule } from './polling/polling.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { TasksModule } from './tasks/tasks.module'
 import { TasksService } from './tasks/tasks.service'
@@ -21,7 +22,8 @@ import { UsersModule } from './users/users.module'
 		MailModule,
 		TasksModule,
 		FormsModule,
-		TasksModule
+		TasksModule,
+		PollingModule
 	],
 	providers: [
 		AppService,

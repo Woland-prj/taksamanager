@@ -1,5 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
-import { Cron } from '@nestjs/schedule'
+import { Injectable } from '@nestjs/common'
 import { TaskStatus } from '@prisma/client'
 import { forms_v1 } from 'googleapis'
 import { FormsService } from 'src/forms/forms.service'
@@ -74,36 +73,39 @@ export class TasksService {
 			}
 		})
 		templates.forEach(template => {
-			if (!res.answers[template.qid]) throw new BadRequestException()
+			if (!res.answers[template.qid]) return
 			tQuestions.push({
 				questionText: template.text,
 				answerText: res.answers[template.qid].textAnswers.answers[0].value
 			})
 		})
+
 		const clientName = res.answers[clientTemp.qid].textAnswers.answers[0].value
 		const suggestedClient = await this.prismaService.user.findUnique({
 			where: {
 				email: res.respondentEmail
 			}
 		})
+		console.log(res.respondentEmail)
+
 		await this.prismaService.task.create({
 			data: {
 				name: res.answers[nameTemp.qid].textAnswers.answers[0].value,
-				deadline: res.answers[deadlineTemp.qid].textAnswers.answers[0].value,
+				deadline:
+					res.answers[deadlineTemp.qid].textAnswers.answers[0].value +
+					'T00:00:00.000Z',
 				clientId: suggestedClient ? suggestedClient.id : null,
 				clientName: suggestedClient
 					? clientName + ` (${suggestedClient.username})`
 					: clientName,
-				status: TaskStatus.MODIFIED
+				status: TaskStatus.MODIFIED,
+				questions: {
+					create: [...tQuestions]
+				}
+			},
+			include: {
+				questions: true
 			}
 		})
-	}
-
-	@Cron('10 * * * * *')
-	async pollingQuestions() {
-		console.log('lol')
-		const resData = await this.formsService.getFormResponses()
-		if (!resData.responses) return
-		resData.responses.forEach(res => this.createTask(res))
 	}
 }

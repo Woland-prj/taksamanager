@@ -11,7 +11,7 @@ datasource db {
 
 model Team {
   id      String @id @default(uuid()) @db.Uuid
-  name    String  
+  name    String
   color   String
   members User[]
 }
@@ -22,44 +22,44 @@ model JwtToken {
 }
 
 model User {
-  id            String  @id @default(uuid()) @db.Uuid
+  id            String   @id @default(uuid()) @db.Uuid
   username      String
-  email         String  @unique
-  password      String  @db.VarChar(64)
+  email         String   @unique
+  password      String   @db.VarChar(64)
   tgUsername    String?  @unique @db.VarChar(64)
   role          UserRole
-  actLink       String  @unique @db.Uuid
-  isActivated   Boolean @default(false)
+  actLink       String   @unique @db.Uuid
+  isActivated   Boolean  @default(false)
   clientTasks   Task[]   @relation("clientUser")
   executorTasks Task[]   @relation("executorUser")
-  team          Team?   @relation(fields: [teamId], references: [id])
-  teamId        String? @unique @db.Uuid
+  team          Team?    @relation(fields: [teamId], references: [id])
+  teamId        String?  @unique @db.Uuid
 
   @@unique([id, username])
 }
 
 model Task {
-  id           String      @id @default(uuid()) @db.Uuid
+  id           String         @id @default(uuid()) @db.Uuid
   name         String
   status       TaskStatus
-  createdAt    DateTime    @default(now())
+  createdAt    DateTime       @default(now())
   deadline     DateTime
-  executorId   String?     @db.Uuid
+  executorId   String?        @db.Uuid
   executorName String?
-  clientId     String?     @db.Uuid
+  clientId     String?        @db.Uuid
   clientName   String?
   questions    TaskQuestion[]
-  client       User?       @relation("clientUser", fields: [clientId, clientName], references: [id, username])
-  executor     User?       @relation("executorUser", fields: [executorId, executorName], references: [id, username])
+  client       User?          @relation("clientUser", fields: [clientId, clientName], references: [id, username])
+  executor     User?          @relation("executorUser", fields: [executorId, executorName], references: [id, username])
 
   @@unique([clientId, clientName])
   @@unique([executorId, executorName])
 }
 
 model QuestionTemplate {
-  id          String @id @default(uuid()) @db.Uuid
-  qid         String @unique
-  text        String
+  id   String @id @default(uuid()) @db.Uuid
+  qid  String @unique
+  text String
 }
 
 model TaskQuestion {

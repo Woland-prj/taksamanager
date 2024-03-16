@@ -24,4 +24,11 @@ export class FormsService {
 		})
 		return res.data
 	}
+
+	async getForm() {
+		const res = await this.forms.forms.get({
+			formId: process.env.GOOGLE_FORM_ID
+		})
+		return res.data
+	}
 }

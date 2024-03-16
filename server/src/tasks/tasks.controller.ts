@@ -3,6 +3,7 @@ import {
 	Controller,
 	Delete,
 	Get,
+	HttpCode,
 	Param,
 	Patch,
 	Post
@@ -11,9 +12,15 @@ import { CreateTaskDto } from './dto/create-task.dto'
 import { UpdateTaskDto } from './dto/update-task.dto'
 import { TasksService } from './tasks.service'
 
-@Controller('tasks')
+@Controller({ path: 'tasks', version: '1' })
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
+
+	@Patch('/templates')
+	@HttpCode(204)
+	updateTemplates() {
+		this.tasksService.updateTemplates()
+	}
 
 	@Post()
 	create(@Body() createTaskDto: CreateTaskDto) {

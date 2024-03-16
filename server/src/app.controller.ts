@@ -27,7 +27,12 @@ export class AppController {
 	}
 
 	@Get('responses')
-	async getRowFormData() {
-		return await this.appService.getRowFormData()
+	async getFormResponses() {
+		return await this.appService.getFormResponses()
+	}
+
+	@Get('formdata')
+	async getFormData() {
+		return await this.appService.getFormData()
 	}
 }

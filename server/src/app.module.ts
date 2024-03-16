@@ -10,6 +10,7 @@ import { MailModule } from './mail/mail.module'
 import { MailService } from './mail/mail.service'
 import { PrismaModule } from './prisma/prisma.module'
 import { TasksModule } from './tasks/tasks.module'
+import { TasksService } from './tasks/tasks.service'
 import { UsersModule } from './users/users.module'
 
 @Module({
@@ -19,9 +20,17 @@ import { UsersModule } from './users/users.module'
 		AuthModule,
 		MailModule,
 		TasksModule,
-		FormsModule
+		FormsModule,
+		TasksModule
 	],
-	providers: [AppService, AuthService, JwtService, MailService, FormsService],
+	providers: [
+		AppService,
+		AuthService,
+		JwtService,
+		MailService,
+		FormsService,
+		TasksService
+	],
 	controllers: [AppController]
 })
 export class AppModule {}

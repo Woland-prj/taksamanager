@@ -39,21 +39,20 @@ model User {
 }
 
 model Task {
-  id           String         @id @default(uuid()) @db.Uuid
-  name         String
-  status       TaskStatus
-  createdAt    DateTime       @default(now())
-  deadline     DateTime
-  executorId   String?        @db.Uuid
-  executorName String?
-  clientId     String?        @db.Uuid
-  clientName   String?
-  questions    TaskQuestion[]
-  client       User?          @relation("clientUser", fields: [clientId, clientName], references: [id, username])
-  executor     User?          @relation("executorUser", fields: [executorId, executorName], references: [id, username])
-
-  @@unique([clientId, clientName])
-  @@unique([executorId, executorName])
+  id             String         @id @default(uuid()) @db.Uuid
+  name           String
+  status         TaskStatus
+  createdAt      DateTime       @default(now())
+  deadline       DateTime
+  responseId     String         @unique
+  executorId     String?        @db.Uuid
+  executorName   String?
+  formClientName String
+  clientId       String?        @db.Uuid
+  clientName     String?
+  questions      TaskQuestion[]
+  client         User?          @relation("clientUser", fields: [clientId, clientName], references: [id, username])
+  executor       User?          @relation("executorUser", fields: [executorId, executorName], references: [id, username])
 }
 
 model QuestionTemplate {

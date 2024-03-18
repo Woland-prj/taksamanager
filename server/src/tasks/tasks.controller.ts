@@ -1,49 +1,42 @@
 import {
-	Body,
 	Controller,
-	Delete,
 	Get,
 	HttpCode,
-	Param,
 	Patch,
-	Post
+	Request,
+	UseGuards
 } from '@nestjs/common'
-import { CreateTaskDto } from './dto/create-task.dto'
-import { UpdateTaskDto } from './dto/update-task.dto'
+import { JwtAccessAuthGuard } from 'src/auth/jwt-access-auth.guard'
+import { ValidatedRequest } from 'src/auth/types/request.types'
 import { TasksService } from './tasks.service'
 
 @Controller({ path: 'tasks', version: '1' })
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
 
+	@UseGuards(JwtAccessAuthGuard)
 	@Patch('/templates')
 	@HttpCode(204)
-	updateTemplates() {
-		this.tasksService.updateTemplates()
+	async updateTemplates(@Request() req: ValidatedRequest) {
+		await this.tasksService.updateTemplatesClient(req.user)
 	}
 
-	@Post()
-	create(@Body() createTaskDto: CreateTaskDto) {
-		return this.tasksService.create(createTaskDto)
+	@UseGuards(JwtAccessAuthGuard)
+	@Patch('/responses')
+	@HttpCode(204)
+	async updateResponses(@Request() req: ValidatedRequest) {
+		await this.tasksService.updateResponses()
 	}
 
-	@Get()
-	findAll() {
-		return this.tasksService.findAll()
+	@UseGuards(JwtAccessAuthGuard)
+	@Get('/executed')
+	async getExecuted(@Request() req: ValidatedRequest) {
+		return await this.tasksService.getAllExecuted(req.user)
 	}
 
-	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.tasksService.findOne(+id)
-	}
-
-	@Patch(':id')
-	update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-		return this.tasksService.update(+id, updateTaskDto)
-	}
-
-	@Delete(':id')
-	remove(@Param('id') id: string) {
-		return this.tasksService.remove(+id)
+	@UseGuards(JwtAccessAuthGuard)
+	@Get('/appointed')
+	async getAppointed(@Request() req: ValidatedRequest) {
+		return await this.tasksService.getAllAppointed(req.user)
 	}
 }

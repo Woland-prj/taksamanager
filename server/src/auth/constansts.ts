@@ -6,7 +6,7 @@ type RefreshCookieData = {
 }
 
 export const refreshCookieData: RefreshCookieData = {
-	name: 'refresh_jwt',
+	name: 'refreshJwt',
 	options: {
 		maxAge: 30 * 24 * 60 * 60 * 1000,
 		httpOnly: true

@@ -26,7 +26,6 @@ async function bootstrap() {
 		.addBearerAuth()
 		.addCookieAuth('refresh_jwt')
 		.build()
-
 	const document = SwaggerModule.createDocument(app, docConfig)
 	SwaggerModule.setup('api/v1', app, document)
 

@@ -1,6 +1,5 @@
 'use client'
 
-import cn from 'clsx'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
 import styles from './field.module.css'
 
@@ -9,7 +8,7 @@ export interface IField {
 	placeholder: string
 	value: string
 	setValue: Dispatch<SetStateAction<string>>
-	type: '' | 'email'
+	// type: '' | 'email'
 }
 
 const Field: FC<IField> = ({ name, placeholder, value, setValue }) => {
@@ -28,8 +27,8 @@ const Field: FC<IField> = ({ name, placeholder, value, setValue }) => {
 					onChange={e => setValue(e.target.value)}
 					value={value}
 					placeholder={placeholder}
-					type={type}
-					onInput={() => checkValidationOfType(type)}
+					// type={type}
+					// onInput={() => checkValidationOfType(type)}
 				/>
 				{/* <label
 					className={cn(isActive ? styles.focusedLabel : null)}

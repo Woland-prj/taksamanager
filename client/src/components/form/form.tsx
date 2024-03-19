@@ -47,13 +47,16 @@ const Form: FC<TFormProps> = ({formOption}) => {
 				<Button
 					type={ButtonType.COLORED}
 					text={'Войти'}
-					action={() => {
+					action={async () => {
 						console.log('login')
 						let JWT: TJWTResponse = {access_token: '', refresh_token: ''}
-						const user: TLoggingInUser = exampleData
-						getTokensFromDb(user, JWT)
+						const user: TLoggingInUser = {email: '',
+							password: ''}
+						await getTokensFromDb(user, JWT)
 						console.log(user, JWT)
-						setUser(user)}}
+						// setUser(user)
+					}
+					}
 				/>
 				<Button
 					type={ButtonType.PLAIN}

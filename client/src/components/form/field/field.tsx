@@ -28,8 +28,8 @@ const Field: FC<IField> = ({ name, placeholder, value, setValue }) => {
 					onChange={e => setValue(e.target.value)}
 					value={value}
 					placeholder={placeholder}
-					type={type}
-					onInput={() => checkValidationOfType(type)}
+					// type={type}
+					// onInput={() => checkValidationOfType(type)}
 				/>
 				{/* <label
 					className={cn(isActive ? styles.focusedLabel : null)}

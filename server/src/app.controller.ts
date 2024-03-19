@@ -25,14 +25,4 @@ export class AppController {
 	getProfile(@Request() req: ValidatedRequest) {
 		return req.user
 	}
-
-	@Get('responses')
-	async getFormResponses() {
-		return await this.appService.getFormResponses()
-	}
-
-	@Get('formdata')
-	async getFormData() {
-		return await this.appService.getFormData()
-	}
 }

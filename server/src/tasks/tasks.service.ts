@@ -1,5 +1,5 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
-import { TaskStatus, UserRole } from '@prisma/client'
+import { Injectable } from '@nestjs/common'
+import { TaskStatus } from '@prisma/client'
 import { forms_v1 } from 'googleapis'
 import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
@@ -83,14 +83,7 @@ export class TasksService {
 		})
 	}
 
-	async updateTemplatesClient(user: IUser) {
-		const dbUser = await this.prismaService.user.findUnique({
-			where: {
-				id: user.id
-			}
-		})
-		console.log(UserRole.ADMIN > UserRole.CLIENT)
-		if (dbUser.role < UserRole.ADMIN) throw new ForbiddenException()
+	async updateTemplatesClient() {
 		await this.updateTemplates()
 	}
 

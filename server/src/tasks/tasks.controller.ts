@@ -16,24 +16,20 @@ import { TasksService } from './tasks.service'
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
 
-	@UseGuards(JwtAccessAuthGuard)
 	@Patch('/templates')
 	@HttpCode(204)
 	@ApiOperation({
-		summary: 'Forced renew tempates for questions (Admins only)'
+		summary: 'Forced renew tempates for questions'
 	})
-	@ApiBearerAuth()
 	async updateTemplates(@Request() req: ValidatedRequest) {
-		await this.tasksService.updateTemplatesClient(req.user)
+		await this.tasksService.updateTemplatesClient()
 	}
 
 	@ApiOperation({
-		summary: 'Forced renew google form responses (Admins only)'
+		summary: 'Forced renew google form responses'
 	})
-	@UseGuards(JwtAccessAuthGuard)
 	@Patch('/responses')
 	@HttpCode(204)
-	@ApiBearerAuth()
 	async updateResponses(@Request() req: ValidatedRequest) {
 		await this.tasksService.updateResponses()
 	}

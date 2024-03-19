@@ -21,6 +21,7 @@ async function bootstrap() {
 		.setVersion('1.0')
 		.addTag('CRUD users operations')
 		.addTag('Authentication')
+		.addTag('CRUD tasks operation (in development)')
 		.addTag('Test endpoints')
 		.addBearerAuth()
 		.addCookieAuth('refresh_jwt')

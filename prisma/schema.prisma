@@ -9,10 +9,69 @@ datasource db {
   extensions = [pgcrypto]
 }
 
+model Team {
+  id      String @id @default(uuid()) @db.Uuid
+  name    String
+  color   String
+  members User[]
+}
+
+model JwtToken {
+  userId String @unique @db.Uuid
+  token  String @unique
+}
+
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  username      String
+  email         String   @unique
+  password      String   @db.VarChar(64)
+  tgUsername    String?  @unique @db.VarChar(64)
+  role          UserRole
+  actLink       String   @unique @db.Uuid
+  isActivated   Boolean  @default(false)
+  clientTasks   Task[]   @relation("clientUser")
+  executorTasks Task[]   @relation("executorUser")
+  team          Team?    @relation(fields: [teamId], references: [id])
+  teamId        String?  @unique @db.Uuid
+
+  @@unique([id, username])
+}
+
+model Task {
+  id             String         @id @default(uuid()) @db.Uuid
+  name           String
+  status         TaskStatus
+  createdAt      DateTime       @default(now())
+  deadline       DateTime
+  responseId     String         @unique
+  executorId     String?        @db.Uuid
+  executorName   String?
+  formClientName String
+  clientId       String?        @db.Uuid
+  clientName     String?
+  questions      TaskQuestion[]
+  client         User?          @relation("clientUser", fields: [clientId, clientName], references: [id, username])
+  executor       User?          @relation("executorUser", fields: [executorId, executorName], references: [id, username])
+}
+
+model QuestionTemplate {
+  id   String @id @default(uuid()) @db.Uuid
+  qid  String @unique
+  text String
+}
+
+model TaskQuestion {
+  id           String @id @default(uuid()) @db.Uuid
+  questionText String
+  answerText   String
+  task         Task   @relation(fields: [taskId], references: [id])
+  taskId       String @db.Uuid
+}
+
 enum UserRole {
   ROOT
   ADMIN
-  LEADER
   EXECUTOR
   CLIENT
   NOTDEFINED
@@ -29,105 +88,9 @@ enum TaskStatus {
   REJECTEDBYADMIN
 }
 
-model Departament {
-  id         String             @id @default(uuid()) @db.Uuid()
-  name       String             @unique
-  leader     User               @relation("leaderDep", fields: [leaderId, leaderName], references: [id, username])
-  leaderId   String             @db.Uuid()
-  leaderName String
-  task       Task[]
-  members    Profile[]          @relation("membersDep")
-  memberId   String[]           @db.Uuid()
-  memberName String[]
-  qTemplates QuestionTemplate[]
-
-  @@unique([leaderId, leaderName])
-  @@unique([id, name])
-}
-
-model JwtToken {
-  userId String @unique @db.Uuid()
-  token  String @unique
-}
-
-model Profile {
-  id          String       @id @default(uuid()) @db.Uuid()
-  email       String       @unique
-  username    String
-  password    String       @db.VarChar(64)
-  role        UserRole     @default(NOTDEFINED)
-  departament Departament? @relation("membersDep", fields: [depId, depName], references: [id, name])
-  depId       String?      @db.Uuid()
-  depName     String?
-  user        User?
-  actLink     String       @unique() @db.Uuid()
-  isActivated Boolean      @default(false)
-
-  @@unique([id, username, email, password, role, depId, depName])
-}
-
-model User {
-  id            String       @id @default(uuid()) @db.Uuid()
-  profile       Profile?     @relation(fields: [profileId, username, email, password, role, depId, depName], references: [id, username, email, password, role, depId, depName])
-  profileId     String       @db.Uuid()
-  username      String
-  email         String       @unique
-  password      String       @db.VarChar(64)
-  role          UserRole
-  executorTasks Task[]       @relation("executorUser")
-  clientTasks   Task[]       @relation("clientUser")
-  isLeader      Departament? @relation("leaderDep")
-  depId         String?      @db.Uuid()
-  depName       String?
-
-  @@unique([profileId, username, email, password, role, depId, depName])
-  @@unique([id, username])
-}
-
-model Task {
-  id           String      @id @default(uuid()) @db.Uuid()
-  name         String
-  status       TaskStatus
-  createdAt    DateTime    @default(now())
-  deadline     DateTime?
-  description  String
-  executor     User?       @relation("executorUser", fields: [executorId, executorName], references: [id, username])
-  executorId   String?     @unique @db.Uuid()
-  executorName String?
-  client       User        @relation("clientUser", fields: [clientId, clientName], references: [id, username])
-  clientId     String      @unique @db.Uuid()
-  clientName   String
-  departament  Departament @relation(fields: [depId, depName], references: [id, name])
-  depId        String      @db.Uuid()
-  depName      String
-  brif         Brif        @relation(fields: [brifId], references: [id])
-  brifId       String      @unique @db.Uuid()
-}
-
-model QuestionTemplate {
-  id          String         @id @default(uuid()) @db.Uuid()
-  text        String
-  departament Departament    @relation(fields: [depName], references: [name])
-  depName     String
-  questions   BrifQuestion[]
-
-  @@unique([id, text])
-}
-
-model BrifQuestion {
-  id           String           @id @default(uuid()) @db.Uuid()
-  template     QuestionTemplate @relation(fields: [templateId, templateText], references: [id, text])
-  brif         Brif             @relation(fields: [brifId], references: [id])
-  brifId       String           @db.Uuid()
-  templateId   String           @db.Uuid()
-  templateText String
-  answer       String
-
-  @@unique([id, answer])
-}
-
-model Brif {
-  id        String         @id @default(uuid()) @db.Uuid()
-  questions BrifQuestion[]
-  task      Task?
+enum TaskType {
+  DESIGN
+  PHOTO
+  VIDEO
+  TEXT
 }

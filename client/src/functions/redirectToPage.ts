@@ -1,0 +1,7 @@
+'use server'
+
+import { RedirectType, redirect } from "next/navigation"
+
+export const redirectToPage = (url: string, type?: RedirectType | undefined) => {
+    redirect(url, type)
+}

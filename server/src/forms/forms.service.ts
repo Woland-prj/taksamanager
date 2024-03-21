@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { google } from 'googleapis'
+import { forms_v1, google } from 'googleapis'
 import { resolve } from 'path'
 
 @Injectable()
@@ -18,14 +18,25 @@ export class FormsService {
 		auth: this.auth
 	})
 
-	async getFormResponses() {
-		const res = await this.forms.forms.responses.list({
-			formId: process.env.GOOGLE_FORM_ID
-		})
-		return res.data
-	}
+	/**
+	 * Retrieves form responses asynchronously.
+	 *
+	 * @return {Promise<forms_v1.Schema$ListFormResponsesResponse>} the form responses data
+	 */
+	getFormResponses =
+		async (): Promise<forms_v1.Schema$ListFormResponsesResponse> => {
+			const res = await this.forms.forms.responses.list({
+				formId: process.env.GOOGLE_FORM_ID
+			})
+			return res.data
+		}
 
-	async getForm() {
+	/**
+	 * Asynchronously retrieves a form.
+	 *
+	 * @return {Promise<forms_v1.Schema$Form>} the data returned from the form request
+	 */
+	getForm = async (): Promise<forms_v1.Schema$Form> => {
 		const res = await this.forms.forms.get({
 			formId: process.env.GOOGLE_FORM_ID
 		})

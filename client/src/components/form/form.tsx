@@ -2,11 +2,7 @@
 
 import { getTokensFromDb } from '@/functions/getTokensFromDb'
 import { redirectToPage } from '@/functions/redirectToPage'
-import {
-	TJWTResponse,
-	TLoggingInUser,
-	TNewUser
-} from '@/types/login_and_register'
+import { TJWTResponse, TLoggingInUser, TNewUser } from '@/types/login_and_register'
 import { FC, useState } from 'react'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
@@ -14,6 +10,12 @@ import styles from './form.module.css'
 
 type TFormProps = { formOption: 'register' | 'login' }
 
+/**
+ * Generate a form based on the formOption provided.
+ *
+ * @param {TFormProps} formOption - the type of form to generate
+ * @return {JSX.Element} the form component JSX
+ */
 const Form: FC<TFormProps> = ({ formOption }) => {
 	const exampleLogInData: TLoggingInUser = {
 		email: 'email@example.com',

@@ -1,13 +1,26 @@
-import Button, { ButtonType } from "@/components/form/button/button"
+import Button, { ButtonType } from '@/components/form/button/button'
+import { FC } from 'react'
+import styles from './PageHeader.module.css'
 
-export const PageHeader = () => {
-    const sectionTitle = ''
-    const buttonText = ''
-    const someAction = () => {}
-    return (
-        <div className='header'>
-            <h1>{sectionTitle}</h1>
-            <Button type={ButtonType.COLORED} text={buttonText} action={someAction}/>
-        </div>
-    )
+interface IPageHeader {
+	sectionTitle: string
+	buttonText: string
+	buttonAction: () => void
+}
+
+export const PageHeader: FC<IPageHeader> = ({
+	sectionTitle,
+	buttonText,
+	buttonAction
+}) => {
+	return (
+		<div className={styles.header}>
+			<h1>{sectionTitle}</h1>
+			<Button
+				type={ButtonType.COLORED}
+				text={buttonText}
+				action={buttonAction}
+			/>
+		</div>
+	)
 }

@@ -32,6 +32,9 @@
 		"toolkit": "^1.5.4"
 	},
 	"scripts": {
+		"inst": "yarn && yarn inst:server && yarn inst:client",
+		"inst:server": "yarn --cwd server install",
+		"inst:client": "yarn --cwd client install",
 		"dev:client": "yarn --cwd client dev",
 		"dev:server": "yarn --cwd server start:dev",
 		"dev": "concurrently \"yarn dev:client\" \"yarn dev:server\""

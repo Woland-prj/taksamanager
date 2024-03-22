@@ -1,11 +1,13 @@
-import Button, { ButtonType } from '@/components/form/button/button'
+'use client'
+
+import Button from '@/components/ui/Button/Button'
 import { FC } from 'react'
 import styles from './PageHeader.module.css'
 
 interface IPageHeader {
 	sectionTitle: string
 	buttonText: string
-	buttonAction: () => void
+	buttonAction: () => Promise<void>
 }
 
 export const PageHeader: FC<IPageHeader> = ({
@@ -15,11 +17,14 @@ export const PageHeader: FC<IPageHeader> = ({
 }) => {
 	return (
 		<div className={styles.header}>
-			<h1>{sectionTitle}</h1>
+			<h1 className={styles.section_name}>{sectionTitle}</h1>
 			<Button
-				type={ButtonType.COLORED}
+				fgColor={'#000000'}
+				bgColor={'#ffffff'}
 				text={buttonText}
-				action={buttonAction}
+				action={async () => {
+					await buttonAction()
+				}}
 			/>
 		</div>
 	)

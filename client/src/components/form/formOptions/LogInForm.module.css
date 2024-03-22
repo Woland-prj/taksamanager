@@ -1,0 +1,12 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+}
+
+.error {
+    border: 1.01px solid rgba(255, 91, 91, 1);
+
+    background: rgba(255, 236, 236, 1);
+
+}

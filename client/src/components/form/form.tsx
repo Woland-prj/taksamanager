@@ -35,7 +35,7 @@ const Form: FC<TFormProps> = ({ formOption }) => {
 				<LogInForm setUser={setLogInUser}/>
 			)}
 			{formOption == 'register' && (
-				<RegisterForm setUser = {setRegisterUser}/>
+				<RegisterForm setUser={setRegisterUser}/>
 			)}
 		</div>
 	)

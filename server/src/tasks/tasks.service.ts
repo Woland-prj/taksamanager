@@ -4,6 +4,7 @@ import { forms_v1 } from 'googleapis'
 import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { IUser } from 'src/users/entities/user.entity'
+import { GetAllTasksDto } from './dto/task.dto'
 import { DefaultFields, DefaultTemplates, TaskQ } from './entities/task.entity'
 
 @Injectable()
@@ -14,7 +15,7 @@ export class TasksService {
 		private readonly formsService: FormsService
 	) {}
 
-	async getAllExecuted(user: IUser) {
+	async getAllExecuted(user: IUser): Promise<GetAllTasksDto[]> {
 		return this.prismaService.task.findMany({
 			where: {
 				executorId: user.id
@@ -39,7 +40,7 @@ export class TasksService {
 		})
 	}
 
-	async getAllAppointed(user: IUser) {
+	async getAllAppointed(user: IUser): Promise<GetAllTasksDto[]> {
 		return this.prismaService.task.findMany({
 			where: {
 				clientId: user.id

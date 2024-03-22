@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { $Enums } from '@prisma/client'
 
 class TaskQ {
 	id: string
@@ -6,21 +7,21 @@ class TaskQ {
 	answerText: string
 }
 
-export const enum TaskStatus {
-	MODIFIED = 'MODIFIED',
-	CREATED = 'CREATED',
-	INWORK = 'INWORK',
-	COMPLETED = 'COMPLETED',
-	VERIFYCOMPLETED = 'VERIFYCOMPLETED',
-	REJECTED = 'REJECTED',
-	REJECTEDBYLEAD = 'REJECTEDBYLEAD',
-	REJECTEDBYADMIN = 'REJECTEDBYADMIN'
-}
+// export const enum TaskStatus {
+// 	MODIFIED = 'MODIFIED',
+// 	CREATED = 'CREATED',
+// 	INWORK = 'INWORK',
+// 	COMPLETED = 'COMPLETED',
+// 	VERIFYCOMPLETED = 'VERIFYCOMPLETED',
+// 	REJECTED = 'REJECTED',
+// 	REJECTEDBYLEAD = 'REJECTEDBYLEAD',
+// 	REJECTEDBYADMIN = 'REJECTEDBYADMIN'
+// }
 
 export class GetAllTasksDto {
 	id: string
 	name: string
-	status: TaskStatus
+	status: $Enums.TaskStatus
 	deadline: Date
 	executorId: string
 	executorName: string

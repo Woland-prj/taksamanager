@@ -1,16 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, HttpCode, Param, Patch, Post } from '@nestjs/common'
 import {
 	ApiBearerAuth,
 	ApiBody,
 	ApiCreatedResponse,
+	ApiForbiddenResponse,
+	ApiNoContentResponse,
+	ApiNotFoundResponse,
 	ApiOperation,
 	ApiResponse,
 	ApiTags
 } from '@nestjs/swagger'
 import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './users.service'
-import { JwtAccessAuthGuard } from 'src/auth/jwt-access-auth.guard'
 
 @ApiBearerAuth()
 @ApiTags('CRUD users operations')
@@ -38,7 +39,21 @@ export class UsersController {
 		return this.usersService.create(createUserDto)
 	}
 
-	@Get('/activate/:linkUuid')
+	@Patch('/activate/:linkUuid')
+	@HttpCode(204)
+	@ApiOperation({
+		summary:
+			'Set activated status for user pofile, after that becomes inactive and returns a forbidden satuscode.'
+	})
+	@ApiNoContentResponse({
+		description: 'Account activated successfully.'
+	})
+	@ApiNotFoundResponse({
+		description: 'Theris no account with this link uuid.'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden.'
+	})
 	validateEmail(@Param('linkUuid') linkUuid: string) {
 		return this.usersService.validateEmail(linkUuid)
 	}

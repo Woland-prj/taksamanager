@@ -9,6 +9,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { JwtAccessAuthGuard } from 'src/auth/jwt-access-auth.guard'
 import { ValidatedRequest } from 'src/auth/types/request.types'
+import { GetAllTasksDto } from './dto/task.dto'
 import { TasksService } from './tasks.service'
 
 @ApiTags('CRUD tasks operation (in development)')
@@ -21,7 +22,7 @@ export class TasksController {
 	@ApiOperation({
 		summary: 'Forced renew tempates for questions'
 	})
-	async updateTemplates(@Request() req: ValidatedRequest) {
+	async updateTemplates() {
 		await this.tasksService.updateTemplatesClient()
 	}
 
@@ -30,7 +31,7 @@ export class TasksController {
 	})
 	@Patch('/responses')
 	@HttpCode(204)
-	async updateResponses(@Request() req: ValidatedRequest) {
+	async updateResponses() {
 		await this.tasksService.updateResponses()
 	}
 
@@ -40,7 +41,9 @@ export class TasksController {
 		summary: 'Get all tasks executed by this user'
 	})
 	@ApiBearerAuth()
-	async getExecuted(@Request() req: ValidatedRequest) {
+	async getExecuted(
+		@Request() req: ValidatedRequest
+	): Promise<GetAllTasksDto[]> {
 		return await this.tasksService.getAllExecuted(req.user)
 	}
 
@@ -50,7 +53,9 @@ export class TasksController {
 		summary: 'Get all tasks appointed by this user'
 	})
 	@ApiBearerAuth()
-	async getAppointed(@Request() req: ValidatedRequest) {
+	async getAppointed(
+		@Request() req: ValidatedRequest
+	): Promise<GetAllTasksDto[]> {
 		return await this.tasksService.getAllAppointed(req.user)
 	}
 }

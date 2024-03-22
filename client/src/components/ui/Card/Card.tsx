@@ -1,18 +1,16 @@
+import { ITask } from '@/types/tasks'
 import { FC } from 'react'
 
-interface ITaskCard {
-	title: string
-	dedline: string
-	taskType: string
-}
-const TaskCard: FC<ITaskCard> = ({ title, dedline }) => {
+interface ITaskCard extends Pick<ITask, 'name' | 'deadline'> {}
+
+const TaskCard: FC<ITaskCard> = ({ name, deadline }) => {
 	return (
 		<div className='card'>
-			<h3>{title}</h3>
+			<h3>{name}</h3>
 			<div>
 				<div>
 					<span>Дедлайн</span>
-					<span>{dedline}</span>
+					<span>{deadline.getDate()}</span>
 				</div>
 			</div>
 		</div>

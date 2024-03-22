@@ -2,17 +2,15 @@ import {
 	ForbiddenException,
 	HttpException,
 	HttpStatus,
-	Injectable,
-	NotFoundException
+	Injectable
 } from '@nestjs/common'
 import { UserRole } from '@prisma/client'
+import { MailService } from 'src/mail/mail.service'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { v4 as uuidv4 } from 'uuid'
 import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
-import { MailService } from 'src/mail/mail.service'
-import { v4 as uuidv4 } from 'uuid'
-import { profile } from 'console'
 
 @Injectable()
 export class UsersService {
@@ -44,24 +42,17 @@ export class UsersService {
 			createUserDto.email,
 			`${process.env.VALIDATION_URL_PREFIX}/${activationLinkId}`
 		)
-		const { id, profileId, username, email, ...other } =
+		const { id, username, email, ...other } =
 			await this.prismaService.user.create({
 				data: {
-					profile: {
-						create: {
-							email: createUserDto.email,
-							password: hashedPass,
-							username: createUserDto.username,
-							role: UserRole.NOTDEFINED,
-							actLink: activationLinkId
-						}
-					}
-				},
-				include: {
-					profile: true
+					email: createUserDto.email,
+					password: hashedPass,
+					username: createUserDto.username,
+					role: UserRole.NOTDEFINED,
+					actLink: activationLinkId
 				}
 			})
-		return { id, profileId, username, email }
+		return { id, username, email }
 	}
 
 	findAll() {
@@ -93,20 +84,26 @@ export class UsersService {
 	}
 
 	async validateEmail(actLinkUuid: string) {
-		const profileData = await this.prismaService.profile.findUnique({
+		const userData = await this.prismaService.user.findUnique({
 			where: {
 				actLink: actLinkUuid
 			}
 		})
-		if (!profileData) {
-			throw new NotFoundException()
+		if (!userData) {
+			throw new HttpException(
+				{
+					status: HttpStatus.NOT_FOUND,
+					error: 'There is no account with this link uuid'
+				},
+				HttpStatus.NOT_FOUND
+			)
 		}
-		if (profileData.isActivated) {
+		if (userData.isActivated) {
 			throw new ForbiddenException()
 		}
-		return this.prismaService.profile.update({
+		await this.prismaService.user.update({
 			where: {
-				id: profileData.id
+				id: userData.id
 			},
 			data: {
 				isActivated: true

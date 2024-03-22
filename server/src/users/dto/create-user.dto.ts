@@ -20,9 +20,6 @@ export class CreateUserResDto {
 	id: string
 
 	@ApiProperty()
-	profileId: string
-
-	@ApiProperty()
 	username: string
 
 	@ApiProperty()

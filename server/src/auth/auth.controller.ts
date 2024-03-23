@@ -39,7 +39,7 @@ export class AuthController {
 		const tokens = await this.authService.login(req.user)
 		res.cookie(
 			refreshCookieData.name,
-			tokens.refresh_token,
+			tokens.refreshToken,
 			refreshCookieData.options
 		)
 		return this.authService.login(req.user)
@@ -63,7 +63,7 @@ export class AuthController {
 		const tokens = await this.authService.refresh(req.user, req)
 		res.cookie(
 			refreshCookieData.name,
-			tokens.refresh_token,
+			tokens.refreshToken,
 			refreshCookieData.options
 		)
 		return this.authService.refresh(req.user, req)

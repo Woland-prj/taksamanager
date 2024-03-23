@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
 import { IUser } from '../users/entities/user.entity'
@@ -36,8 +36,8 @@ export class AuthService {
 		})
 		await this.tokenService.saveToken(user.id, refresh_token)
 		return {
-			access_token: access_token,
-			refresh_token: refresh_token
+			accessToken: access_token,
+			refreshToken: refresh_token
 		}
 	}
 

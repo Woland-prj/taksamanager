@@ -13,8 +13,8 @@ export class LoginReqDto {
 
 export class LoginResDto {
 	@ApiProperty()
-	access_token: string
+	accessToken: string
 
 	@ApiProperty()
-	refresh_token: string
+	refreshToken: string
 }

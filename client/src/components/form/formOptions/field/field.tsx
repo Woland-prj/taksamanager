@@ -1,21 +1,29 @@
 'use client'
 
-import { Dispatch, FC, SetStateAction, useState } from 'react'
-import styles from './field.module.css'
+import { TLoggingInUser } from '@/types/login_and_register'
 import cn from 'clsx'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { Status } from '../LogInForm'
+import styles from './field.module.css'
 
 export interface IField {
 	name: string
 	placeholder: string
 	value: string
-	setValue: Dispatch<SetStateAction<string>>
-	isThereAnyError: boolean
-	// type: '' | 'email'
+	setValue: Dispatch<SetStateAction<TLoggingInUser>>
+	status: Status
+	fieldType: 'password' | 'email' | 'username'
 }
 
-const Field: FC<IField> = ({ name, placeholder, value, setValue, isThereAnyError }) => {
+const Field: FC<IField> = ({
+	name,
+	placeholder,
+	value,
+	setValue,
+	fieldType
+}) => {
 	const [isActive, setIsActive] = useState<boolean>(false)
-	const classes = cn(styles.field, styles.error && isThereAnyError)
+	const classes = cn(styles.field, styles.error)
 
 	return (
 		<div>
@@ -26,10 +34,14 @@ const Field: FC<IField> = ({ name, placeholder, value, setValue, isThereAnyError
 				onBlur={() => {
 					if (!value) setIsActive(false)
 				}}
-				onChange={e => setValue(e.target.value)}
+				onChange={e =>
+					setValue(prev => {
+						return { ...prev, [fieldType]: e.target.value }
+					})
+				}
 				value={value}
 				placeholder={placeholder}
-				// type={type}
+				type={fieldType}
 				// onInput={() => checkValidationOfType(type)}
 			/>
 			{/* <label

@@ -1,34 +1,17 @@
-import { TJWTResponse, TLoggingInUser } from "@/types/login_and_register";
+import { IJwt } from '@/types/jwt'
+import { TLoggingInUser } from '@/types/login_and_register'
 
-export const getTokensFromDb = async (user: TLoggingInUser, JWT: TJWTResponse) => {
-    async function postJSONWithLoggingInUser(loggingInUser: TLoggingInUser) {
-        try {
-          const response = await fetch("localhost:3200/api/v1/auth/login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(loggingInUser),
-          });
-      
-          const result = await response.json();
-          console.log("Success:", result);
-        } catch (error) {
-          console.error("Error:", error)
-        }
-    }
-    async function getJWTResponse(JWT: TJWTResponse) {
-      try {
-        const response = await fetch("localhost:3200/api/v1/auth/login")
-        if (response.status == 201) {
-          JWT = await response.json()
-          console.log("Success:", JWT) // !!! Убрать лог JWT после тестов !!!
-        }
-        if (response.status == 401) { console.error('401 Unauthorised') }
-      } catch (error) {
-        console.error("Error:", error)
-      }
-    }
-    postJSONWithLoggingInUser(user)
-    getJWTResponse(JWT)
+export const getTokensFromDb = async (user: TLoggingInUser): Promise<IJwt> => {
+	const response = await fetch('http://localhost:3000/api/v1/auth/login', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8'
+		},
+		body: JSON.stringify(user)
+	})
+
+	if (response.status == 201) {
+		return await response.json()
+	}
+	throw new Error(`${response.status}`)
 }

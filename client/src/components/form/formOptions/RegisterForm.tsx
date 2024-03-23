@@ -4,6 +4,7 @@ import { saveAccessToken } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
 import { IForm, Status, TNewUser } from '@/types/login_and_register'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
+import ErrorBlock from '../error/Error'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
 import styles from './registerForm.module.css'
@@ -21,6 +22,7 @@ export const RegisterForm: FC<TRegisterFormProps> = ({ setUser }) => {
 
 	return (
 		<div className={styles.content}>
+			<ErrorBlock status={status} />
 			{formData.username != undefined && (
 				<>
 					<Field

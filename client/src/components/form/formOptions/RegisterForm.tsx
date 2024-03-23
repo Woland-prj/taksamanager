@@ -1,65 +1,74 @@
-import { redirectToPage } from "@/functions/redirectToPage"
-import Button, { ButtonType } from "./button/button"
-import Field from "./field/field"
-import { Dispatch, FC, SetStateAction, useState } from "react"
+import { createUser } from '@/functions/createUser'
+import { getTokensFromDb } from '@/functions/getTokensFromDb'
+import { saveAccessToken } from '@/functions/jwt'
+import { redirectToPage } from '@/functions/redirectToPage'
+import { IForm, Status, TNewUser } from '@/types/login_and_register'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
+import Button, { ButtonType } from './button/button'
+import Field from './field/field'
 import styles from './registerForm.module.css'
-import { TJWTResponse, TLoggingInUser, TNewUser } from "@/types/login_and_register"
-import { createUser } from "@/functions/createUser"
-import { getTokensFromDb } from "@/functions/getTokensFromDb"
-import cn from "clsx"
 
-type TPossibleErrorStates = '201' | '400' | '409' // 201 - User and his profile was successfully created.
-// 400 - [ "email must be an email" | "password should not be empty" | "username should not be empty" ]
-// 409 - User with email "email" already exist.
-type TRegisterFormProps = {setUser: Dispatch<SetStateAction<TNewUser>>}
+type TRegisterFormProps = { setUser: Dispatch<SetStateAction<TNewUser>> }
 
-export const RegisterForm: FC<TRegisterFormProps> = ({setUser}) => {
-	const [errorState, setErrorState] = useState<TPossibleErrorStates>('201')
-	const [nameValue, setNameValue] = useState<string>('')
-	const [emailValue, setEmailValue] = useState<string>('')
-	const [passValue, setPassValue] = useState<string>('')
+export const RegisterForm: FC<TRegisterFormProps> = ({ setUser }) => {
+	const [formData, setFormData] = useState<IForm>({
+		email: '',
+		password: '',
+		username: ''
+	})
 
-	const fieldClass = cn(styles.error && errorState != '201')
+	const [status, setStatus] = useState<Status | null>(null)
 
-    return (
-        <div className={styles.content}>
-			<Field
-				placeholder='Введите имя пользователя'
-				name='username'
-				value={nameValue}
-				setValue={setNameValue}
-				isThereAnyError = {errorState != '201'}
-			/>
-			<Field
-				placeholder='Введите почту'
-				name='username'
-				value={emailValue}
-				setValue={setEmailValue}
-				isThereAnyError = {errorState != '201'}
-			/>
-			<Field
-				placeholder='Введите пароль'
-				name='pass'
-				value={passValue}
-				setValue={setPassValue}
-				isThereAnyError = {errorState != '201'}
-			/>
+	return (
+		<div className={styles.content}>
+			{formData.username != undefined && (
+				<>
+					<Field
+						placeholder='Введите имя пользователя'
+						name='username'
+						value={formData.username}
+						setValue={setFormData}
+						fieldType='username'
+						status={status}
+					/>
+					<Field
+						placeholder='Введите почту'
+						name='email'
+						value={formData.email}
+						setValue={setFormData}
+						fieldType='email'
+						status={status}
+					/>
+					<Field
+						placeholder='Введите пароль'
+						name='pass'
+						value={formData.password}
+						setValue={setFormData}
+						fieldType='password'
+						status={status}
+					/>
+				</>
+			)}
+
 			<Button
 				type={ButtonType.COLORED}
 				text={'Зарегистрироваться'}
 				action={async () => {
-					console.log('registration')
-					let JWT: TJWTResponse = { access_token: '', refresh_token: '' }
-                    let user: TLoggingInUser
-					const userInfoFromFields: TNewUser = {
-						username: nameValue,
-						email: emailValue,
-						password: passValue
+					try {
+						await createUser(formData)
+						const jwt = await getTokensFromDb({
+							email: formData.email,
+							password: formData.password
+						})
+						await saveAccessToken(jwt)
+						setStatus(Status.CREATED)
+						redirectToPage('/dashboard')
+					} catch (status) {
+						console.log(status)
+						if (status === Status.BADREQUEST) setStatus(Status.FORBIDDEN)
+						if (status === Status.EXIST) setStatus(Status.FORBIDDEN)
 					}
-					await createUser(userInfoFromFields, user)
-                    await getTokensFromDb(user, JWT)
-                    console.log(user, JWT)
-                    setUser(user)}}
+				}}
 			/>
 			<Button
 				type={ButtonType.PLAIN}
@@ -67,5 +76,5 @@ export const RegisterForm: FC<TRegisterFormProps> = ({setUser}) => {
 				action={() => redirectToPage('/auth/login')}
 			/>
 		</div>
-    )
+	)
 }

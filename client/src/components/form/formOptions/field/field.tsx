@@ -1,17 +1,16 @@
 'use client'
 
-import { TLoggingInUser } from '@/types/login_and_register'
+import { IForm, Status } from '@/types/login_and_register'
 import cn from 'clsx'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
-import { Status } from '../LogInForm'
 import styles from './field.module.css'
 
 export interface IField {
 	name: string
 	placeholder: string
 	value: string
-	setValue: Dispatch<SetStateAction<TLoggingInUser>>
-	status: Status
+	setValue: Dispatch<SetStateAction<IForm>>
+	status: Status | null
 	fieldType: 'password' | 'email' | 'username'
 }
 
@@ -20,10 +19,11 @@ const Field: FC<IField> = ({
 	placeholder,
 	value,
 	setValue,
-	fieldType
+	fieldType,
+	status
 }) => {
 	const [isActive, setIsActive] = useState<boolean>(false)
-	const classes = cn(styles.field, styles.error)
+	const classes = cn(styles.field, status === Status.FORBIDDEN && styles.error)
 
 	return (
 		<div>

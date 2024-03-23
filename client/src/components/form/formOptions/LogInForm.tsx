@@ -1,7 +1,7 @@
 import { getTokensFromDb } from '@/functions/getTokensFromDb'
 import { saveAccessToken } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
-import { TLoggingInUser } from '@/types/login_and_register'
+import { IForm, Status, TLoggingInUser } from '@/types/login_and_register'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
 import ErrorBlock from '../error/Error'
 import styles from './LogInForm.module.css'
@@ -11,15 +11,12 @@ import Field from './field/field'
 type TLogInFormProps = {
 	setUser: Dispatch<SetStateAction<TLoggingInUser>>
 }
-export const enum Status {
-	CREATED = '201',
-	FORBIDDEN = '401'
-}
+
 // 201 - Tokens generated succesfully
 // 401 - Unauthorized
 
 export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
-	const [formData, setFormData] = useState<TLoggingInUser>({
+	const [formData, setFormData] = useState<IForm>({
 		email: '',
 		password: ''
 	})
@@ -27,8 +24,9 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 
 	return (
 		<div className={styles.content}>
-			status != Status.FORBIDDEN ?{' '}
-			<ErrorBlock text='Неверный логин или пароль' /> : null
+			{status === Status.FORBIDDEN ? (
+				<ErrorBlock text='Неверный логин или пароль' />
+			) : null}
 			<Field
 				placeholder='Введите почту'
 				name='email'
@@ -53,8 +51,9 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 						const jwt = await getTokensFromDb(formData)
 						await saveAccessToken(jwt)
 						setStatus(Status.CREATED)
-					} catch (error) {
-						setStatus(Status.FORBIDDEN)
+						redirectToPage('/dashboard')
+					} catch (status) {
+						if (status === Status.FORBIDDEN) setStatus(Status.FORBIDDEN)
 					}
 				}}
 			/>

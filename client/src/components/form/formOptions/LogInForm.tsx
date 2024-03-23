@@ -16,17 +16,24 @@ type TLogInFormProps = {
 // 401 - Unauthorized
 
 export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
+	const [isEmpty, setIsEmpty] = useState<boolean>(false)
 	const [formData, setFormData] = useState<IForm>({
 		email: '',
 		password: ''
 	})
 	const [status, setStatus] = useState<Status | null>(null)
 
+	const isNotEmpty = (data: IForm): boolean => {
+		if (data.email == '' || data.password == '' || data.username == '') {
+			return false
+		}
+		return true
+	}
+
 	return (
 		<div className={styles.content}>
-			{status === Status.FORBIDDEN ? (
-				<ErrorBlock text='Неверный логин или пароль' />
-			) : null}
+			{status && <ErrorBlock status={status} />}
+			{isEmpty && <ErrorBlock text='Поля не должны быть пустыми' />}
 			<Field
 				placeholder='Введите почту'
 				name='email'
@@ -34,6 +41,7 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 				setValue={setFormData}
 				fieldType='email'
 				status={status}
+				isEmpty={isEmpty}
 			/>
 			<Field
 				placeholder='Введите пароль'
@@ -42,18 +50,24 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 				setValue={setFormData}
 				fieldType='password'
 				status={status}
+				isEmpty={isEmpty}
 			/>
 			<Button
 				type={ButtonType.COLORED}
 				text={'Войти'}
 				action={async () => {
-					try {
-						const jwt = await getTokensFromDb(formData)
-						await saveAccessToken(jwt)
-						setStatus(Status.CREATED)
-						redirectToPage('/dashboard')
-					} catch (status) {
-						if (status === Status.FORBIDDEN) setStatus(Status.FORBIDDEN)
+					if (isNotEmpty(formData)) {
+						setIsEmpty(false)
+						try {
+							const jwt = await getTokensFromDb(formData)
+							await saveAccessToken(jwt)
+							setStatus(Status.CREATED)
+							redirectToPage('/dashboard')
+						} catch (status) {
+							if (status === Status.FORBIDDEN) setStatus(Status.FORBIDDEN)
+						}
+					} else {
+						setIsEmpty(true)
 					}
 				}}
 			/>

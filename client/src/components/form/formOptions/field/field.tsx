@@ -12,6 +12,7 @@ export interface IField {
 	setValue: Dispatch<SetStateAction<IForm>>
 	status: Status | null
 	fieldType: 'password' | 'email' | 'username'
+	isEmpty?: boolean
 }
 
 const Field: FC<IField> = ({
@@ -20,10 +21,18 @@ const Field: FC<IField> = ({
 	value,
 	setValue,
 	fieldType,
-	status
+	status,
+	isEmpty
 }) => {
 	const [isActive, setIsActive] = useState<boolean>(false)
-	const classes = cn(styles.field, status === Status.FORBIDDEN && styles.error)
+	const classes = cn(
+		styles.field,
+		(status === Status.FORBIDDEN ||
+			status === Status.BADREQUEST ||
+			status === Status.EXIST ||
+			isEmpty) &&
+			styles.error
+	)
 
 	return (
 		<div>

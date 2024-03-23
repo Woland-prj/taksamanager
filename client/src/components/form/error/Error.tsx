@@ -3,20 +3,29 @@ import Image from 'next/image'
 import { FC } from 'react'
 import styles from './Error.module.css'
 
-const ErrorBlock: FC<{ status: Status | null }> = ({ status }) => {
+interface IErrorProps {
+	status?: Status
+	text?: string
+}
+
+const ErrorBlock: FC<IErrorProps> = ({ status, text }) => {
 	const getTextByStatus = (status: Status) => {
 		switch (status) {
+			case Status.BADREQUEST:
+				return 'Некорректный email адресс'
+			case Status.EXIST:
+				return 'Пользователь с таким email уже существует'
 			case Status.FORBIDDEN:
 				return 'Неверный логин или пароль'
-			case Status.EXIST:
-				return 'Такого пользователя не существует'
 		}
 	}
 
 	return (
 		<div className={styles.error}>
 			<Image src='/error.svg' alt='error_icon' width={40} height={35} />
-			<p>{getTextByStatus(status)}</p>
+			{status && !text && <p>{getTextByStatus(status)}</p>}
+			{!status && text && <p>{text}</p>}
+			{(!status && !text) || (status && text && <p>Что-то пошло не так</p>)}
 		</div>
 	)
 }

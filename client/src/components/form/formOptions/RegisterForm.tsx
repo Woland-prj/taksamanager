@@ -69,7 +69,7 @@ export const RegisterForm: FC<TRegisterFormProps> = ({ setUser }) => {
 				text={'Зарегистрироваться'}
 				action={async () => {
 					if (isNotEmpty(formData)) {
-						setIsEmpty(true)
+						setIsEmpty(false)
 						try {
 							await createUser(formData)
 							const jwt = await getTokensFromDb({

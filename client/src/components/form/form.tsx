@@ -1,10 +1,17 @@
 'use client'
 
 import { TLoggingInUser, TNewUser } from '@/types/login_and_register'
+import cn from 'clsx'
+import localFont from 'next/font/local'
 import { FC, useState } from 'react'
 import styles from './form.module.css'
 import { LogInForm } from './formOptions/LogInForm'
 import { RegisterForm } from './formOptions/RegisterForm'
+
+const euclidMedium = localFont({
+	src: '../../fonts/EuclidCircularBMedium.ttf',
+	display: 'swap'
+})
 
 type TFormProps = { formOption: 'register' | 'login' }
 
@@ -30,11 +37,8 @@ const Form: FC<TFormProps> = ({ formOption }) => {
 
 	return (
 		<div className={styles.form}>
-			<div
-				className={styles.entrance}
-				style={{ fontFamily: 'EuclidCircularBBold' }}
-			>
-				Вход
+			<div className={cn(styles.entrance, euclidMedium.className)}>
+				{formOption == 'login' ? 'Вход' : 'Регистрация'}
 			</div>
 			{formOption == 'login' && <LogInForm setUser={setLogInUser} />}
 			{formOption == 'register' && <RegisterForm setUser={setRegisterUser} />}

@@ -5,9 +5,9 @@ import { redirectToPage } from '@/functions/redirectToPage'
 import { IForm, Status, TNewUser } from '@/types/login_and_register'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
 import ErrorBlock from '../error/Error'
+import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
-import styles from './registerForm.module.css'
 
 type TRegisterFormProps = { setUser: Dispatch<SetStateAction<TNewUser>> }
 

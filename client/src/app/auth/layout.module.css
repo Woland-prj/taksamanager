@@ -40,7 +40,7 @@
 }
 
 .text {
-	margin: 12rem /* 192px */;
+	margin: 9rem /* 192px */;
 	color: #ffffff;
 	text-align: center;
 	width: 25%;
@@ -51,6 +51,7 @@
 	margin-block-end: 0;
 	font-size: 8rem /* 128px */;
 	line-height: 1;
+	font-weight: 600;
 }
 
 .text > h2 {

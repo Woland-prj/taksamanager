@@ -1,31 +1,26 @@
 .form {
+	width: 25vw;
+	min-height: 65vh;
+	border-radius: 31px;
+	padding: 5rem;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-
-	max-width: 610px;
-	margin-right: 6.50406vw;
-	padding: 70px;
-	padding-top: 50px;
-	box-sizing: border-box;
-
-	border-radius: 31px;
-	border: 2px solid;
+	gap: 5rem;
+	/* border: 2px solid;
 	border-image-source: linear-gradient(
 		44.08deg,
 		#ffffff 12.92%,
 		rgba(255, 255, 255, 0.5) 88.98%
-	);
+	); */
 	box-shadow: 4px 9px 50px -1px rgba(0, 0, 0, 0.4);
 }
 
 .entrance {
-	margin-bottom: 20px;
-
-	font-family: 'Euclid Circular B';
+	margin: 0;
 	font-size: 50px;
 	font-weight: 600;
 	line-height: 63px;
 	letter-spacing: 0em;
-	text-align: left;
+	text-align: center;
+	color: #00733a;
 }

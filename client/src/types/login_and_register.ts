@@ -35,5 +35,6 @@ export enum Status {
 	CREATED = '201',
 	FORBIDDEN = '401',
 	EXIST = '409',
-	BADREQUEST = '400'
+	BADREQUEST = '400',
+	NOTFOUND = '404'
 }

@@ -3,6 +3,7 @@
 	margin: 0 1rem;
 	align-items: center;
 	gap: 0.7rem;
+	height: 5rem;
 }
 
 .error p {

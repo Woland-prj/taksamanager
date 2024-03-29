@@ -1,4 +1,5 @@
 import { PageHeader } from '@/components/main/PageHeader/PageHeader'
+import TasksContainer from '@/components/main/TasksContainer/TasksContainer'
 import { permanentRedirect } from 'next/navigation'
 
 export default function Dashboard() {
@@ -14,6 +15,7 @@ export default function Dashboard() {
 					buttonText='Создать задачу'
 					buttonAction={createTaskAction}
 				/>
+				<TasksContainer />
 			</header>
 		</main>
 	)

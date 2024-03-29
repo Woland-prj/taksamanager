@@ -24,6 +24,7 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 	const [status, setStatus] = useState<Status | null>(null)
 
 	const isNotEmpty = (data: IForm): boolean => {
+		setStatus(null)
 		if (data.email == '' || data.password == '' || data.username == '') {
 			return false
 		}
@@ -31,54 +32,55 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 	}
 
 	return (
-		<div className={styles.content}>
-			{status && <ErrorBlock status={status} />}
-			{isEmpty && <ErrorBlock text='Поля не должны быть пустыми' />}
-			<Field
-				placeholder='Введите почту'
-				name='email'
-				value={formData.email}
-				setValue={setFormData}
-				fieldType='email'
-				status={status}
-				isEmpty={isEmpty}
-			/>
-			<Field
-				placeholder='Введите пароль'
-				name='pass'
-				value={formData.password}
-				setValue={setFormData}
-				fieldType='password'
-				status={status}
-				isEmpty={isEmpty}
-			/>
-			<Button
-				type={ButtonType.COLORED}
-				text={'Войти'}
-				action={async () => {
-					if (isNotEmpty(formData)) {
-						setIsEmpty(false)
-						try {
-							const jwt = await getTokensFromDb(formData)
-							await saveAccessToken(jwt)
-							setStatus(Status.CREATED)
-							redirectToPage('/dashboard')
-						} catch (status) {
-							if (status === Status.FORBIDDEN) setStatus(Status.FORBIDDEN)
+		<>
+			<ErrorBlock status={status} isEmpty={isEmpty} />
+			<div className={styles.content}>
+				<Field
+					placeholder='Введите почту'
+					name='email'
+					value={formData.email}
+					setValue={setFormData}
+					fieldType='email'
+					status={status}
+					isEmpty={isEmpty}
+				/>
+				<Field
+					placeholder='Введите пароль'
+					name='pass'
+					value={formData.password}
+					setValue={setFormData}
+					fieldType='password'
+					status={status}
+					isEmpty={isEmpty}
+				/>
+				<Button
+					type={ButtonType.COLORED}
+					text={'Войти'}
+					action={async () => {
+						if (isNotEmpty(formData)) {
+							setIsEmpty(false)
+							try {
+								const jwt = await getTokensFromDb(formData)
+								await saveAccessToken(jwt)
+								setStatus(Status.CREATED)
+								redirectToPage('/dashboard')
+							} catch (status) {
+								if (status === Status.FORBIDDEN) setStatus(Status.FORBIDDEN)
+							}
+						} else {
+							setIsEmpty(true)
 						}
-					} else {
-						setIsEmpty(true)
-					}
-				}}
-			/>
-			<Button
-				type={ButtonType.PLAIN}
-				text={'Зарегистрироваться'}
-				action={async () => {
-					console.log('redirection')
-					redirectToPage('/auth/register')
-				}}
-			/>
-		</div>
+					}}
+				/>
+				<Button
+					type={ButtonType.PLAIN}
+					text={'Зарегистрироваться'}
+					action={async () => {
+						console.log('redirection')
+						redirectToPage('/auth/register')
+					}}
+				/>
+			</div>
+		</>
 	)
 }

@@ -5,8 +5,29 @@ import '../styles/globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 const euclidRegular = localFont({
-	src: '../fonts/EuclidCircularBRegular.ttf',
-	display: 'swap'
+	src: [{
+		path: '../fonts/EuclidCircularBBold.ttf',
+		weight: '600',
+		style: 'normal',
+	},
+	{
+		path: '../fonts/EuclidCircularBLight.ttf',
+		weight: '200',
+		style: 'normal'
+	},
+	{
+		path: '../fonts/EuclidCircularBMedium.ttf',
+		weight: '300',
+		style: 'normal'
+	},
+	{
+		path: '../fonts/EuclidCircularBRegular.ttf',
+		weight: '400',
+		style: 'normal'
+	}],
+	display: 'swap',
+	
+	variable: '--font-euclidCircular'
 })
 
 export const metadata: Metadata = {

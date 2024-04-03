@@ -21,8 +21,7 @@
 
 .entrance {
 	margin-bottom: 20px;
-
-	font-family: 'Euclid Circular B';
+	font-family: '--font-euclidCircular';
 	font-size: 50px;
 	font-weight: 600;
 	line-height: 63px;

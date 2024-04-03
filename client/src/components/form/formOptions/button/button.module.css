@@ -1,5 +1,4 @@
 .plain {
-	margin: 18px;
 	width: 253px;
 	height: 38px;
 	padding: 0;
@@ -11,16 +10,15 @@
 	text-align: left;
 
 	color: rgba(0, 115, 58, 1);
-	background-color: #FFFFFF;
+	background-color: #ffffff;
 	border: 0;
 }
 
 .colored {
-	margin: 18px;
-	width: 470px;
+	/* width: 470px; */
 	height: 85px;
-	background-color: #009C4D;
-	color: #FFFFFF;
+	background-color: #009c4d;
+	color: #ffffff;
 
 	border: 0;
 	border-radius: 10px;

@@ -27,6 +27,7 @@ const Field: FC<IField> = ({
 	const [isActive, setIsActive] = useState<boolean>(false)
 	const classes = cn(
 		styles.field,
+		isActive && styles.active,
 		(status === Status.FORBIDDEN ||
 			status === Status.BADREQUEST ||
 			status === Status.EXIST ||
@@ -53,12 +54,6 @@ const Field: FC<IField> = ({
 				type={fieldType}
 				// onInput={() => checkValidationOfType(type)}
 			/>
-			{/* <label
-				className={cn(isActive ? styles.focusedLabel : null)}
-				htmlFor={name}
-			>
-				{placeholder}
-			</label> */}
 		</div>
 	)
 }

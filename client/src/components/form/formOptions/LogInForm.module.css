@@ -10,3 +10,19 @@
 
 	background: rgba(255, 236, 236, 1);
 }
+
+.plain_text {
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 25.36px;
+	text-align: left;
+	color: 0;
+}
+
+.bold_text {
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 25.36px;
+	text-align: left;
+    color: rgba(51, 141, 95, 1);
+}

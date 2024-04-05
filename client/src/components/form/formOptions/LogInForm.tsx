@@ -72,14 +72,20 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 						}
 					}}
 				/>
-				<Button
-					type={ButtonType.PLAIN}
-					text={'Зарегистрироваться'}
-					action={async () => {
-						console.log('redirection')
-						redirectToPage('/auth/register')
-					}}
-				/>
+				<div>
+					<span className={styles.plain_text}>
+						Если у вас нет аккаунта, то для начала вам нужно
+					</span>
+					<Button
+						type={ButtonType.PLAIN}
+						className={styles.bold_text}
+						text={'зарегистрироваться'}
+						action={async () => {
+							console.log('redirection')
+							redirectToPage('/auth/register')
+						}}
+					/>
+				</div>
 			</div>
 		</>
 	)

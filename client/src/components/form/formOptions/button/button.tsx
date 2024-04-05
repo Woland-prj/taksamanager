@@ -10,17 +10,19 @@ export enum ButtonType {
 }
 
 interface IButton {
+	className?: string
 	type: ButtonType
 	text: string
 	action: () => Promise<void>
 }
 
-const Button: FC<IButton> = ({ type, text, action }) => {
+const Button: FC<IButton> = ({ type, text, className, action }) => {
 	return (
 		<button
 			className={cn(
 				styles.button,
-				type == ButtonType.PLAIN ? styles.plain : styles.colored
+				type == ButtonType.PLAIN ? styles.plain : styles.colored,
+				className
 			)}
 			onClick={async () => await action()}
 		>

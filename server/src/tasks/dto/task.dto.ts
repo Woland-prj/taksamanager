@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { $Enums } from '@prisma/client'
+import { IsUUID } from 'class-validator'
 
 class TaskQ {
 	id: string
@@ -18,7 +19,7 @@ class TaskQ {
 // 	REJECTEDBYADMIN = 'REJECTEDBYADMIN'
 // }
 
-export class GetAllTasksDto {
+export class GetTaskDto {
 	id: string
 	name: string
 	status: $Enums.TaskStatus
@@ -33,4 +34,12 @@ export class GetAllTasksDto {
 		questionText: string
 		answerText: string
 	}[]
+}
+
+export class SetExecutorDto {
+	@IsUUID()
+	taskId: string
+
+	@IsUUID()
+	userId: string
 }

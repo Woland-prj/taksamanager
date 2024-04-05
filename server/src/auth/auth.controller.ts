@@ -12,8 +12,8 @@ import { Response } from 'express'
 import { AuthService } from './auth.service'
 import { refreshCookieData } from './constansts'
 import { LoginReqDto, LoginResDto } from './dto/login.dto'
-import { JwtRefreshAuthGuard } from './jwt-refresh-auth.guard'
-import { LocalAuthGuard } from './local-auth.guard'
+import { JwtRefreshAuthGuard } from './guards/jwt-refresh-auth.guard'
+import { LocalAuthGuard } from './guards/local-auth.guard'
 import { ValidatedRequest } from './types/request.types'
 
 @ApiTags('Authentication')

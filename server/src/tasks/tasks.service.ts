@@ -4,7 +4,7 @@ import { forms_v1 } from 'googleapis'
 import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { IUser } from 'src/users/entities/user.entity'
-import { GetAllTasksDto } from './dto/task.dto'
+import { GetTaskDto, SetExecutorDto } from './dto/task.dto'
 import { DefaultFields, DefaultTemplates, TaskQ } from './entities/task.entity'
 
 @Injectable()
@@ -15,7 +15,7 @@ export class TasksService {
 		private readonly formsService: FormsService
 	) {}
 
-	async getAllExecuted(user: IUser): Promise<GetAllTasksDto[]> {
+	async getAllExecuted(user: IUser): Promise<GetTaskDto[]> {
 		return this.prismaService.task.findMany({
 			where: {
 				executorId: user.id
@@ -40,7 +40,7 @@ export class TasksService {
 		})
 	}
 
-	async getAllAppointed(user: IUser): Promise<GetAllTasksDto[]> {
+	async getAllAppointed(user: IUser): Promise<GetTaskDto[]> {
 		return this.prismaService.task.findMany({
 			where: {
 				clientId: user.id
@@ -59,6 +59,46 @@ export class TasksService {
 						id: true,
 						questionText: true,
 						answerText: true
+					}
+				}
+			}
+		})
+	}
+
+	async getById(id: string): Promise<GetTaskDto> {
+		return this.prismaService.task.findUnique({
+			where: {
+				id: id
+			},
+			select: {
+				id: true,
+				clientId: true,
+				executorId: true,
+				clientName: true,
+				executorName: true,
+				name: true,
+				deadline: true,
+				status: true,
+				questions: {
+					select: {
+						id: true,
+						questionText: true,
+						answerText: true
+					}
+				}
+			}
+		})
+	}
+
+	async setExecutor(setExecutorDto: SetExecutorDto) {
+		return this.prismaService.task.update({
+			where: {
+				id: setExecutorDto.taskId
+			},
+			data: {
+				executor: {
+					connect: {
+						id: setExecutorDto.userId
 					}
 				}
 			}

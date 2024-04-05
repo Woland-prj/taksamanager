@@ -8,31 +8,33 @@ import { useEffect, useState } from 'react'
 import styles from './TasksContainer.module.css'
 
 const TasksContainer = () => {
-	const [tasks, setTasks] = useState<ITask[] | null>(null)
-	const REMOVE_AFTER_TESTS_STYLE = {
-		height: '3000px'
-	}
+  const [tasks, setTasks] = useState<ITask[] | null>(null)
+  const REMOVE_AFTER_TESTS_STYLE = {
+    height: '3000px'
+  }
 
-	useEffect(() => {
-		const getExecuted = async () => {
-			const token = getAccessToken()
-			try {
-				const tasks = await getTasks(token)
-				setTasks(tasks)
-				console.log(tasks)
-			} catch (status) {
-				if (status == Status.FORBIDDEN) console.log('renew token')
-			}
-		}
+  useEffect(() => {
+    const getExecuted = async () => {
+      const token = getAccessToken()
+      console.log(token)
+      try {
+        const tasksDb = await getTasks(token)
+        console.log(tasksDb)
+        setTasks(tasksDb)
+      } catch (status) {
+        console.log(status)
+        if (status == Status.FORBIDDEN) console.log('renew token')
+      }
+    }
 
-		getExecuted()
-	}, [])
-	return (
-		<div className={styles.tasksContainer}>
-			Слово
-			<div style={REMOVE_AFTER_TESTS_STYLE}></div>
-		</div>
-	)
+    getExecuted()
+  }, [])
+  return (
+    <div className={styles.tasksContainer}>
+      Слово
+      <div style={REMOVE_AFTER_TESTS_STYLE}></div>
+    </div>
+  )
 }
 
 export default TasksContainer

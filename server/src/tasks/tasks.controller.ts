@@ -1,15 +1,22 @@
 import {
+	Body,
 	Controller,
 	Get,
 	HttpCode,
+	Param,
 	Patch,
-	Request,
-	UseGuards
+	Request
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { JwtAccessAuthGuard } from 'src/auth/jwt-access-auth.guard'
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiOperation,
+	ApiTags,
+	ApiUnauthorizedResponse
+} from '@nestjs/swagger'
+import { JwtAdminAuth, JwtAuth } from 'src/auth/decorators/auth.decorator'
 import { ValidatedRequest } from 'src/auth/types/request.types'
-import { GetAllTasksDto } from './dto/task.dto'
+import { GetTaskDto, SetExecutorDto } from './dto/task.dto'
 import { TasksService } from './tasks.service'
 
 @ApiTags('CRUD tasks operation (in development)')
@@ -35,27 +42,52 @@ export class TasksController {
 		await this.tasksService.updateResponses()
 	}
 
-	@UseGuards(JwtAccessAuthGuard)
+	@JwtAuth()
 	@Get('/executed')
 	@ApiOperation({
 		summary: 'Get all tasks executed by this user'
 	})
 	@ApiBearerAuth()
-	async getExecuted(
-		@Request() req: ValidatedRequest
-	): Promise<GetAllTasksDto[]> {
-		return await this.tasksService.getAllExecuted(req.user)
+	async getExecuted(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getAllExecuted(req.user)
 	}
 
-	@UseGuards(JwtAccessAuthGuard)
+	@JwtAuth()
 	@Get('/appointed')
 	@ApiOperation({
 		summary: 'Get all tasks appointed by this user'
 	})
 	@ApiBearerAuth()
-	async getAppointed(
-		@Request() req: ValidatedRequest
-	): Promise<GetAllTasksDto[]> {
-		return await this.tasksService.getAllAppointed(req.user)
+	async getAppointed(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getAllAppointed(req.user)
+	}
+
+	@JwtAuth()
+	@Get(':id')
+	@ApiOperation({
+		summary: 'Get task by id'
+	})
+	@ApiBearerAuth()
+	@ApiBadRequestResponse({
+		description: 'Task with this id is not found'
+	})
+	async getById(@Param('id') id: string): Promise<GetTaskDto> {
+		return this.tasksService.getById(id)
+	}
+
+	@ApiOperation({
+		summary: 'Set executor for task'
+	})
+	@JwtAdminAuth()
+	@ApiBearerAuth()
+	@ApiBadRequestResponse({
+		description: 'Task with this id or user with this id is not found'
+	})
+	@ApiUnauthorizedResponse({
+		description: 'You should be a lead'
+	})
+	@Patch('/executor')
+	async setExecutor(@Body() setExecutorDto: SetExecutorDto) {
+		return this.tasksService.setExecutor(setExecutorDto)
 	}
 }

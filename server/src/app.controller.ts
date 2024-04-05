@@ -5,7 +5,7 @@ import {
 	ApiOperation,
 	ApiTags
 } from '@nestjs/swagger'
-import { JwtAccessAuthGuard } from './auth/jwt-access-auth.guard'
+import { JwtAccessAuthGuard } from './auth/guards/jwt-access-auth.guard'
 import { ValidatedRequest } from './auth/types/request.types'
 
 @ApiTags('Test endpoints')

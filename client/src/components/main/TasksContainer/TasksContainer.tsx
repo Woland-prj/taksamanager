@@ -11,17 +11,19 @@ import { Task } from './task/Task'
 const TasksContainer = () => {
 	const [tasks, setTasks] = useState<ITask[] | null>(null)
 
-	useEffect(() => {
-		const getExecuted = async () => {
-			const token = getAccessToken()
-			try {
-				const tasks = await getTasks(token)
-				setTasks(tasks)
-				console.log(tasks)
-			} catch (status) {
-				if (status == Status.FORBIDDEN) console.log('renew token')
-			}
-		}
+  useEffect(() => {
+    const getExecuted = async () => {
+      const token = getAccessToken()
+      console.log(token)
+      try {
+        const tasksDb = await getTasks(token)
+        console.log(tasksDb)
+        setTasks(tasksDb)
+      } catch (status) {
+        console.log(status)
+        if (status == Status.FORBIDDEN) console.log('renew token')
+      }
+    }
 
 		getExecuted()
 	}, [])

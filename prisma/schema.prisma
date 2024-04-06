@@ -79,13 +79,12 @@ enum UserRole {
 
 enum TaskStatus {
   MODIFIED
-  CREATED
+  WAITCONSENT
   INWORK
   COMPLETED
   VERIFYCOMPLETED
   REJECTED
-  REJECTEDBYLEAD
-  REJECTEDBYADMIN
+  VERIFYREJECTED
 }
 
 enum TaskType {
@@ -93,4 +92,5 @@ enum TaskType {
   PHOTO
   VIDEO
   TEXT
+  MONTAGE
 }

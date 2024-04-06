@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import '../styles/globals.css'
+import cn from 'clsx'
+import styles from './layout.module.css'
 
 const euclidRegular = localFont({
 	src: [{
@@ -40,7 +42,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='ru'>
-			<body className={euclidRegular.className}>{children}</body>
+			<body className={cn(euclidRegular.className, styles.body)}>{children}</body>
 		</html>
 	)
 }

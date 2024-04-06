@@ -42,7 +42,7 @@ export class AuthController {
 			tokens.refreshToken,
 			refreshCookieData.options
 		)
-		return this.authService.login(req.user)
+		return tokens
 	}
 
 	@ApiCookieAuth('refresh_jwt')
@@ -66,6 +66,6 @@ export class AuthController {
 			tokens.refreshToken,
 			refreshCookieData.options
 		)
-		return this.authService.refresh(req.user, req)
+		return tokens
 	}
 }

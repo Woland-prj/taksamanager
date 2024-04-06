@@ -19,7 +19,7 @@ export class PollingService {
 		console.log('Ping success!')
 	}
 
-	@Cron(CronExpression.EVERY_5_MINUTES)
+	@Cron('*/30 * * * * *')
 	async pollingQuestions() {
 		console.log('Ping form responses...')
 		await this.tasksService.updateResponses()

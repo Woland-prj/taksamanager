@@ -1,6 +1,8 @@
 import { FC } from "react"
 import styles from './Tag.module.css'
 import Image from "next/image"
+import cn from 'clsx'
+
 
 export enum TagOption {
     TYPE_POST = 'TYPE_POST',
@@ -16,71 +18,72 @@ export enum TagOption {
 
     DEADLINE = 'DEADLINE',
 }
-type TTagProps = {option: TagOption, date?: string } 
+type TTagProps = {option: TagOption, date?: string, width?: string, className?: string } 
 
-export const Tag: FC<TTagProps> = ({option, date}) => {
-    let className: string = ''
+export const Tag: FC<TTagProps> = ({option, date, className}) => {
+    let tagClassName: string = ''
     let src: string = ''
     let text: string = ''
-    
+    const layoutClassName = styles.layout
+
     if(option == TagOption.TYPE_POST )
     {
-        className = styles.typeTag
-        src = '../../../../../public/post.png'
+        tagClassName = styles.typeTag
+        src = '/post.png'
         text = 'Пост'
     }
     if(option == TagOption.TYPE_DESIGN )
     {
-        className = styles.typeTag
-        src = '../../../../../public/design.png'
+        tagClassName = styles.typeTag
+        src = '/design.png'
         text = 'Дизайн'
     }
     if(option == TagOption.TYPE_VIDEO )
     {
-        className = styles.typeTag
-        src = '../../../../../public/video.png'
+        tagClassName = styles.typeTag
+        src = '/video.png'
         text = 'Видео'
     }
     if(option == TagOption.TYPE_MONTAGE )
     {
-        className = styles.typeTag
-        src = '../../../../../public/montage.png'
+        tagClassName = styles.typeTag
+        src = '/montage.png'
         text = 'Монтаж'
     }
     if(option == TagOption.TYPE_PHOTO )
     {
-        className = styles.typeTag
-        src = '../../../../../public/photo.png'
+        tagClassName = styles.typeTag
+        src = '/photo.png'
         text = 'Фото'
     }
     if(option == TagOption.STATE_FREE) {
-        className = styles.freeTag
-        src = '../../../../../public/free.png'
+        tagClassName = styles.freeTag
+        src = '/free.png'
         text = 'Свободно'
     }
     if(option == TagOption.STATE_INWORK) {
-        className = styles.inworkTag
-        src = '../../../../../public/inwork.png'
+        tagClassName = styles.inworkTag
+        src = '/inwork.png'
         text = 'В работе'
     }
     if(option == TagOption.STATE_EXPIRED) {
-        className = styles.expiredTag
-        src = '../../../../../public/expired.png'
+        tagClassName = styles.expiredTag
+        src = '/expired.png'
         text = 'Просрочено'
     }
     if(option == TagOption.STATE_DONE) {
-        className = styles.doneTag
-        src = '../../../../../public/done.png'
+        tagClassName = styles.doneTag
+        src = '/done.png'
         text = 'Выполнено'
     }
     if(option == TagOption.DEADLINE) {
-        className = styles.deadlineTag
-        src = '../../../../../public/deadline.png'
-        text = 'Выполнить до' + date
-    }
+        tagClassName = styles.deadlineTag
+        src = '/deadline.png'
+        text = 'Выполнить до ' + date
+    } 
     return (
-        <div className={className}>
-            <Image src={src} alt=''/>
+        <div className={cn(tagClassName, className, layoutClassName)}>
+            <Image src={src} alt='' width='21' height='20'/>
             {text}
         </div>
     )

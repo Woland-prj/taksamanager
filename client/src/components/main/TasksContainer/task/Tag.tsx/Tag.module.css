@@ -1,23 +1,76 @@
+.layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .typeTag {
-
+    height: 33px;
+    margin-left: 5px;
+    padding: 5px 9px 5px 9px;
+    gap: 6px;
+    border-radius: 17px;
+    border: 1px solid rgba(80, 80, 80, 1);
+    opacity: 0.5px;
+    
+    color: #808080
 }
 
 .freeTag {
+    height: 33px;
+    margin-right: 5px;
+    padding: 5px 9px 5px 9px;
+    gap: 6px;
+    border-radius: 17px;
+    border: 1px solid rgba(138, 141, 0, 1);
 
+    background-color: rgba(254, 255, 210, 1);
+    color: rgba(138, 141, 0, 1);
 }
 
 .inworkTag {
+    height: 33px;
+    margin-right: 5px;
+    padding: 5px 9px 5px 9px;
+    gap: 6px;
+    border-radius: 17px;
+    border: 1px solid #52ADFF;
 
+    background-color: #DBEEFF;
+    color: #52ADFF
 }
 
 .expiredTag {
+    height: 33px;
+    margin-right: 5px;
+    padding: 5px 9px 5px 9px;
+    gap: 6px;
+    border-radius: 17px;
+    border: 1px solid #FF5B5B;
 
+    color: #FF5B5B;
+    background-color: #FFC5C5;
 }
 
 .doneTag {
+    height: 33px;
+    margin-right: 5px;
+    padding: 5px 9px 5px 9px;
+    gap: 6px;
+    border-radius: 17px;
+    border: 1px solid #338D5F;
 
+    background-color: #C8FFE3;
+    color: #338D5F;
 }
 
 .deadlineTag {
-    
+    height: 33px;
+    margin-bottom: 5px;
+    padding: 5px 9px 5px 9px;
+    gap: 6px;
+    border-radius: 17px;
+    border: 1px solid #9C9C9C;
+
+    color: #000000;
+    background-color: #EAEAEA;
 }

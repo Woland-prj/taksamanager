@@ -3,6 +3,9 @@ import TasksContainer from '@/components/main/TasksContainer/TasksContainer'
 import { permanentRedirect } from 'next/navigation'
 import styles from './page.module.css'
 import { SideBar } from '@/components/main/SideBar/SideBar'
+import { useEffect } from 'react'
+import { checkJWTAndRedirect } from '@/functions/checkJWTAndRedirect'
+import { getAccessToken } from '@/functions/jwt'
 
 export default function Dashboard() {
 	const createTaskAction = async () => {
@@ -14,6 +17,9 @@ export default function Dashboard() {
 		display: 'flex',
 		
 	}
+	useEffect(() => {
+		checkJWTAndRedirect(getAccessToken())
+	}, [])
 	return (
 		<div style={bodyStyle}> {/* Накостылял style
 		потому что по-другому отключение полосы прокрутки

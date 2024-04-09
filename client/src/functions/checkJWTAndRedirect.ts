@@ -1,18 +1,19 @@
 'use server'
 
-import { getAccessToken } from "./jwt"
+import { permanentRedirect } from "next/navigation"
 
-
-
-export const checkJWTAndRedirec = async () => {
-    const accessToken: string | null = getAccessToken()
+export const checkJWTAndRedirect = async (accessToken: string | null) => {
     if (accessToken != null) {
-        const response = await fetch('http://localhost:3000/api/v1/profile', {
+        const response = await fetch('http://localhost:3200/api/v1/profile', { // обращение к серверу за юзером по входящему токену
             method: 'GET',
             headers: {
                 Authorization: 'Bearer ' + `${accessToken}`
             }
         })
+        // overwriteUser(response) // Сохранение юзера в редаксе
+        // permanentRedirect('https://localhost:3000/dashboard')
+    } else {
+        permanentRedirect('https://localhost:3000/auth/login')
     }
 
 }

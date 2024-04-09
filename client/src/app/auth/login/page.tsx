@@ -1,6 +1,6 @@
 'use client'
 import Form from '@/components/form/form'
-import styles from '../login.module.css'
+import styles from '../login.module.css''
 
 export default function LoginPage() {
 	return (

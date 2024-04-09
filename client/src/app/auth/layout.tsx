@@ -2,6 +2,9 @@ import cn from 'clsx'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import styles from './layout.module.css'
+import { useEffect } from 'react'
+import { checkJWTAndRedirect } from '@/functions/checkJWTAndRedirect'
+import { getAccessToken } from '@/functions/jwt'
 
 const euclidMedium = localFont({
 	src: '../../fonts/EuclidCircularBMedium.ttf',
@@ -18,6 +21,10 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode
 }>) {
+	
+	useEffect(() => {
+		checkJWTAndRedirect(getAccessToken())
+	}, [])
 	return (
 		<main className={styles.main}>
 			<div className={styles.taksa}>

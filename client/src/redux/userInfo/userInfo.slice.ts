@@ -8,7 +8,6 @@ export const userSlice = createSlice({
     reducers: {
         overwriteUser: (state, action:PayloadAction<TUser>) => {
             state = action.payload
-
         },
     },
 })

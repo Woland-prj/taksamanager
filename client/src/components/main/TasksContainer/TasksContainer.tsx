@@ -34,6 +34,21 @@ const TasksContainer = () => {
 				state={firstTask.state}
 				type = {firstTask.type}
 			/>
+			<Task taskText={firstTask.taskText}
+				deadlineDate={firstTask.deadlineDate}
+				state={firstTask.state}
+				type = {firstTask.type}
+			/>
+			<Task taskText={firstTask.taskText}
+				deadlineDate={firstTask.deadlineDate}
+				state={firstTask.state}
+				type = {firstTask.type}
+			/>
+			<Task taskText={firstTask.taskText}
+				deadlineDate={firstTask.deadlineDate}
+				state={firstTask.state}
+				type = {firstTask.type}
+			/>
 		</div>
 	)
 }

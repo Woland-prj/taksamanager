@@ -10,6 +10,7 @@
     padding: 40px 75px 40px 75px;
 
     display: flex;
+    flex-wrap: wrap;
     gap: 36px;
     opacity: 1;
 }

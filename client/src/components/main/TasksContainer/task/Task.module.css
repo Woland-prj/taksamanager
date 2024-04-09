@@ -4,9 +4,10 @@
     width: 456px;
     height: 212px;
     padding: 25px 30px 25px 30px;
-    gap: 30px;
     border-radius: 20px;
+    box-sizing: border-box;
     border: 1px solid #AFAFAF;
+
     font-weight: 300;
     font-size: 22.19px;
     line-height: 28.14px;

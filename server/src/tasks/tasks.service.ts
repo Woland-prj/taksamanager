@@ -3,7 +3,7 @@ import {
 	Injectable,
 	NotFoundException
 } from '@nestjs/common'
-import { TaskStatus } from '@prisma/client'
+import { TaskStatus, TaskType } from '@prisma/client'
 import { forms_v1 } from 'googleapis'
 import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
@@ -11,11 +11,15 @@ import { IUser } from 'src/users/entities/user.entity'
 import {
 	GetTaskDto,
 	SetExecutorDto,
-	SetStatusDto,
 	TaskAdminUpdateDto,
 	TaskExecutorUpdateDto
 } from './dto/task.dto'
-import { DefaultFields, DefaultTemplates, TaskQ } from './entities/task.entity'
+import {
+	DefaultFields,
+	DefaultTemplates,
+	TaskFormType,
+	TaskQ
+} from './entities/task.entity'
 
 @Injectable()
 export class TasksService {
@@ -39,6 +43,7 @@ export class TasksService {
 				name: true,
 				deadline: true,
 				status: true,
+				type: true,
 				questions: {
 					select: {
 						id: true,
@@ -64,6 +69,7 @@ export class TasksService {
 				name: true,
 				deadline: true,
 				status: true,
+				type: true,
 				questions: {
 					select: {
 						id: true,
@@ -89,6 +95,7 @@ export class TasksService {
 				name: true,
 				deadline: true,
 				status: true,
+				type: true,
 				questions: {
 					select: {
 						id: true,
@@ -111,17 +118,6 @@ export class TasksService {
 						id: setExecutorDto.userId
 					}
 				}
-			}
-		})
-	}
-
-	async setStatus(setStatusDto: SetStatusDto) {
-		return this.prismaService.task.update({
-			where: {
-				id: setStatusDto.taskId
-			},
-			data: {
-				status: setStatusDto.status as TaskStatus
 			}
 		})
 	}
@@ -199,18 +195,55 @@ export class TasksService {
 				text: DefaultFields.CLIENTNAME
 			}
 		})
+		const typeTemp = await this.prismaService.questionTemplate.findFirst({
+			where: {
+				text: DefaultFields.TYPE
+			}
+		})
 		return {
 			nameTemp: nameTemp,
 			deadlineTemp: deadlineTemp,
-			clientTemp: clientTemp
+			clientTemp: clientTemp,
+			typeTemp: typeTemp
+		}
+	}
+
+	private async convertTextTypeToDbType(
+		formType: string
+	): Promise<TaskType | null> {
+		switch (formType) {
+			case TaskFormType.FORM_VIDEO:
+				return TaskType.VIDEO
+
+			case TaskFormType.FORM_PHOTO:
+				return TaskType.PHOTO
+
+			case TaskFormType.FORM_POST:
+				return TaskType.POST
+
+			case TaskFormType.FORM_DESIGN:
+				return TaskType.DESIGN
+
+			case TaskFormType.FORM_MONTAGE:
+				return TaskType.MONTAGE
+
+			default:
+				return null
 		}
 	}
 
 	async createTask(res: forms_v1.Schema$FormResponse) {
 		const templates = await this.prismaService.questionTemplate.findMany()
 		const tQuestions: TaskQ[] = []
-		const { nameTemp, deadlineTemp, clientTemp } =
+		const { nameTemp, deadlineTemp, clientTemp, typeTemp } =
 			await this.getDefaultTemplates()
+
+		const taskFormType = res.answers[typeTemp.qid].textAnswers.answers[0].value
+		const convertedType = await this.convertTextTypeToDbType(taskFormType)
+
+		console.log(convertedType)
+
+		if (!convertedType) return
 
 		// Create questions instances
 		templates.forEach(template => {
@@ -230,6 +263,7 @@ export class TasksService {
 					'T00:00:00.000Z',
 				formClientName:
 					res.answers[clientTemp.qid].textAnswers.answers[0].value,
+				type: convertedType,
 				status: TaskStatus.MODIFIED,
 				responseId: res.responseId,
 				questions: {

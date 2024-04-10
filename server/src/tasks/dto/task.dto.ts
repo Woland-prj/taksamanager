@@ -23,6 +23,7 @@ export class GetTaskDto {
 	id: string
 	name: string
 	status: $Enums.TaskStatus
+	type: $Enums.TaskType
 	deadline: Date
 	executorId: string
 	executorName: string

@@ -41,6 +41,7 @@ model User {
 model Task {
   id             String         @id @default(uuid()) @db.Uuid
   name           String
+  type           TaskType
   status         TaskStatus
   createdAt      DateTime       @default(now())
   deadline       DateTime
@@ -91,6 +92,6 @@ enum TaskType {
   DESIGN
   PHOTO
   VIDEO
-  TEXT
   MONTAGE
+  POST
 }

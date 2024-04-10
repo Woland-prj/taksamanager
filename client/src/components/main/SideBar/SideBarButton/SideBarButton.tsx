@@ -1,16 +1,25 @@
 import Image from "next/image"
 import { FC } from "react"
+import styles from './SideBarButton.module.css'
 
 type TSideBarButtonProps = {
-    iconURL: string
+    iconName: string
     text: string
+    
+	action: () => Promise<void>
 }
 
-export const SideBarButton: FC<TSideBarButtonProps> = ({iconURL, text}) => {
+export const SideBarButton: FC<TSideBarButtonProps> = ({iconName, text, action}) => {
     return (
-        <div className="button">
-            <Image className="image" src={iconURL} alt=''/>
-            <div className="text">{text}</div>
+        <div className={styles.button} onClick={async () => await {action}}>
+            <Image
+                className={styles.image}
+                src={'/' + iconName}
+                alt=''
+                width='21'
+                height='20'
+            />
+            <div className={styles.text}>{text}</div>
         </div>
     )
 }

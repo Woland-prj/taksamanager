@@ -1,6 +1,5 @@
 import { createUser } from '@/functions/createUser'
-import { getTokensFromDb } from '@/functions/getTokensFromDb'
-import { saveAccessToken } from '@/functions/jwt'
+import { saveAccessToken, getTokensFromDb } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
 import { IForm, Status, TNewUser } from '@/types/login_and_register'
 import { Dispatch, FC, SetStateAction, useState } from 'react'

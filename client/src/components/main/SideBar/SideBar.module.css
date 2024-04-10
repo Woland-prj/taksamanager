@@ -3,5 +3,11 @@
     height: 1080px;
     gap: 0px;
 
-    background-color: rgba(128, 183, 155, 1);
+    background-color: #4CA97A;
+    color: #FFFFFF
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
 }

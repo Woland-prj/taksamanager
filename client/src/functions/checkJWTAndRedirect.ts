@@ -10,6 +10,7 @@ export const checkJWTAndRedirect = async (accessToken: string | null) => {
                 Authorization: 'Bearer ' + `${accessToken}`
             }
         })
+        console.log(response)
         // overwriteUser(response) // Сохранение юзера в редаксе
         // permanentRedirect('https://localhost:3000/dashboard')
     } else {

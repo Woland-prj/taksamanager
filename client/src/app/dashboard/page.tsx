@@ -21,9 +21,7 @@ export default function Dashboard() {
 		checkJWTAndRedirect(getAccessToken())
 	}, [])
 	return (
-		<div style={bodyStyle}> {/* Накостылял style
-		потому что по-другому отключение полосы прокрутки
-		не работает*/}
+		<div className={styles.container}>
 			<SideBar></SideBar>
 			<main className={styles.workingField}>
 				<header>
@@ -33,7 +31,7 @@ export default function Dashboard() {
 						buttonAction={createTaskAction}
 					/>
 				</header>
-				<TasksContainer />
+				<TasksContainer />	
 			</main>
 		</div>
 	)

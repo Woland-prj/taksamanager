@@ -1,4 +1,4 @@
-import { TagOption } from "../task/Tag.tsx/Tag";
+import { TagOption } from "../task/tag/Tag";
 
 export const firstTask = {
     taskText: 'Сфотографировать основные локации лицея',

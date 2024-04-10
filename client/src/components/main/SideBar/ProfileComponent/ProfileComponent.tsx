@@ -1,11 +1,25 @@
 import Image from "next/image"
-export const ProfileComponent = () => {
-    const imageSrc = '@/public/taksa.svg'
-    const username = ''
+import { FC } from "react"
+import styles from './ProfileComponent.module.css'
+type TProfileComponentProps = {
+    imageName: string
+    username: string
+	action: () => Promise<void>}
+export const ProfileComponent: FC<TProfileComponentProps> = ({
+    imageName,
+    username,
+    action
+}) => {
     return (
-        <div>
-            <Image src={imageSrc} alt='@/public/taksa.svg'/>
-            <h2>{username}</h2>
+        <div className={styles.profile}>
+            <Image
+                className={styles.image}
+                src={'/' + imageName}
+                alt='/taksa.png'
+                width='20'
+                height='20'
+            />
+            <h2 className={styles.username}>{username}</h2>
         </div>
     )
 }

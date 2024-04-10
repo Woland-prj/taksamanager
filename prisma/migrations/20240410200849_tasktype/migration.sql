@@ -8,7 +8,7 @@ CREATE TYPE "UserRole" AS ENUM ('ROOT', 'ADMIN', 'EXECUTOR', 'CLIENT', 'NOTDEFIN
 CREATE TYPE "TaskStatus" AS ENUM ('MODIFIED', 'CREATED', 'INWORK', 'COMPLETED', 'VERIFYCOMPLETED', 'REJECTED', 'REJECTEDBYLEAD', 'REJECTEDBYADMIN');
 
 -- CreateEnum
-CREATE TYPE "TaskType" AS ENUM ('DESIGN', 'PHOTO', 'VIDEO', 'TEXT');
+CREATE TYPE "TaskType" AS ENUM ('DESIGN', 'PHOTO', 'VIDEO', 'MONTAGE', 'POST');
 
 -- CreateTable
 CREATE TABLE "Team" (
@@ -44,11 +44,14 @@ CREATE TABLE "User" (
 CREATE TABLE "Task" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
+    "type" "TaskType" NOT NULL,
     "status" "TaskStatus" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deadline" TIMESTAMP(3) NOT NULL,
+    "responseId" TEXT NOT NULL,
     "executorId" UUID,
     "executorName" TEXT,
+    "formClientName" TEXT NOT NULL,
     "clientId" UUID,
     "clientName" TEXT,
 
@@ -96,10 +99,7 @@ CREATE UNIQUE INDEX "User_teamId_key" ON "User"("teamId");
 CREATE UNIQUE INDEX "User_id_username_key" ON "User"("id", "username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Task_clientId_clientName_key" ON "Task"("clientId", "clientName");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Task_executorId_executorName_key" ON "Task"("executorId", "executorName");
+CREATE UNIQUE INDEX "Task_responseId_key" ON "Task"("responseId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "QuestionTemplate_qid_key" ON "QuestionTemplate"("qid");

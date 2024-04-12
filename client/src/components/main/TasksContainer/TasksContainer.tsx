@@ -1,5 +1,4 @@
 'use client'
-import { firstTask } from './tests/minTest'
 import { TaskType, getTasks } from '@/functions/getTasks'
 import { getAccessToken, refreshJWT } from '@/functions/jwt'
 import { Status } from '@/types/login_and_register'
@@ -7,13 +6,17 @@ import { ITask } from '@/types/tasks'
 import { useEffect, useState } from 'react'
 import styles from './TasksContainer.module.css'
 import { Task } from './task/Task'
-import { TagOption } from './task/tag/Tag'
+import { redirectToPage } from '@/functions/redirectToPage'
+
 
 const TasksContainer = () => {
 	const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
 
   useEffect(() => {
-	refreshJWT()
+	try {refreshJWT()}
+	catch {
+		redirectToPage('http://localhost:3000/auth/login')
+	}
 	console.log('start')
     const getExecuted = async () => {
       const token = getAccessToken()
@@ -33,16 +36,14 @@ const TasksContainer = () => {
 	return (
 		<div>
 			<div className={styles.tasksContainer}>
-				{executedTasks?.map( task => { 
+				{executedTasks?.map(task => { 
 					return (
 						<Task 
 							key={task.id}
 							taskText={task.name}
 							deadlineDate={task.deadline}
-							status={task.status}
-							taskType={'DESIGN'}
-							// type = {task.type}
-
+							taskStatus={task.status}
+							taskType = {task.type}
 							executorId={task.executorId}
 							executorName={task.executorName}
 							clientId={task.clientId}

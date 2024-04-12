@@ -1,4 +1,4 @@
-import { TagOption } from "@/components/main/TasksContainer/task/tag/Tag";
+import { TagOption } from '@/types/tasks'
 import styles from '../components/main/TasksContainer/task/tag/Tag.module.css'
 
 type TTagParameters = {tagClassName: string, src: string, text: string}
@@ -53,18 +53,18 @@ export const TagOptionToTagParameters = (option: TagOption, date?: string): TTag
         }
         case TagOption.COMPLETED: return {
             tagClassName: styles.completedTag,
-            src: '/complete.png',
-            text: 'Выполнено',
+            src: 'verify_completed_tag',   // src: '/complete.png',
+            text: 'Выполнено, просмотрено' // text: 'Выполнено',
         }
         case TagOption.VERIFY_COMPLETED: return {
             tagClassName: styles.verifyCompletedTag,
             src: 'verify_completed_tag',
-            text: 'Выполнено'
+            text: 'Выполнено, просмотрено'
         }
         case TagOption.REJECTED: return {
             tagClassName: styles.rejectedTag,
-            src: '/rejected.png',
-            text: 'Отклонено',
+            src: '/rejected_by_admin.png',  // src: '/rejected.png',
+            text: 'Отклонено, просмотрено', // text: 'Отклонено',
         }
         case TagOption.REJECTED_BY_ADMIN: return {
             tagClassName: styles.rejectedByAdminTag,

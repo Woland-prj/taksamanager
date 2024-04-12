@@ -1,4 +1,5 @@
-import { TagOption } from "@/components/main/TasksContainer/task/tag/Tag";
+import { TagOption } from "@/types/tasks"
+
 
 export const stringToTagOption = (text: string): TagOption => {
     switch (text) {

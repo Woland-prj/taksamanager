@@ -64,7 +64,7 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 								setStatus(Status.CREATED)
 								redirectToPage('/dashboard')
 							} catch (status) {
-								if (status === Status.FORBIDDEN) setStatus(Status.FORBIDDEN)
+								if (status === Status.FORBIDDEN) {setStatus(Status.FORBIDDEN)}
 							}
 						} else {
 							setIsEmpty(true)

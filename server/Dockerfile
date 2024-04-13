@@ -1,13 +1,20 @@
 FROM node:21-alpine as build
 WORKDIR /opt/app
-ADD *.json ./
+ADD package*.json ./
 RUN npm install
 ADD . .
+COPY .env .
+RUN npx prisma generate
 RUN npm run build
 
-FROM node:20.1-alpine
+FROM node:21-alpine
 WORKDIR /opt/app
+COPY --from=build /opt/app/.env .env
+COPY --from=build /opt/app/service_account.json service_account.json
 COPY --from=build /opt/app/dist ./dist
-ADD *.json ./
+COPY --from=build /opt/app/prisma ./prisma
+ADD package*.json ./
 RUN npm ci --omit=dev
-CMD ["node", "dist/main"]
+EXPOSE 3200
+EXPOSE 5400
+CMD ["npm", "run", "start:migrate:prod"]

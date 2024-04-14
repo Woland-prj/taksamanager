@@ -13,6 +13,6 @@ COPY --from=build /opt/app/prisma ./prisma
 ADD package*.json ./
 ADD .env ./
 ADD service_account.json ./
-RUN npm ci --omit=dev
+RUN npm ci --only=production && npm cache clean --force 
 EXPOSE 3200
 CMD ["npm", "run", "start:migrate:prod"]

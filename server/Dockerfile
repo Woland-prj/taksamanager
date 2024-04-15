@@ -15,4 +15,4 @@ ADD .env ./
 ADD service_account.json ./
 RUN npm ci --only=production && npm cache clean --force 
 EXPOSE 3200
-CMD ["npm", "run", "start:migrate:prod"]
+CMD ["npm", "run", "start:docker:dev"]

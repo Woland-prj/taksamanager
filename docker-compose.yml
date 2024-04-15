@@ -7,33 +7,38 @@ services:
     env_file:
       - ./server/.env
     ports:
-      - 5432:5432
+      - '5432:5432'
     networks:
       - taksanet
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    restart: on-failure
-    ports:
-      - 5555:80
-    env_file:
-      - ./server/.env
-    networks:
-      - taksanet
+  prisma:
+    links:
+      - postgres
     depends_on:
       - postgres
+    container_name: prisma
+    ports:
+      - '5555:5555'
+    build:
+      context: server/prisma
+      dockerfile: Dockerfile
+    env_file:
+        - ./server/.env
+    networks:
+        - taksanet
+    volumes:
+      - /opt/app/prisma 
 
   server:
     container_name: server
     build:
-      dockerfile: ./Dockerfile
-      context: ./server
+      dockerfile: Dockerfile
+      context: server
     restart: on-failure
     ports:
-      - 3200:3200
+      - '3200:3200'
     env_file:
       - ./server/.env
     networks:

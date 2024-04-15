@@ -25,3 +25,26 @@ export class CreateUserResDto {
 	@ApiProperty()
 	email: string
 }
+
+export class GetUserResDto {
+	@ApiProperty()
+	id: string
+
+	@ApiProperty()
+	username: string
+
+	@ApiProperty()
+	email: string
+
+	@ApiProperty()
+	role: string
+
+	@ApiProperty()
+	isActivated: boolean
+
+	@ApiProperty()
+	tgUsername: string | null
+
+	@ApiProperty()
+	teamId: string | null
+}

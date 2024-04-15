@@ -41,6 +41,8 @@ services:
       - '3200:3200'
     env_file:
       - ./server/.env
+    environment:
+      API_HOST: postgres 
     networks:
       - taksanet
     depends_on:

@@ -11,6 +11,8 @@ import {
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
+	ApiForbiddenResponse,
+	ApiHeader,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
@@ -31,9 +33,25 @@ import {
 import { TasksService } from './tasks.service'
 
 @ApiTags('CRUD tasks operation (in development)')
+@ApiHeader({
+	name: 'Authorization',
+	description: 'Bearer <access_jwt>'
+})
 @Controller({ path: 'tasks', version: '1' })
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
+
+	@JwtAuth()
+	@Get()
+	@ApiOperation({
+		summary: 'Get all tasks by this user'
+	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
+	@ApiBearerAuth()
+	async getAll(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getAll(req.user)
+	}
 
 	@Patch('/templates')
 	@HttpCode(204)
@@ -58,6 +76,8 @@ export class TasksController {
 	@ApiOperation({
 		summary: 'Get all tasks executed by this user'
 	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
 	@ApiBearerAuth()
 	async getExecuted(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
 		return this.tasksService.getAllExecuted(req.user)
@@ -68,6 +88,8 @@ export class TasksController {
 	@ApiOperation({
 		summary: 'Get all tasks appointed by this user'
 	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
 	@ApiBearerAuth()
 	async getAppointed(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
 		return this.tasksService.getAllAppointed(req.user)

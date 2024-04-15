@@ -81,6 +81,39 @@ export class TasksService {
 		})
 	}
 
+	async getAll(user: IUser): Promise<GetTaskDto[]> {
+		return this.prismaService.task.findMany({
+			where: {
+				OR: [
+					{
+						executorId: user.id
+					},
+					{
+						clientId: user.id
+					}
+				]
+			},
+			select: {
+				id: true,
+				clientId: true,
+				executorId: true,
+				clientName: true,
+				executorName: true,
+				name: true,
+				deadline: true,
+				status: true,
+				type: true,
+				questions: {
+					select: {
+						id: true,
+						questionText: true,
+						answerText: true
+					}
+				}
+			}
+		})
+	}
+
 	async getById(id: string): Promise<GetTaskDto> {
 		return this.prismaService.task.findUnique({
 			where: {

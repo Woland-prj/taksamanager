@@ -42,17 +42,18 @@ export class UsersService {
 			createUserDto.email,
 			`${process.env.VALIDATION_URL_PREFIX}/${activationLinkId}`
 		)
-		const { id, username, email, ...other } =
-			await this.prismaService.user.create({
-				data: {
-					email: createUserDto.email,
-					password: hashedPass,
-					username: createUserDto.username,
-					role: UserRole.NOTDEFINED,
-					actLink: activationLinkId
-				}
-			})
-		return { id, username, email }
+		// const { id, username, email, ...other } =
+		// 	await this.prismaService.user.create({
+		// 		data: {
+		// 			email: createUserDto.email,
+		// 			password: hashedPass,
+		// 			username: createUserDto.username,
+		// 			role: UserRole.NOTDEFINED,
+		// 			actLink: activationLinkId
+		// 		}
+		// 	})
+		return { id: '1', username: '1', email: '1' }
+		// return { id, username, email }
 	}
 
 	findAll() {

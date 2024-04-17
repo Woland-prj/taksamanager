@@ -27,6 +27,7 @@ model User {
   email         String   @unique
   password      String   @db.VarChar(64)
   tgUsername    String?  @unique @db.VarChar(64)
+  tgChatId      Int?     @unique
   role          UserRole
   actLink       String   @unique @db.Uuid
   isActivated   Boolean  @default(false)

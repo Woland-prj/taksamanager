@@ -5,7 +5,7 @@ services:
     image: postgres
     restart: on-failure
     env_file:
-      - ./server/.env
+      - ./server/.env.prod
     ports:
       - '5432:5432'
     networks:
@@ -25,9 +25,11 @@ services:
       context: server/prisma
       dockerfile: Dockerfile
     env_file:
-        - ./server/.env
+      - ./server/.env.prod
+    environment:
+      API_HOST: postgres
     networks:
-        - taksanet
+      - taksanet
     volumes:
       - /opt/app/prisma 
 
@@ -40,7 +42,7 @@ services:
     ports:
       - '3200:3200'
     env_file:
-      - ./server/.env
+      - ./server/.env.prod
     environment:
       API_HOST: postgres 
     networks:

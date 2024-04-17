@@ -46,5 +46,8 @@ export class GetUserResDto {
 	tgUsername: string | null
 
 	@ApiProperty()
+	tgChatId: number | null
+
+	@ApiProperty()
 	teamId: string | null
 }

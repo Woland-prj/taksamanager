@@ -8,7 +8,11 @@ import { UserRole } from '@prisma/client'
 import { MailService } from 'src/mail/mail.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { v4 as uuidv4 } from 'uuid'
-import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
+import {
+	CreateUserReqDto,
+	CreateUserResDto,
+	GetUserResDto
+} from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
 
@@ -42,25 +46,25 @@ export class UsersService {
 			createUserDto.email,
 			`${process.env.VALIDATION_URL_PREFIX}/${activationLinkId}`
 		)
-		// const { id, username, email, ...other } =
-		// 	await this.prismaService.user.create({
-		// 		data: {
-		// 			email: createUserDto.email,
-		// 			password: hashedPass,
-		// 			username: createUserDto.username,
-		// 			role: UserRole.NOTDEFINED,
-		// 			actLink: activationLinkId
-		// 		}
-		// 	})
-		return { id: '1', username: '1', email: '1' }
-		// return { id, username, email }
+		const { id, username, email, ...other } =
+			await this.prismaService.user.create({
+				data: {
+					email: createUserDto.email,
+					password: hashedPass,
+					username: createUserDto.username,
+					role: UserRole.NOTDEFINED,
+					actLink: activationLinkId
+				}
+			})
+		// return { id: '1', username: '1', email: '1' }
+		return { id, username, email }
 	}
 
 	findAll() {
 		return `This action returns all users`
 	}
 
-	async findOne(id: string) {
+	async findOne(id: string): Promise<GetUserResDto> {
 		const user = await this.prismaService.user.findUnique({
 			where: {
 				id: id
@@ -71,8 +75,24 @@ export class UsersService {
 		return other
 	}
 
-	update(id: string, updateUserDto: UpdateUserDto) {
-		return `This action updates a #${id} user`
+	async update(
+		id: string,
+		updateUserDto: UpdateUserDto
+	): Promise<GetUserResDto> {
+		const regExp = /\@| |\$/g
+		updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
+		const updetedUser = await this.prismaService.user.update({
+			where: {
+				id: id
+			},
+			data: {
+				...updateUserDto
+			}
+		})
+		if (!updetedUser)
+			throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+		const { password, actLink, ...other } = updetedUser
+		return other
 	}
 
 	remove(id: string) {
@@ -83,6 +103,25 @@ export class UsersService {
 		return this.prismaService.user.findUnique({
 			where: {
 				email: email
+			}
+		})
+	}
+
+	findByTgUsername(tgUsername: string) {
+		return this.prismaService.user.findUnique({
+			where: {
+				tgUsername: tgUsername
+			}
+		})
+	}
+
+	setTgChatId(id: string, chatId: number) {
+		return this.prismaService.user.update({
+			where: {
+				id: id
+			},
+			data: {
+				tgChatId: chatId
 			}
 		})
 	}

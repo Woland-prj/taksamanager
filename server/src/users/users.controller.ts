@@ -29,6 +29,7 @@ import {
 import { UsersService } from './users.service'
 import { JwtAuth } from 'src/auth/decorators/auth.decorator'
 import { ValidatedRequest } from 'src/auth/types/request.types'
+import { UpdateUserDto } from './dto/update-user.dto'
 
 @ApiBearerAuth()
 @ApiTags('CRUD users operations')
@@ -92,6 +93,25 @@ export class UsersController {
 	@ApiBearerAuth()
 	getOne(@Req() req: ValidatedRequest) {
 		return this.usersService.findOne(req.user.id)
+	}
+
+	@Patch()
+	@JwtAuth()
+	@ApiOperation({ summary: 'Update user profile' })
+	@ApiOkResponse({ type: GetUserResDto })
+	@ApiNotFoundResponse({
+		description: 'Account not found'
+	})
+	@ApiBearerAuth()
+	@ApiHeader({
+		name: 'Authorization',
+		description: 'Bearer <access_jwt>'
+	})
+	async update(
+		@Req() req: ValidatedRequest,
+		@Body() updateUserDto: UpdateUserDto
+	) {
+		return this.usersService.update(req.user.id, updateUserDto)
 	}
 	//
 	// @Get(':id')

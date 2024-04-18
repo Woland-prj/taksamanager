@@ -5,6 +5,13 @@
     box-sizing: border-box;
 
     font-size: 18px;
+
+    width: 356px;
+    height: 33px;
+    padding: 5px 9px 5px 9px;
+    gap: 6px;
+    border-radius: 17px 0px 0px 0px;
+    border: 1px 0px 0px 0px;
 }
 .typeTag {
     height: 33px;
@@ -16,6 +23,10 @@
     opacity: 0.5px;
     
     color: #808080
+}
+
+.modifiedTag {
+    border: 1px solid #8A8D00
 }
 
 .freeTag {
@@ -31,15 +42,8 @@
 }
 
 .inworkTag {
-    height: 33px;
-    margin-right: 5px;
-    padding: 5px 9px 5px 9px;
-    gap: 6px;
-    border-radius: 17px;
-    border: 1px solid #52ADFF;
+    border: 1px solid #8A8D00
 
-    background-color: #DBEEFF;
-    color: #52ADFF
 }
 
 .expiredTag {

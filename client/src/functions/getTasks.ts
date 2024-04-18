@@ -12,9 +12,7 @@ export const getTasks = async (token: string | null, type: TaskType): Promise<IT
 			Authorization: 'Bearer ' + `${token}`
 		}
 	})
-	// if (response) console.log(response.status)
-	
-	if (response.ok){ console.log(response.json()); return await response.json()}
+	if (response.ok) return await response.json()
 	if (response.status === +Status.FORBIDDEN) throw Status.FORBIDDEN
 	else throw Status.NOTFOUND
 }

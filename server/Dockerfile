@@ -13,6 +13,6 @@ COPY --from=build /opt/app/prisma ./prisma
 ADD package*.json ./
 ADD .env ./
 ADD service_account.json ./
-RUN npm ci --only=production && npm cache clean --force 
+RUN npm install --omit=dev
 EXPOSE 3200
 CMD ["npm", "run", "start:docker:dev"]

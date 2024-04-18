@@ -8,7 +8,11 @@ import { UserRole } from '@prisma/client'
 import { MailService } from 'src/mail/mail.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { v4 as uuidv4 } from 'uuid'
-import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
+import {
+	CreateUserReqDto,
+	CreateUserResDto,
+	GetUserResDto
+} from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
 
@@ -52,6 +56,7 @@ export class UsersService {
 					actLink: activationLinkId
 				}
 			})
+		// return { id: '1', username: '1', email: '1' }
 		return { id, username, email }
 	}
 
@@ -59,16 +64,35 @@ export class UsersService {
 		return `This action returns all users`
 	}
 
-	findOne(id: string) {
-		return this.prismaService.user.findUnique({
+	async findOne(id: string): Promise<GetUserResDto> {
+		const user = await this.prismaService.user.findUnique({
 			where: {
 				id: id
 			}
 		})
+		const { password, actLink, ...other } = user
+		if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+		return other
 	}
 
-	update(id: string, updateUserDto: UpdateUserDto) {
-		return `This action updates a #${id} user`
+	async update(
+		id: string,
+		updateUserDto: UpdateUserDto
+	): Promise<GetUserResDto> {
+		const regExp = /\@| |\$/g
+		updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
+		const updetedUser = await this.prismaService.user.update({
+			where: {
+				id: id
+			},
+			data: {
+				...updateUserDto
+			}
+		})
+		if (!updetedUser)
+			throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+		const { password, actLink, ...other } = updetedUser
+		return other
 	}
 
 	remove(id: string) {
@@ -79,6 +103,25 @@ export class UsersService {
 		return this.prismaService.user.findUnique({
 			where: {
 				email: email
+			}
+		})
+	}
+
+	findByTgUsername(tgUsername: string) {
+		return this.prismaService.user.findUnique({
+			where: {
+				tgUsername: tgUsername
+			}
+		})
+	}
+
+	setTgChatId(id: string, chatId: number) {
+		return this.prismaService.user.update({
+			where: {
+				id: id
+			},
+			data: {
+				tgChatId: chatId
 			}
 		})
 	}

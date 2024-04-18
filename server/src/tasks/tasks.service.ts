@@ -1,10 +1,19 @@
-import { Injectable } from '@nestjs/common'
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common'
 import { TaskStatus, TaskType } from '@prisma/client'
 import { forms_v1 } from 'googleapis'
 import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { IUser } from 'src/users/entities/user.entity'
-import { GetTaskDto, SetExecutorDto } from './dto/task.dto'
+import {
+	GetTaskDto,
+	SetExecutorDto,
+	TaskAdminUpdateDto,
+	TaskExecutorUpdateDto
+} from './dto/task.dto'
 import {
 	DefaultFields,
 	DefaultTemplates,
@@ -50,6 +59,39 @@ export class TasksService {
 		return this.prismaService.task.findMany({
 			where: {
 				clientId: user.id
+			},
+			select: {
+				id: true,
+				clientId: true,
+				executorId: true,
+				clientName: true,
+				executorName: true,
+				name: true,
+				deadline: true,
+				status: true,
+				type: true,
+				questions: {
+					select: {
+						id: true,
+						questionText: true,
+						answerText: true
+					}
+				}
+			}
+		})
+	}
+
+	async getAll(user: IUser): Promise<GetTaskDto[]> {
+		return this.prismaService.task.findMany({
+			where: {
+				OR: [
+					{
+						executorId: user.id
+					},
+					{
+						clientId: user.id
+					}
+				]
 			},
 			select: {
 				id: true,
@@ -268,5 +310,50 @@ export class TasksService {
 
 		// If client authorized link task and his profile as client
 		await this.updateClient(res.respondentEmail, task.id)
+	}
+
+	async updateByAdmin(id: string, dto: TaskAdminUpdateDto) {
+		const task = await this.getById(id)
+		if (!task) throw new NotFoundException()
+		let query = {
+			where: {
+				id: id
+			},
+			data: {
+				status: dto.status as TaskStatus
+			}
+		}
+		if (dto.executorId) {
+			const suggestedExecutor = await this.prismaService.user.findUnique({
+				where: {
+					id: dto.executorId
+				}
+			})
+			if (!suggestedExecutor)
+				throw new BadRequestException('executor with this id is not exist')
+			query.data['executor'] = {
+				connect: {
+					id: dto.executorId
+				}
+			}
+		}
+		return this.prismaService.task.update(query)
+	}
+
+	async updateByExecutor(id: string, dto: TaskExecutorUpdateDto) {
+		const task = await this.prismaService.task.findFirst({
+			where: {
+				id: id
+			}
+		})
+		if (!task) throw new NotFoundException()
+		return this.prismaService.task.update({
+			where: {
+				id: id
+			},
+			data: {
+				status: dto.status as TaskStatus
+			}
+		})
 	}
 }

@@ -1,14 +1,56 @@
 version: '3'
 services:
   postgres:
+    container_name: postgres
     image: postgres
     restart: on-failure
     env_file:
-      - .env
+      - ./server/.env.prod
     ports:
-      - 5400:5432
+      - '5432:5432'
+    networks:
+      - taksanet
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  studio:
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    container_name: prisma_studio
+    ports:
+      - '5555:5555'
+    build:
+      context: server/prisma
+      dockerfile: Dockerfile
+    env_file:
+      - ./server/.env.prod
+    environment:
+      API_HOST: postgres
+    networks:
+      - taksanet
+    volumes:
+      - /opt/app/prisma 
+
+  server:
+    container_name: server
+    build:
+      dockerfile: Dockerfile
+      context: server
+    restart: on-failure
+    ports:
+      - '3200:3200'
+    env_file:
+      - ./server/.env.prod
+    environment:
+      API_HOST: postgres 
+    networks:
+      - taksanet
+    depends_on:
+      - postgres
+
+networks:
+  taksanet:
 volumes:
   postgres-data:

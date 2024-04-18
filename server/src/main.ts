@@ -5,8 +5,8 @@ import { config } from 'dotenv'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-	const envConfRes = config({ path: '../.env' })
-	if (envConfRes.error) throw envConfRes.error
+	// const envConfRes = config({ path: '.env' })
+	// if (envConfRes.error) throw envConfRes.error
 
 	const app = await NestFactory.create(AppModule)
 	app.setGlobalPrefix('/api')

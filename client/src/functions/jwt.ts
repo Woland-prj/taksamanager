@@ -18,7 +18,7 @@ export const refreshJWT = async () => {
 	if (response.ok) {
 		saveAccessToken(data)
 	}
-	throw Status.FORBIDDEN
+	else throw Status.FORBIDDEN
 }
 
 export const getTokensFromDb = async (user: TLoggingInUser): Promise<IJwt> => {

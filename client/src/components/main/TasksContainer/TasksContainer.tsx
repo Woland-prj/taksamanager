@@ -13,11 +13,6 @@ const TasksContainer = () => {
 	const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
 
   useEffect(() => {
-	try {refreshJWT()}
-	catch {
-		redirectToPage('http://localhost:3000/auth/login')
-	}
-	console.log('start')
     const getExecuted = async () => {
       const token = getAccessToken()
       console.log(token)
@@ -28,13 +23,21 @@ const TasksContainer = () => {
       } catch (status) {
         console.log(status)
         if (status == Status.FORBIDDEN) console.log('renew token')
+		else console.log('Something unforseen happened.')
       }
     }
 
-		getExecuted()
+	//renewQuestionTemplates()
+	try {refreshJWT()
+		console.log('refreshJWT()')}
+	catch {
+		redirectToPage('http://localhost:3000/auth/login')
+	}
+	console.log('check')
+	getExecuted()
 	}, [])
 	return (
-		<div>
+		<div className={styles.blockContainer}>
 			<div className={styles.tasksContainer}>
 				{executedTasks?.map(task => { 
 					return (

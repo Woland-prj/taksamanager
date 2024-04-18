@@ -42,8 +42,8 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang='ru'>
-			<body className={cn(euclidRegular.className, styles.body)}>
+		<html lang='ru' data-lt-installed='true'>
+			<body className={cn(euclidRegular.className, styles.body)} data-gr-ext-installed cz-shortcut-listen='true'>
 				<StoreProvider>
 					{children}
 				</StoreProvider>

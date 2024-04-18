@@ -7,22 +7,19 @@ import { SideBar } from '@/components/main/SideBar/SideBar'
 import { useEffect } from 'react'
 import { checkJWTAndRedirect } from '@/functions/checkJWTAndRedirect'
 import { getAccessToken } from '@/functions/jwt'
+import { redirectToPage } from '@/functions/redirectToPage'
 
 export default function Dashboard() {
 	const createTaskAction = async () => {
-		permanentRedirect('https://forms.gle/aevQapAyVCtDbPsSA')
+		redirectToPage('https://forms.gle/aevQapAyVCtDbPsSA')
 	}
 	const bodyStyle={
 		overflow: 'hidden',
 		display: 'flex',
 		
 	}
-	useEffect(() => {
-		checkJWTAndRedirect(getAccessToken())
-	}, [])
 	return (
 		<div className={styles.container}>
-			<SideBar></SideBar>
 			<main className={styles.workingField}>
 				<header>
 					<PageHeader
@@ -33,6 +30,7 @@ export default function Dashboard() {
 				</header>
 				<TasksContainer />	
 			</main>
+			<SideBar></SideBar>
 		</div>
 	)
 }

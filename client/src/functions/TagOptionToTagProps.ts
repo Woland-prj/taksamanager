@@ -10,7 +10,6 @@ export const TagOptionToTagParameters = (option: TagOption, date?: string): TTag
             src: '/post.png',
             text: 'Пост',
         }
-
         case TagOption.DESIGN: return{
             tagClassName: styles.typeTag,
             src: '/design.png',
@@ -34,12 +33,12 @@ export const TagOptionToTagParameters = (option: TagOption, date?: string): TTag
         case TagOption.MODIFIED: return {
             tagClassName: styles.modifiedTag,
             src: '/',
-            text: 'Модерируется',
+            text: 'Модерирование',
         }
         case TagOption.IN_WORK: return {
             tagClassName: styles.inworkTag,
             src: '/inwork.png',
-            text: 'В работе',
+            text: 'Рассмотрение',
         }
         case TagOption.EXPIRED: return {
             tagClassName: styles.expiredTag,

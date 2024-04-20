@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { checkJWTAndRedirect } from '@/functions/checkJWTAndRedirect'
 import { getAccessToken } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
+import Link from 'next/link'
 
 export default function Dashboard() {
 	const createTaskAction = async () => {
@@ -28,6 +29,7 @@ export default function Dashboard() {
 						buttonAction={createTaskAction}
 					/>
 				</header>
+				<Link href='/dashboard/2'> Переход по ссылке</Link>
 				<TasksContainer />	
 			</main>
 			<SideBar></SideBar>

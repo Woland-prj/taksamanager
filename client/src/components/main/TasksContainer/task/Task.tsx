@@ -34,10 +34,10 @@ export const Task: FC<TTaskProps> = ({
     const executorLink = executorId
     ? '/userpage/' + executorId
     : '/dashboard'
-    const taskLink = type == TagOption.
+    // const taskLink = type == TagOption.COMPLETED
     return (
         <div className={styles.task}>
-            <Link href={taskLink} className={styles.taskText}>{taskText}</Link>
+            {/* <Link href={taskLink} className={styles.taskText}>{taskText}</Link> */}
             <div className={styles.taskInfo}>
                 <div className={styles.info}>
                     {/* <Image></Image> */}

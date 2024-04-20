@@ -4,25 +4,54 @@ import {
 	Get,
 	HttpCode,
 	Param,
+	ParseUUIDPipe,
 	Patch,
 	Request
 } from '@nestjs/common'
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
+	ApiForbiddenResponse,
+	ApiHeader,
+	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { JwtAdminAuth, JwtAuth } from 'src/auth/decorators/auth.decorator'
+import {
+	JwtAdminAuth,
+	JwtAuth,
+	JwtExecutorAuth
+} from 'src/auth/decorators/auth.decorator'
 import { ValidatedRequest } from 'src/auth/types/request.types'
-import { GetTaskDto, SetExecutorDto } from './dto/task.dto'
+import {
+	GetTaskDto,
+	TaskAdminUpdateDto,
+	TaskExecutorUpdateDto
+} from './dto/task.dto'
 import { TasksService } from './tasks.service'
 
 @ApiTags('CRUD tasks operation (in development)')
+@ApiHeader({
+	name: 'Authorization',
+	description: 'Bearer <access_jwt>'
+})
 @Controller({ path: 'tasks', version: '1' })
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
+
+	@JwtAuth()
+	@Get()
+	@ApiOperation({
+		summary: 'Get all tasks by this user'
+	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
+	@ApiBearerAuth()
+	async getAll(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getAll(req.user)
+	}
 
 	@Patch('/templates')
 	@HttpCode(204)
@@ -47,6 +76,8 @@ export class TasksController {
 	@ApiOperation({
 		summary: 'Get all tasks executed by this user'
 	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
 	@ApiBearerAuth()
 	async getExecuted(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
 		return this.tasksService.getAllExecuted(req.user)
@@ -57,6 +88,8 @@ export class TasksController {
 	@ApiOperation({
 		summary: 'Get all tasks appointed by this user'
 	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
 	@ApiBearerAuth()
 	async getAppointed(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
 		return this.tasksService.getAllAppointed(req.user)
@@ -76,18 +109,53 @@ export class TasksController {
 	}
 
 	@ApiOperation({
-		summary: 'Set executor for task'
+		summary: 'Update task executor or status'
 	})
-	@JwtAdminAuth()
 	@ApiBearerAuth()
+	@ApiOkResponse({
+		description: 'Data updated successfuly'
+	})
 	@ApiBadRequestResponse({
-		description: 'Task with this id or user with this id is not found'
+		description:
+			'User with this id is not found or user id is not uuid or incorrect status value'
 	})
 	@ApiUnauthorizedResponse({
-		description: 'You should be a lead'
+		description: 'User should be an admin'
 	})
-	@Patch('/executor')
-	async setExecutor(@Body() setExecutorDto: SetExecutorDto) {
-		return this.tasksService.setExecutor(setExecutorDto)
+	@ApiNotFoundResponse({
+		description: 'Task with this uuid is not exist'
+	})
+	@JwtAdminAuth()
+	@Patch('/admin/:id')
+	async updateByAdmin(
+		@Body() taskAdminUpdateDto: TaskAdminUpdateDto,
+		@Param('id', new ParseUUIDPipe()) id: string
+	) {
+		return this.tasksService.updateByAdmin(id, taskAdminUpdateDto)
+	}
+
+	@ApiOperation({
+		summary: 'Update status'
+	})
+	@ApiBearerAuth()
+	@ApiOkResponse({
+		description: 'Data updated successfuly'
+	})
+	@ApiBadRequestResponse({
+		description: 'Incorrect status value'
+	})
+	@ApiUnauthorizedResponse({
+		description: 'User should be an executor or admin'
+	})
+	@ApiNotFoundResponse({
+		description: 'Task with this uuid is not exist'
+	})
+	@JwtExecutorAuth()
+	@Patch('/executor/:id')
+	async updateByExecutor(
+		@Body() taskExecutorUpdateDto: TaskExecutorUpdateDto,
+		@Param('id', new ParseUUIDPipe()) id: string
+	) {
+		return this.tasksService.updateByExecutor(id, taskExecutorUpdateDto)
 	}
 }

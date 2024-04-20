@@ -1,17 +1,35 @@
-import { Body, Controller, HttpCode, Param, Patch, Post } from '@nestjs/common'
+import {
+	Body,
+	Controller,
+	Get,
+	HttpCode,
+	Param,
+	Patch,
+	Post,
+	Req
+} from '@nestjs/common'
 import {
 	ApiBearerAuth,
 	ApiBody,
 	ApiCreatedResponse,
 	ApiForbiddenResponse,
+	ApiHeader,
 	ApiNoContentResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiResponse,
 	ApiTags
 } from '@nestjs/swagger'
-import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto'
+import {
+	CreateUserReqDto,
+	CreateUserResDto,
+	GetUserResDto
+} from './dto/create-user.dto'
 import { UsersService } from './users.service'
+import { JwtAuth } from 'src/auth/decorators/auth.decorator'
+import { ValidatedRequest } from 'src/auth/types/request.types'
+import { UpdateUserDto } from './dto/update-user.dto'
 
 @ApiBearerAuth()
 @ApiTags('CRUD users operations')
@@ -58,10 +76,43 @@ export class UsersController {
 		return this.usersService.validateEmail(linkUuid)
 	}
 
-	// @Get()
-	// findAll() {
-	// 	return this.usersService.findAll()
-	// }
+	@JwtAuth()
+	@Get()
+	@ApiOperation({ summary: 'Get user profile from db with JwtToken' })
+	@ApiOkResponse({ type: GetUserResDto })
+	@ApiNotFoundResponse({
+		description: 'Account not found.'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden.'
+	})
+	@ApiHeader({
+		name: 'Authorization',
+		description: 'Bearer <access_jwt>'
+	})
+	@ApiBearerAuth()
+	getOne(@Req() req: ValidatedRequest) {
+		return this.usersService.findOne(req.user.id)
+	}
+
+	@Patch()
+	@JwtAuth()
+	@ApiOperation({ summary: 'Update user profile' })
+	@ApiOkResponse({ type: GetUserResDto })
+	@ApiNotFoundResponse({
+		description: 'Account not found'
+	})
+	@ApiBearerAuth()
+	@ApiHeader({
+		name: 'Authorization',
+		description: 'Bearer <access_jwt>'
+	})
+	async update(
+		@Req() req: ValidatedRequest,
+		@Body() updateUserDto: UpdateUserDto
+	) {
+		return this.usersService.update(req.user.id, updateUserDto)
+	}
 	//
 	// @Get(':id')
 	// findOne(@Param('id') id: string) {

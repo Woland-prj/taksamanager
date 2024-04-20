@@ -14,10 +14,14 @@ import { PrismaModule } from './prisma/prisma.module'
 import { TasksModule } from './tasks/tasks.module'
 import { TasksService } from './tasks/tasks.service'
 import { UsersModule } from './users/users.module'
+import { TelegrafModule } from 'nestjs-telegraf'
+import { BotModule } from './tgbot/bot.module'
+import { BotUpdate } from './tgbot/bot.service'
 
 @Module({
 	imports: [
 		ConfigModule.forRoot(),
+		BotModule,
 		UsersModule,
 		PrismaModule,
 		AuthModule,
@@ -33,7 +37,8 @@ import { UsersModule } from './users/users.module'
 		JwtService,
 		MailService,
 		FormsService,
-		TasksService
+		TasksService,
+		BotUpdate
 	],
 	controllers: [AppController]
 })

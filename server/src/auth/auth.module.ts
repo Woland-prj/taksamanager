@@ -13,6 +13,7 @@ import { JwtAdminAccessStrategy } from './strategys/jwt-admin-access.strategy'
 import { JwtRefreshStrategy } from './strategys/jwt-refresh.strategy'
 import { LocalStrategy } from './strategys/local.strategy'
 import { TokenService } from './token.service'
+import { JwtExecutorAccessStrategy } from './strategys/jwt-executor-access.strategy'
 
 @Module({
 	imports: [UsersModule, PassportModule, JwtModule, MailModule, ConfigModule],
@@ -24,7 +25,8 @@ import { TokenService } from './token.service'
 		MailService,
 		LocalStrategy,
 		JwtAccessStrategy,
-    JwtAdminAccessStrategy,
+		JwtAdminAccessStrategy,
+		JwtExecutorAccessStrategy,
 		JwtRefreshStrategy
 	],
 	exports: [AuthService, TokenService]

@@ -1,6 +1,6 @@
 export const enum TaskStatus {
 	MODIFIED = 'MODIFIED',
-	CREATED = 'CREATED',
+	WAITCONSENT = 'WAITCONSENT',
 	INWORK = 'INWORK',
 	COMPLETED = 'COMPLETED',
 	VERIFYCOMPLETED = 'VERIFYCOMPLETED',
@@ -15,6 +15,7 @@ export const enum TaskType {
     VIDEO = 'VIDEO',
     MONTAGE = 'MONTAGE',
     PHOTO = 'PHOTO',
+	ANIMATION = 'ANIMATION'
 }
 
 export interface ITask {
@@ -42,9 +43,10 @@ export const enum TagOption {
     VIDEO = 'VIDEO',
     MONTAGE = 'MONTAGE',
     PHOTO = 'PHOTO',
+	ANIMATION = 'ANIMATION',
 
 	MODIFIED = 'MODIFIED', // В процессе модерации
-	CREATED = 'CREATED',   // Задача ожидает подтверждения исполнителя
+	WAIT_CONSENT = 'WAIT_CONSENT',   // Задача ожидает подтверждения исполнителя
 	IN_WORK = 'INWORK',
 	COMPLETED = 'COMPLETED',
 	VERIFY_COMPLETED = 'VERIFYCOMPLETED',
@@ -52,6 +54,5 @@ export const enum TagOption {
 	REJECTED_BY_ADMIN = 'REJECTEDBYADMIN',
 	EXPIRED = 'EXPIRED',
 
-    DEADLINE = 'DEADLINE',
     UNDEFINED = 'UNDEFINED',
 }

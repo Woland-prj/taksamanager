@@ -1,24 +1,25 @@
 'use client'
 import { PageHeader } from '@/components/main/PageHeader/PageHeader'
 import TasksContainer from '@/components/main/TasksContainer/TasksContainer'
-import { permanentRedirect } from 'next/navigation'
 import styles from './page.module.css'
 import { SideBar } from '@/components/main/SideBar/SideBar'
-import { useEffect } from 'react'
-import { checkJWTAndRedirect } from '@/functions/checkJWTAndRedirect'
-import { getAccessToken } from '@/functions/jwt'
+import { useEffect, useLayoutEffect } from 'react'
+import { refreshJWT } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
-import Link from 'next/link'
 
 export default function Dashboard() {
 	const createTaskAction = async () => {
 		redirectToPage('https://forms.gle/aevQapAyVCtDbPsSA')
 	}
-	const bodyStyle={
-		overflow: 'hidden',
-		display: 'flex',
-		
-	}
+	useEffect(() => {
+		try {
+			refreshJWT()
+			console.log('refreshJWT()')
+		}
+		catch {
+			redirectToPage('auth/login')
+		}
+	})
 	return (
 		<div className={styles.container}>
 			<main className={styles.workingField}>
@@ -29,7 +30,6 @@ export default function Dashboard() {
 						buttonAction={createTaskAction}
 					/>
 				</header>
-				<Link href='/dashboard/2'> Переход по ссылке</Link>
 				<TasksContainer />	
 			</main>
 			<SideBar></SideBar>

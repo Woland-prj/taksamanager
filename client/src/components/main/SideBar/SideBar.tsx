@@ -11,17 +11,15 @@ export const SideBar = () => {
                 imageName='taksa.png'
                 action={() => {return new Promise(() => {})}}
             />
-            <div className={styles.buttons}>
-                <SideBarButton
-                    iconName='dashboard.png'
-                    text='Доска задач'
-                    action={() => {return new Promise(() => {})}}
-                />
-                <SideBarButton
-                    iconName='team.png'
-                    text='Команда'
-                    action={() => {return new Promise(() => {})}}
-                />
-            </div>
+            <SideBarButton
+                iconName='dashboard.png'
+                text='Доска задач'
+                action={() => {return new Promise(() => {})}}
+            />
+            <SideBarButton
+                iconName='team.png'
+                text='Команда'
+                action={() => {return new Promise(() => {})}}
+            />
         </div>)
 }

@@ -6,14 +6,14 @@
 
     font-size: 18px;
 
-    width: 356px;
     height: 33px;
-    padding: 5px 9px 5px 9px;
+    padding: 5px 9px;
     gap: 6px;
-    border-radius: 17px 0px 0px 0px;
-    border: 1px 0px 0px 0px;
+    border-radius: 17px;
+    border: 1px;
 }
-.typeTag {
+
+.greyTag {
     height: 33px;
     margin-left: 5px;
     padding: 5px 9px 5px 9px;
@@ -25,59 +25,26 @@
     color: #808080
 }
 
-.modifiedTag {
+.yellowTag {
+    background: #FEFFD2;
+    color: #8A8D00;
     border: 1px solid #8A8D00
 }
 
-.freeTag {
-    height: 33px;
-    margin-right: 5px;
-    padding: 5px 9px 5px 9px;
-    gap: 6px;
-    border-radius: 17px;
-    border: 1px solid rgba(138, 141, 0, 1);
-
-    background-color: rgba(254, 255, 210, 1);
-    color: rgba(138, 141, 0, 1);
+.blueTag {
+    background: #DBEEFF;
+    color: #52ADFF;
+    border: 1px solid #52ADFF
 }
 
-.inworkTag {
-    border: 1px solid #8A8D00
-
-}
-
-.expiredTag {
-    height: 33px;
-    margin-right: 5px;
-    padding: 5px 9px 5px 9px;
-    gap: 6px;
-    border-radius: 17px;
-    border: 1px solid #FF5B5B;
-
-    color: #FF5B5B;
-    background-color: #FFC5C5;
-}
-
-.completedTag {
-    height: 33px;
-    margin-right: 5px;
-    padding: 5px 9px 5px 9px;
-    gap: 6px;
-    border-radius: 17px;
-    border: 1px solid #338D5F;
-
-    background-color: #C8FFE3;
+.greenTag {
+    background: #C8FFE3;
     color: #338D5F;
+    border: 1px solid #338D5F
 }
 
-.deadlineTag {
-    height: 33px;
-    margin-bottom: 5px;
-    padding: 5px 9px 5px 9px;
-    gap: 6px;
-    border-radius: 17px;
-    border: 1px solid #9C9C9C;
-
-    color: #000000;
-    background-color: #EAEAEA;
+.redTag {
+    background: #FFC5C5;
+    color: #FF5B5B;
+    border: 1px solid #FF5B5B
 }

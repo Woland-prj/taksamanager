@@ -2,7 +2,6 @@
     width: 330px;
     height: 100vh;
     gap: 0px;
-    flex-grow: 1;
     background-color: #4CA97A;
     color: #FFFFFF
 }

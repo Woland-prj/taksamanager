@@ -4,6 +4,8 @@ import styles from './Task.module.css'
 import { stringToTagOption } from "@/functions/stringToTagOption";
 import { TagOption } from "@/types/tasks";
 import Link from "next/link";
+import Image from "next/image";
+import cn from 'clsx'
 type TTaskProps = {
     taskId: string
     taskText: string
@@ -34,13 +36,14 @@ export const Task: FC<TTaskProps> = ({
     const executorLink = executorId
     ? '/userpage/' + executorId
     : '/dashboard'
-    // const taskLink = type == TagOption.COMPLETED
     return (
         <div className={styles.task}>
-            {/* <Link href={taskLink} className={styles.taskText}>{taskText}</Link> */}
+            <Link href={taskId} className={styles.link}>
+                <span className={styles.taskText}>{taskText}</span>
+            </Link>
             <div className={styles.taskInfo}>
                 <div className={styles.info}>
-                    {/* <Image></Image> */}
+                    <Image src='/person.svg' width='21' height='21' alt=''></Image>
                     <span>
                         Исполнитель {textAddition}
                         <Link
@@ -52,11 +55,11 @@ export const Task: FC<TTaskProps> = ({
                     </span>
                 </div>
                 <div className={styles.info}>
-                    {/* <Image></Image> */}
+                    <Image src='/calendar.svg' width='21' height='21' alt=''></Image>
                     <span>Выполнить до {deadline}</span>
                 </div>
                 <div className={styles.tags}>
-                    <Tag className={styles.state_tag} option={status}></Tag>
+                    <Tag className={styles.stateLayout} option={status}></Tag>
                     <Tag option={type}></Tag>
                 </div>
             </div>

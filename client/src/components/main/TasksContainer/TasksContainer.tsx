@@ -14,27 +14,30 @@ const TasksContainer = () => {
 
   useEffect(() => {
     const getExecuted = async () => {
-      const token = getAccessToken()
-      console.log(token)
-      try {
-        const tasksDb = await getTasks(token, TaskType.EXECUTED)
-        console.log(tasksDb)
-        setExecutedTasks(tasksDb)
-      } catch (status) {
-        console.log(status)
-        if (status == Status.FORBIDDEN) console.log('renew token')
-		else console.log('Something unforseen happened.')
-      }
-    }
+		try {
+		const token = getAccessToken()
+		console.log(token)
+		const tasksDb = await getTasks(token, TaskType.EXECUTED)
+		console.log(tasksDb)
+		setExecutedTasks(tasksDb)
+		}
+		catch (status) {
+			console.log('renew token') 
+			redirectToPage('http://localhost:3000/auth/login')
+		}
+    } 
 
-	//renewQuestionTemplates()
-	try {refreshJWT()
-		console.log('refreshJWT()')}
-	catch {
-		redirectToPage('http://localhost:3000/auth/login')
+	try {
+		getExecuted()
 	}
-	console.log('check')
-	getExecuted()
+	catch (status) {
+		console.log(status)
+		if (status == Status.FORBIDDEN) {
+			console.log('renew token') 
+			redirectToPage('http://localhost:3000/auth/login')
+		}
+		else console.log('Something unforseen happened.')
+		}
 	}, [])
 	return (
 		<div className={styles.blockContainer}>
@@ -43,6 +46,7 @@ const TasksContainer = () => {
 					return (
 						<Task 
 							key={task.id}
+							taskId={task.id}
 							taskText={task.name}
 							deadlineDate={task.deadline}
 							taskStatus={task.status}
@@ -51,7 +55,8 @@ const TasksContainer = () => {
 							executorName={task.executorName}
 							clientId={task.clientId}
 							clientName={task.clientName}
-						/>)
+						/>
+					)
 				})}
 			</div>
 		</div>

@@ -14,8 +14,8 @@ export const refreshJWT = async () => {
 	const response = await fetch('http://localhost:3000/api/v1/auth/refresh', {
 		method: 'GET'
 	})
-	const data: IJwt = await response.json() as IJwt
 	if (response.ok) {
+		const data: IJwt = await response.json() as IJwt
 		saveAccessToken(data)
 	}
 	else throw Status.FORBIDDEN

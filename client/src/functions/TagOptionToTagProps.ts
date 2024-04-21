@@ -6,79 +6,81 @@ type TTagParameters = {tagClassName: string, src: string, text: string}
 export const TagOptionToTagParameters = (option: TagOption, date?: string): TTagParameters => {
     switch (option){
         case TagOption.POST: return {
-            tagClassName: styles.typeTag,
-            src: '/post.png',
+            tagClassName: styles.greyTag,
+            src: '/post.svg',
             text: 'Пост',
         }
         case TagOption.DESIGN: return{
-            tagClassName: styles.typeTag,
-            src: '/design.png',
+            tagClassName: styles.greyTag,
+            src: '/design.svg',
             text: 'Дизайн',
         }
         case TagOption.VIDEO: return{
-            tagClassName: styles.typeTag,
-            src: '/video.png',
+            tagClassName: styles.greyTag,
+            src: '/video.svg',
             text: 'Видео',
         }
         case TagOption.MONTAGE: return {
-            tagClassName: styles.typeTag,
-            src: '/montage.png',
+            tagClassName: styles.greyTag,
+            src: '/montage.svg',
             text: 'Монтаж',
         }
         case TagOption.PHOTO: return {
-            tagClassName: styles.typeTag,
-            src: '/photo.png',
+            tagClassName: styles.greyTag,
+            src: '/photo.svg',
             text: 'Фото',
         }
+        case TagOption.ANIMATION: return {
+            tagClassName: styles.greyTag,
+            src: '/animation.svg',
+            text: 'Анимация',
+        }
+        case TagOption.WAIT_CONSENT: return {
+            tagClassName: styles.yellowTag,
+            src: '/wait_consent.svg',
+            text: 'Ожидает подтверждения',
+        }
         case TagOption.MODIFIED: return {
-            tagClassName: styles.modifiedTag,
-            src: '/',
+            tagClassName: styles.yellowTag,
+            src: '/modified.svg',
             text: 'Модерирование',
         }
         case TagOption.IN_WORK: return {
-            tagClassName: styles.inworkTag,
-            src: '/inwork.png',
-            text: 'Рассмотрение',
+            tagClassName: styles.blueTag,
+            src: '/in_work.svg',
+            text: 'В работе',
         }
         case TagOption.EXPIRED: return {
-            tagClassName: styles.expiredTag,
-            src: '/expired.png',
+            tagClassName: styles.redTag,
+            src: '/expired.svg',
             text: 'Просрочено',
         }
-        case TagOption.CREATED: return {
-            tagClassName: styles.createdTag,
-            src: '/created.png',
-            text: 'Ожидает подтверждения исполнителя',
-        }
         case TagOption.COMPLETED: return {
-            tagClassName: styles.completedTag,
-            src: 'verify_completed_tag',   // src: '/complete.png',
-            text: 'Выполнено, просмотрено' // text: 'Выполнено',
+            tagClassName: styles.greenTag,
+            src: '/completed.svg',
+            text: 'Выполнено',
         }
         case TagOption.VERIFY_COMPLETED: return {
-            tagClassName: styles.verifyCompletedTag,
-            src: 'verify_completed_tag',
+            tagClassName: styles.greenTag,
+            src: '/verify_completed_tag.svg',
             text: 'Выполнено, просмотрено'
         }
         case TagOption.REJECTED: return {
-            tagClassName: styles.rejectedTag,
-            src: '/rejected_by_admin.png',  // src: '/rejected.png',
-            text: 'Отклонено, просмотрено', // text: 'Отклонено',
+            tagClassName: styles.redTag,
+            src: '/rejected.svg',
+            text: 'Отклонено',
         }
         case TagOption.REJECTED_BY_ADMIN: return {
-            tagClassName: styles.rejectedByAdminTag,
-            src: '/rejected_by_admin.png',
+            tagClassName: styles.redTag,
+            src: '/rejected_by_admin.svg',
             text: 'Отклонено, просмотрено',
-        }
-        case TagOption.DEADLINE: return {
-            tagClassName: styles.deadlineTag,
-            src: '/deadline.png',
-            text: 'Выполнить до ' + date,
         }
         default: return {
             tagClassName: 'Класс необрабатываемого тэга',
-            src: '-',
+            src: '/-',
             text: '-',
         }
     }
 }
+
+// Стили - redTag, greyTag, greenTag, blueTag

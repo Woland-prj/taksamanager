@@ -5,11 +5,13 @@
     scrollbar-width: thin;
     scrollbar-color: hsl(0 0% 50%);
 
-    max-height: 960px;
-    flex-grow: 1;
+    max-height: 85vh;
     padding: 40px 75px 40px 75px;
+    box-sizing: border-box;
 
     display: flex;
-    gap: 36px;
-    opacity: 1;
+    flex-wrap: wrap;
+    flex-direction: row;
+    flex-grow: 1;
+    gap: 1.622rem 
 }

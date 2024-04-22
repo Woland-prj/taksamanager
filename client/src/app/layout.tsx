@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import '../styles/globals.css'
 import cn from 'clsx'
 import styles from './layout.module.css'
+import StoreProvider from './StoreProvider'
 
 const euclidRegular = localFont({
 	src: [{
@@ -41,8 +42,12 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang='ru'>
-			<body className={cn(euclidRegular.className, styles.body)}>{children}</body>
+		<html lang='ru' data-lt-installed='true'>
+			<body className={cn(euclidRegular.className, styles.body)} data-gr-ext-installed cz-shortcut-listen='true'>
+				<StoreProvider>
+					{children}
+				</StoreProvider>
+			</body>
 		</html>
 	)
 }

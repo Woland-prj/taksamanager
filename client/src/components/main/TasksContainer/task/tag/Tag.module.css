@@ -1,0 +1,50 @@
+.layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+
+    font-size: 18px;
+
+    height: 33px;
+    padding: 5px 9px;
+    gap: 6px;
+    border-radius: 17px;
+    border: 1px;
+}
+
+.greyTag {
+    height: 33px;
+    margin-left: 5px;
+    padding: 5px 9px 5px 9px;
+    gap: 6px;
+    border-radius: 17px;
+    border: 1px solid rgba(80, 80, 80, 1);
+    opacity: 0.5px;
+    
+    color: #808080
+}
+
+.yellowTag {
+    background: #FEFFD2;
+    color: #8A8D00;
+    border: 1px solid #8A8D00
+}
+
+.blueTag {
+    background: #DBEEFF;
+    color: #52ADFF;
+    border: 1px solid #52ADFF
+}
+
+.greenTag {
+    background: #C8FFE3;
+    color: #338D5F;
+    border: 1px solid #338D5F
+}
+
+.redTag {
+    background: #FFC5C5;
+    color: #FF5B5B;
+    border: 1px solid #FF5B5B
+}

@@ -1,24 +1,27 @@
+'use client'
 import { PageHeader } from '@/components/main/PageHeader/PageHeader'
 import TasksContainer from '@/components/main/TasksContainer/TasksContainer'
-import { permanentRedirect } from 'next/navigation'
 import styles from './page.module.css'
 import { SideBar } from '@/components/main/SideBar/SideBar'
+import { useEffect, useLayoutEffect } from 'react'
+import { refreshJWT } from '@/functions/jwt'
+import { redirectToPage } from '@/functions/redirectToPage'
 
 export default function Dashboard() {
 	const createTaskAction = async () => {
-		'use server'
-		permanentRedirect('https://forms.gle/aevQapAyVCtDbPsSA')
+		redirectToPage('https://forms.gle/aevQapAyVCtDbPsSA')
 	}
-	const bodyStyle={
-		overflow: 'hidden',
-		display: 'flex',
-		
-	}
+	useEffect(() => {
+		try {
+			refreshJWT()
+			console.log('refreshJWT()')
+		}
+		catch {
+			redirectToPage('auth/login')
+		}
+	})
 	return (
-		<div style={bodyStyle}> {/* Накостылял style
-		потому что по-другому отключение полосы прокрутки
-		не работает*/}
-			<SideBar></SideBar>
+		<div className={styles.container}>
 			<main className={styles.workingField}>
 				<header>
 					<PageHeader
@@ -27,8 +30,9 @@ export default function Dashboard() {
 						buttonAction={createTaskAction}
 					/>
 				</header>
-				<TasksContainer />
+				<TasksContainer />	
 			</main>
+			<SideBar></SideBar>
 		</div>
 	)
 }

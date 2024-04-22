@@ -1,7 +1,12 @@
 .sideBar {
     width: 330px;
-    height: 1080px;
+    height: 100vh;
     gap: 0px;
+    background-color: #4CA97A;
+    color: #FFFFFF
+}
 
-    background-color: rgba(128, 183, 155, 1);
+.buttons {
+    display: flex;
+    flex-direction: column;
 }

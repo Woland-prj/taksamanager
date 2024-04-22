@@ -1,7 +1,8 @@
-import { MainPageComponent } from "@/components/main/MainPageComponent"
+// import { MainPageComponent } from "@/components/main/MainPageComponent"
 export default function MainPage() {
-    return (
-        <MainPageComponent />
-    )
+  return (
+    // <MainPageComponent />
+    <div>deprecated</div>
+  )
 
 }

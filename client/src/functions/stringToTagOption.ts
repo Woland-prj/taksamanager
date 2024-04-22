@@ -1,5 +1,4 @@
 import { TagOption } from "@/types/tasks"
-import { TaskStatus } from "@prisma/client"
 
 export const stringToTagOption = (text: string): TagOption => {
     switch (text) {

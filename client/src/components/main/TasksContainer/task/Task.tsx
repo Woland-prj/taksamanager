@@ -38,7 +38,7 @@ export const Task: FC<TTaskProps> = ({
     : '/dashboard'
     return (
         <div className={styles.task}>
-            <Link href={taskId} className={styles.link}>
+            <Link href={'dashboard/' + taskId} className={styles.link}>
                 <span className={styles.taskText}>{taskText}</span>
             </Link>
             <div className={styles.taskInfo}>

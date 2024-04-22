@@ -1,16 +1,15 @@
 import { createUser } from '@/functions/createUser'
 import { saveAccessToken, getTokensFromDb } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
-import { IForm, Status, TNewUser } from '@/types/login_and_register'
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { IForm, Status} from '@/types/login_and_register'
+import { useState } from 'react'
 import ErrorBlock from '../error/Error'
 import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
 
-type TRegisterFormProps = { setUser: Dispatch<SetStateAction<TNewUser>> }
 
-export const RegisterForm: FC<TRegisterFormProps> = ({ setUser }) => {
+export const RegisterForm = () => {
 	const [formData, setFormData] = useState<IForm>({
 		email: '',
 		password: '',

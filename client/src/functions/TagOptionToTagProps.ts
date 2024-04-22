@@ -38,7 +38,7 @@ export const TagOptionToTagParameters = (option: TagOption, date?: string): TTag
         case TagOption.WAIT_CONSENT: return {
             tagClassName: styles.yellowTag,
             src: '/wait_consent.svg',
-            text: 'Ожидает подтверждения',
+            text: 'Назначение',
         }
         case TagOption.MODIFIED: return {
             tagClassName: styles.yellowTag,

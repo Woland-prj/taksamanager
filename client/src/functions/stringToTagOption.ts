@@ -1,23 +1,21 @@
-import { TagOption } from "@/types/tasks"
-import { TaskStatus } from "@prisma/client"
-
+import { TagOption, TaskStatus, TaskType } from "@/types/tasks"
 export const stringToTagOption = (text: string): TagOption => {
     switch (text) {
-        case 'MODIFIED': return TagOption.MODIFIED
-        case 'WAITCONSENT': return TagOption.WAIT_CONSENT
-        case 'INWORK': return TagOption.IN_WORK
-        case 'COMPLETED': return TagOption.COMPLETED
-        case 'VERIFYCOMPLETED': return TagOption.VERIFY_COMPLETED
-        case 'REJECTED': return TagOption.REJECTED
-        case 'REJECTEDBYADMIN': return TagOption.REJECTED_BY_ADMIN
-        case 'EXPIRED': return TagOption.EXPIRED
+        case TaskStatus.MODIFIED: return TagOption.MODIFIED
+        case TaskStatus.WAITCONSENT: return TagOption.WAIT_CONSENT
+        case TaskStatus.INWORK: return TagOption.IN_WORK
+        case TaskStatus.COMPLETED: return TagOption.COMPLETED
+        case TaskStatus.VERIFYCOMPLETED: return TagOption.VERIFY_COMPLETED
+        case TaskStatus.REJECTED: return TagOption.REJECTED
+        case TaskStatus.REJECTEDBYLEAD: return TagOption.REJECTED_BY_ADMIN
+        case TaskStatus.EXPIRED: return TagOption.EXPIRED
 
-        case 'PHOTO': return TagOption.PHOTO
-        case 'MONTAGE': return TagOption.MONTAGE
-        case 'VIDEO': return TagOption.VIDEO
-        case 'DESIGN': return TagOption.DESIGN
-        case 'POST': return TagOption.POST
-        case 'ANIMATION': return TagOption.ANIMATION
+        case TaskType.PHOTO: return TagOption.PHOTO
+        case TaskType.MONTAGE: return TagOption.MONTAGE
+        case TaskType.VIDEO: return TagOption.VIDEO
+        case TaskType.DESIGN: return TagOption.DESIGN
+        case TaskType.POST: return TagOption.POST
+        case TaskType.ANIMATION: return TagOption.ANIMATION
 
         default: return TagOption.UNDEFINED
     }

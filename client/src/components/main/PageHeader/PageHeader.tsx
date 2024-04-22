@@ -6,8 +6,8 @@ import Button from '@/components/ui/Button/Button'
 import localFont from 'next/font/local'
 import cn from 'clsx'
 interface IPageHeader {
-	sectionTitle: string
-	buttonText: string
+	sectionTitle?: string
+	buttonText?: string
 	buttonAction: () => Promise<void>
 }
 
@@ -24,14 +24,16 @@ export const PageHeader: FC<IPageHeader> = ({
 	buttonText,
 	buttonAction
 }) => {
+	const title = !sectionTitle ? 'Безымянная задача' : sectionTitle
+	const definedButtonText = !buttonText ? 'Неизвестно' : buttonText
 	return (
 		<div className={styles.header}>
-			<h1 className={styles.section_name}>{sectionTitle}</h1>
+			<h1 className={styles.section_name}>{title}</h1>
 			<Button
 				className={buttonClassName}
 				fgColor={'#FFFFFF'}
 				bgColor={'#545454'}
-				text={buttonText}
+				text={definedButtonText}
 				action={async () => {
 					await buttonAction()
 				}}

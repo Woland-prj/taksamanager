@@ -11,34 +11,20 @@ import { redirectToPage } from '@/functions/redirectToPage'
 
 const TasksContainer = () => {
 	const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
-
-  useEffect(() => {
     const getExecuted = async () => {
 		try {
-		const token = getAccessToken()
-		console.log(token)
-		const tasksDb = await getTasks(token, TaskType.EXECUTED)
-		console.log(tasksDb)
-		setExecutedTasks(tasksDb)
+			const token = getAccessToken()
+			const tasksDb = await getTasks(token, TaskType.EXECUTED)
+			setExecutedTasks(tasksDb)
 		}
-		catch (status) {
+		catch {
 			console.log('renew token') 
 			redirectToPage('http://localhost:3000/auth/login')
 		}
     } 
 
-	try {
-		getExecuted()
-	}
-	catch (status) {
-		console.log(status)
-		if (status == Status.FORBIDDEN) {
-			console.log('renew token') 
-			redirectToPage('http://localhost:3000/auth/login')
-		}
-		else console.log('Something unforseen happened.')
-		}
-	}, [])
+  	useEffect(() => {getExecuted()}, [])
+
 	return (
 		<div className={styles.blockContainer}>
 			<div className={styles.tasksContainer}>

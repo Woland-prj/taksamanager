@@ -1,3 +1,4 @@
+'use client'
 import { ProfileComponent } from "./ProfileComponent/ProfileComponent"
 import styles from "./SideBar.module.css"
 import exampleTaksa from '../../../../public/taksa.png'

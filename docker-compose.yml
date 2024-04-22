@@ -80,6 +80,20 @@ services:
       - dev
       - dev-server
 
+  proxy:
+    container_name: proxy
+    build:
+      dockerfile: Dockerfile
+      context: scripts
+    restart: on-failure
+    ports:
+      - '3000:3000'
+    networks:
+      - taksanet
+    profiles:
+      - prod
+      - dev
+
 networks:
   taksanet:
 volumes:

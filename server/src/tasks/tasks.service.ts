@@ -3,7 +3,7 @@ import {
 	Injectable,
 	NotFoundException
 } from '@nestjs/common'
-import { TaskStatus, TaskType } from '@prisma/client'
+import { Task, TaskStatus, TaskType } from '@prisma/client'
 import { forms_v1 } from 'googleapis'
 import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
@@ -20,13 +20,17 @@ import {
 	TaskFormType,
 	TaskQ
 } from './entities/task.entity'
+import { BotService } from 'src/tgbot/bot.service'
+import { InjectBot } from 'nestjs-telegraf'
+import { Context, Telegraf } from 'telegraf'
 
 @Injectable()
 export class TasksService {
 	pollingInterval: number = 1000
 	constructor(
 		private readonly prismaService: PrismaService,
-		private readonly formsService: FormsService
+		private readonly formsService: FormsService,
+		@InjectBot() private readonly botService: Telegraf<Context>
 	) {}
 
 	async getAllExecuted(user: IUser): Promise<GetTaskDto[]> {
@@ -336,6 +340,10 @@ export class TasksService {
 					id: dto.executorId
 				}
 			}
+			this.botService.sendNewExecutedTaskMessage(
+				suggestedExecutor.id,
+				task as unknown as Task
+			)
 		}
 		return this.prismaService.task.update(query)
 	}

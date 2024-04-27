@@ -1,6 +1,5 @@
 import { IJwt } from '@/types/jwt'
 import { Status, TLoggingInUser } from '@/types/login_and_register'
-import { redirect } from 'next/navigation'
 
 export const saveAccessToken = async (tokens: IJwt) => {
 	localStorage.setItem('accessToken', tokens.accessToken)

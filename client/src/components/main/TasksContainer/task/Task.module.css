@@ -1,0 +1,55 @@
+.task{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    width: 456px;
+    height: 260px;
+    padding: 25px 30px 25px 30px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    border: 1px solid #AFAFAF;
+
+    font-weight: 300;
+    font-size: 22.19px;
+    line-height: 28.14px;
+}
+
+.taskInfo{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info {
+    display: flex;
+    gap: 6px;
+
+    font-weight: 500;
+}
+
+.tags {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+
+    font-weight: 400;
+}
+
+.taskText {
+    height: 56px;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.link {
+    
+    height: 56px;
+    text-decoration: none;
+    color: #000000
+}
+
+.stateLayout {
+    flex: 1;
+    width: 70%;
+}

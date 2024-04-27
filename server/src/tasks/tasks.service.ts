@@ -1,11 +1,28 @@
-import { Injectable } from '@nestjs/common'
-import { TaskStatus } from '@prisma/client'
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common'
+import { Task, TaskStatus, TaskType } from '@prisma/client'
 import { forms_v1 } from 'googleapis'
 import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { IUser } from 'src/users/entities/user.entity'
-import { GetAllTasksDto } from './dto/task.dto'
-import { DefaultFields, DefaultTemplates, TaskQ } from './entities/task.entity'
+import {
+	GetTaskDto,
+	SetExecutorDto,
+	TaskAdminUpdateDto,
+	TaskExecutorUpdateDto
+} from './dto/task.dto'
+import {
+	DefaultFields,
+	DefaultTemplates,
+	TaskFormType,
+	TaskQ
+} from './entities/task.entity'
+// import { BotService } from 'src/tgbot/bot.service'
+// import { InjectBot } from 'nestjs-telegraf'
+// import { Context, Telegraf } from 'telegraf'
 
 @Injectable()
 export class TasksService {
@@ -13,9 +30,10 @@ export class TasksService {
 	constructor(
 		private readonly prismaService: PrismaService,
 		private readonly formsService: FormsService
+		// @InjectBot() private readonly botService: Telegraf<Context>
 	) {}
 
-	async getAllExecuted(user: IUser): Promise<GetAllTasksDto[]> {
+	async getAllExecuted(user: IUser): Promise<GetTaskDto[]> {
 		return this.prismaService.task.findMany({
 			where: {
 				executorId: user.id
@@ -29,6 +47,7 @@ export class TasksService {
 				name: true,
 				deadline: true,
 				status: true,
+				type: true,
 				questions: {
 					select: {
 						id: true,
@@ -40,7 +59,7 @@ export class TasksService {
 		})
 	}
 
-	async getAllAppointed(user: IUser): Promise<GetAllTasksDto[]> {
+	async getAllAppointed(user: IUser): Promise<GetTaskDto[]> {
 		return this.prismaService.task.findMany({
 			where: {
 				clientId: user.id
@@ -54,11 +73,86 @@ export class TasksService {
 				name: true,
 				deadline: true,
 				status: true,
+				type: true,
 				questions: {
 					select: {
 						id: true,
 						questionText: true,
 						answerText: true
+					}
+				}
+			}
+		})
+	}
+
+	async getAll(user: IUser): Promise<GetTaskDto[]> {
+		return this.prismaService.task.findMany({
+			where: {
+				OR: [
+					{
+						executorId: user.id
+					},
+					{
+						clientId: user.id
+					}
+				]
+			},
+			select: {
+				id: true,
+				clientId: true,
+				executorId: true,
+				clientName: true,
+				executorName: true,
+				name: true,
+				deadline: true,
+				status: true,
+				type: true,
+				questions: {
+					select: {
+						id: true,
+						questionText: true,
+						answerText: true
+					}
+				}
+			}
+		})
+	}
+
+	async getById(id: string): Promise<GetTaskDto> {
+		return this.prismaService.task.findUnique({
+			where: {
+				id: id
+			},
+			select: {
+				id: true,
+				clientId: true,
+				executorId: true,
+				clientName: true,
+				executorName: true,
+				name: true,
+				deadline: true,
+				status: true,
+				type: true,
+				questions: {
+					select: {
+						id: true,
+						questionText: true,
+						answerText: true
+					}
+				}
+			}
+		})
+	}
+
+	async setExecutor(setExecutorDto: SetExecutorDto) {
+		return this.prismaService.task.update({
+			where: {
+				id: setExecutorDto.taskId
+			},
+			data: {
+				executor: {
+					connect: {
+						id: setExecutorDto.userId
 					}
 				}
 			}
@@ -138,18 +232,55 @@ export class TasksService {
 				text: DefaultFields.CLIENTNAME
 			}
 		})
+		const typeTemp = await this.prismaService.questionTemplate.findFirst({
+			where: {
+				text: DefaultFields.TYPE
+			}
+		})
 		return {
 			nameTemp: nameTemp,
 			deadlineTemp: deadlineTemp,
-			clientTemp: clientTemp
+			clientTemp: clientTemp,
+			typeTemp: typeTemp
+		}
+	}
+
+	private async convertTextTypeToDbType(
+		formType: string
+	): Promise<TaskType | null> {
+		switch (formType) {
+			case TaskFormType.FORM_VIDEO:
+				return TaskType.VIDEO
+
+			case TaskFormType.FORM_PHOTO:
+				return TaskType.PHOTO
+
+			case TaskFormType.FORM_POST:
+				return TaskType.POST
+
+			case TaskFormType.FORM_DESIGN:
+				return TaskType.DESIGN
+
+			case TaskFormType.FORM_MONTAGE:
+				return TaskType.MONTAGE
+
+			default:
+				return null
 		}
 	}
 
 	async createTask(res: forms_v1.Schema$FormResponse) {
 		const templates = await this.prismaService.questionTemplate.findMany()
 		const tQuestions: TaskQ[] = []
-		const { nameTemp, deadlineTemp, clientTemp } =
+		const { nameTemp, deadlineTemp, clientTemp, typeTemp } =
 			await this.getDefaultTemplates()
+
+		const taskFormType = res.answers[typeTemp.qid].textAnswers.answers[0].value
+		const convertedType = await this.convertTextTypeToDbType(taskFormType)
+
+		console.log(convertedType)
+
+		if (!convertedType) return
 
 		// Create questions instances
 		templates.forEach(template => {
@@ -169,6 +300,7 @@ export class TasksService {
 					'T00:00:00.000Z',
 				formClientName:
 					res.answers[clientTemp.qid].textAnswers.answers[0].value,
+				type: convertedType,
 				status: TaskStatus.MODIFIED,
 				responseId: res.responseId,
 				questions: {
@@ -182,5 +314,54 @@ export class TasksService {
 
 		// If client authorized link task and his profile as client
 		await this.updateClient(res.respondentEmail, task.id)
+	}
+
+	async updateByAdmin(id: string, dto: TaskAdminUpdateDto) {
+		const task = await this.getById(id)
+		if (!task) throw new NotFoundException()
+		let query = {
+			where: {
+				id: id
+			},
+			data: {
+				status: dto.status as TaskStatus
+			}
+		}
+		if (dto.executorId) {
+			const suggestedExecutor = await this.prismaService.user.findUnique({
+				where: {
+					id: dto.executorId
+				}
+			})
+			if (!suggestedExecutor)
+				throw new BadRequestException('executor with this id is not exist')
+			query.data['executor'] = {
+				connect: {
+					id: dto.executorId
+				}
+			}
+			// this.botService.sendNewExecutedTaskMessage(
+			// 	suggestedExecutor.id,
+			// 	task as unknown as Task
+			// )
+		}
+		return this.prismaService.task.update(query)
+	}
+
+	async updateByExecutor(id: string, dto: TaskExecutorUpdateDto) {
+		const task = await this.prismaService.task.findFirst({
+			where: {
+				id: id
+			}
+		})
+		if (!task) throw new NotFoundException()
+		return this.prismaService.task.update({
+			where: {
+				id: id
+			},
+			data: {
+				status: dto.status as TaskStatus
+			}
+		})
 	}
 }

@@ -1,21 +1,57 @@
 import {
+	Body,
 	Controller,
 	Get,
 	HttpCode,
+	Param,
+	ParseUUIDPipe,
 	Patch,
-	Request,
-	UseGuards
+	Request
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { JwtAccessAuthGuard } from 'src/auth/jwt-access-auth.guard'
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiForbiddenResponse,
+	ApiHeader,
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiTags,
+	ApiUnauthorizedResponse
+} from '@nestjs/swagger'
+import {
+	JwtAdminAuth,
+	JwtAuth,
+	JwtExecutorAuth
+} from 'src/auth/decorators/auth.decorator'
 import { ValidatedRequest } from 'src/auth/types/request.types'
-import { GetAllTasksDto } from './dto/task.dto'
+import {
+	GetTaskDto,
+	TaskAdminUpdateDto,
+	TaskExecutorUpdateDto
+} from './dto/task.dto'
 import { TasksService } from './tasks.service'
 
 @ApiTags('CRUD tasks operation (in development)')
+@ApiHeader({
+	name: 'Authorization',
+	description: 'Bearer <access_jwt>'
+})
 @Controller({ path: 'tasks', version: '1' })
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
+
+	@JwtAuth()
+	@Get()
+	@ApiOperation({
+		summary: 'Get all tasks by this user'
+	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
+	@ApiBearerAuth()
+	async getAll(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getAll(req.user)
+	}
 
 	@Patch('/templates')
 	@HttpCode(204)
@@ -35,27 +71,91 @@ export class TasksController {
 		await this.tasksService.updateResponses()
 	}
 
-	@UseGuards(JwtAccessAuthGuard)
+	@JwtAuth()
 	@Get('/executed')
 	@ApiOperation({
 		summary: 'Get all tasks executed by this user'
 	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
 	@ApiBearerAuth()
-	async getExecuted(
-		@Request() req: ValidatedRequest
-	): Promise<GetAllTasksDto[]> {
-		return await this.tasksService.getAllExecuted(req.user)
+	async getExecuted(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getAllExecuted(req.user)
 	}
 
-	@UseGuards(JwtAccessAuthGuard)
+	@JwtAuth()
 	@Get('/appointed')
 	@ApiOperation({
 		summary: 'Get all tasks appointed by this user'
 	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
 	@ApiBearerAuth()
-	async getAppointed(
-		@Request() req: ValidatedRequest
-	): Promise<GetAllTasksDto[]> {
-		return await this.tasksService.getAllAppointed(req.user)
+	async getAppointed(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getAllAppointed(req.user)
+	}
+
+	@JwtAuth()
+	@Get(':id')
+	@ApiOperation({
+		summary: 'Get task by id'
+	})
+	@ApiBearerAuth()
+	@ApiBadRequestResponse({
+		description: 'Task with this id is not found'
+	})
+	async getById(@Param('id') id: string): Promise<GetTaskDto> {
+		return this.tasksService.getById(id)
+	}
+
+	@ApiOperation({
+		summary: 'Update task executor or status'
+	})
+	@ApiBearerAuth()
+	@ApiOkResponse({
+		description: 'Data updated successfuly'
+	})
+	@ApiBadRequestResponse({
+		description:
+			'User with this id is not found or user id is not uuid or incorrect status value'
+	})
+	@ApiUnauthorizedResponse({
+		description: 'User should be an admin'
+	})
+	@ApiNotFoundResponse({
+		description: 'Task with this uuid is not exist'
+	})
+	@JwtAdminAuth()
+	@Patch('/admin/:id')
+	async updateByAdmin(
+		@Body() taskAdminUpdateDto: TaskAdminUpdateDto,
+		@Param('id', new ParseUUIDPipe()) id: string
+	) {
+		return this.tasksService.updateByAdmin(id, taskAdminUpdateDto)
+	}
+
+	@ApiOperation({
+		summary: 'Update status'
+	})
+	@ApiBearerAuth()
+	@ApiOkResponse({
+		description: 'Data updated successfuly'
+	})
+	@ApiBadRequestResponse({
+		description: 'Incorrect status value'
+	})
+	@ApiUnauthorizedResponse({
+		description: 'User should be an executor or admin'
+	})
+	@ApiNotFoundResponse({
+		description: 'Task with this uuid is not exist'
+	})
+	@JwtExecutorAuth()
+	@Patch('/executor/:id')
+	async updateByExecutor(
+		@Body() taskExecutorUpdateDto: TaskExecutorUpdateDto,
+		@Param('id', new ParseUUIDPipe()) id: string
+	) {
+		return this.tasksService.updateByExecutor(id, taskExecutorUpdateDto)
 	}
 }

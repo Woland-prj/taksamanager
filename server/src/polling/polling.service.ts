@@ -12,14 +12,14 @@ export class PollingService {
 		private readonly prismaService: PrismaService
 	) {}
 
-	@Cron(CronExpression.EVERY_HOUR)
+	@Cron('*/30 * * * * *')
 	async pollingTemplates() {
 		console.log('Ping form questions templates...')
 		await this.tasksService.updateTemplates()
 		console.log('Ping success!')
 	}
 
-	@Cron(CronExpression.EVERY_5_MINUTES)
+	@Cron('*/30 * * * * *')
 	async pollingQuestions() {
 		console.log('Ping form responses...')
 		await this.tasksService.updateResponses()

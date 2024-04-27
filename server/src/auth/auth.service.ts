@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
 import { IUser } from '../users/entities/user.entity'
@@ -41,13 +41,16 @@ export class AuthService {
 		}
 	}
 
-	async refresh(user: IUser, req: Request) {
-		// const tokenDataFromDb = await this.tokenService.findToken(
-		// 	this.tokenService.getTokenFromCookie(req)
-		// )
-		// if (!tokenDataFromDb) {
-		// 	throw new UnauthorizedException()
-		// }
+	async refresh(
+		user: IUser,
+		req: Request
+	): Promise<{
+		accessToken: string
+		refreshToken: string
+	}> {
+		const token = this.tokenService.getTokenFromCookie(req)
+		const tokenDataFromDb = await this.tokenService.findToken(token)
+		if (!tokenDataFromDb) throw new UnauthorizedException()
 		return this.login(user)
 	}
 }

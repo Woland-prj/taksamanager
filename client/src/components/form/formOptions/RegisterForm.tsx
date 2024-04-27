@@ -1,17 +1,18 @@
+'useclient'
 import { createUser } from '@/functions/createUser'
-import { getTokensFromDb } from '@/functions/getTokensFromDb'
-import { saveAccessToken } from '@/functions/jwt'
+import { saveAccessToken, getTokensFromDb } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
-import { IForm, Status, TNewUser } from '@/types/login_and_register'
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { IForm, Status} from '@/types/login_and_register'
+import { useState } from 'react'
 import ErrorBlock from '../error/Error'
 import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
+import { useRouter } from 'next/navigation'
 
-type TRegisterFormProps = { setUser: Dispatch<SetStateAction<TNewUser>> }
 
-export const RegisterForm: FC<TRegisterFormProps> = ({ setUser }) => {
+export const RegisterForm = () => {
+	const router = useRouter()
 	const [formData, setFormData] = useState<IForm>({
 		email: '',
 		password: '',
@@ -79,7 +80,7 @@ export const RegisterForm: FC<TRegisterFormProps> = ({ setUser }) => {
 								})
 								await saveAccessToken(jwt)
 								setStatus(Status.CREATED)
-								redirectToPage('/dashboard')
+								router.replace('/dashboard')
 							} catch (status) {
 								console.log(status)
 								if (status === Status.BADREQUEST) setStatus(Status.BADREQUEST)

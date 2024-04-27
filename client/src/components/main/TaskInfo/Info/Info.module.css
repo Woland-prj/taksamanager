@@ -1,0 +1,24 @@
+.info {
+    width: 800px
+}
+.title {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22.82px;
+    letter-spacing: 0.02em;
+    text-align: left;
+
+    color: #808080;
+
+}
+
+.text {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 22.82px;
+    letter-spacing: 0.02em;
+    text-align: left;
+
+    color: #000000;
+
+}

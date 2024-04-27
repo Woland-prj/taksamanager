@@ -16,11 +16,13 @@
 }
 
 .entrance {
+	margin-bottom: 20px;
+	font-family: '--font-euclidCircular';
 	margin: 0;
 	font-size: 50px;
 	font-weight: 600;
 	line-height: 63px;
 	letter-spacing: 0em;
 	text-align: center;
-	color: #00733a;
+	color: rgba(51, 141, 95, 1);
 }

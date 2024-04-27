@@ -36,7 +36,7 @@ export class TokenService {
 				token: token
 			}
 		})
-		return tokenData
+		return await tokenData
 	}
 
 	getTokenFromCookie(req: Request): string | null {

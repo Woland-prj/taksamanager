@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -12,10 +13,17 @@ import { PollingModule } from './polling/polling.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { TasksModule } from './tasks/tasks.module'
 import { TasksService } from './tasks/tasks.service'
+import { BotModule } from './tgbot/bot.module'
+import { BotService } from './tgbot/bot.service'
 import { UsersModule } from './users/users.module'
 
 @Module({
 	imports: [
+		ConfigModule.forRoot({
+			isGlobal: true,
+			envFilePath: '../.env.prod'
+		}),
+		BotModule,
 		UsersModule,
 		PrismaModule,
 		AuthModule,
@@ -31,7 +39,8 @@ import { UsersModule } from './users/users.module'
 		JwtService,
 		MailService,
 		FormsService,
-		TasksService
+		TasksService,
+		BotService
 	],
 	controllers: [AppController]
 })

@@ -1,19 +1,22 @@
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { MailModule } from '../mail/mail.module'
+import { MailService } from '../mail/mail.service'
 import { UsersModule } from '../users/users.module'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { JwtAccessStrategy } from './jwt-access.strategy'
-import { JwtRefreshStrategy } from './jwt-refresh.strategy'
-import { LocalStrategy } from './local.strategy'
+import { JwtAccessStrategy } from './strategys/jwt-access.strategy'
+import { JwtAdminAccessStrategy } from './strategys/jwt-admin-access.strategy'
+import { JwtRefreshStrategy } from './strategys/jwt-refresh.strategy'
+import { LocalStrategy } from './strategys/local.strategy'
 import { TokenService } from './token.service'
-import { MailService } from '../mail/mail.service'
-import { MailModule } from '../mail/mail.module'
+import { JwtExecutorAccessStrategy } from './strategys/jwt-executor-access.strategy'
 
 @Module({
-	imports: [UsersModule, PassportModule, JwtModule, MailModule],
+	imports: [UsersModule, PassportModule, JwtModule, MailModule, ConfigModule],
 	controllers: [AuthController],
 	providers: [
 		AuthService,
@@ -22,6 +25,8 @@ import { MailModule } from '../mail/mail.module'
 		MailService,
 		LocalStrategy,
 		JwtAccessStrategy,
+		JwtAdminAccessStrategy,
+		JwtExecutorAccessStrategy,
 		JwtRefreshStrategy
 	],
 	exports: [AuthService, TokenService]

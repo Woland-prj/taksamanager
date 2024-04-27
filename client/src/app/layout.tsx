@@ -1,12 +1,34 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 import '../styles/globals.css'
+import cn from 'clsx'
+import styles from './layout.module.css'
+import StoreProvider from './StoreProvider'
 
-const inter = Inter({ subsets: ['latin'] })
 const euclidRegular = localFont({
-	src: '../fonts/EuclidCircularBRegular.ttf',
-	display: 'swap'
+	src: [{
+		path: '../fonts/EuclidCircularBBold.ttf',
+		weight: '600',
+		style: 'normal',
+	},
+	{
+		path: '../fonts/EuclidCircularBLight.ttf',
+		weight: '200',
+		style: 'normal'
+	},
+	{
+		path: '../fonts/EuclidCircularBMedium.ttf',
+		weight: '300',
+		style: 'normal'
+	},
+	{
+		path: '../fonts/EuclidCircularBRegular.ttf',
+		weight: '400',
+		style: 'normal'
+	}],
+	display: 'swap',
+	
+	variable: '--font-euclidCircular'
 })
 
 export const metadata: Metadata = {
@@ -20,8 +42,12 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang='ru'>
-			<body className={euclidRegular.className}>{children}</body>
+		<html lang='ru' data-lt-installed='true'>
+			<body className={cn(euclidRegular.className, styles.body)} data-gr-ext-installed cz-shortcut-listen='true'>
+				<StoreProvider>
+					{children}
+				</StoreProvider>
+			</body>
 		</html>
 	)
 }

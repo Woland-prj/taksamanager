@@ -1,7 +1,9 @@
+'use client'
+
 export default function Home() {
 	return (
 		<main>
-			<div>Redirecting</div>
+			<div>Redirecting to another page</div>
 		</main>
 	)
 }

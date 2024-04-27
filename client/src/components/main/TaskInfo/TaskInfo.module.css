@@ -1,0 +1,41 @@
+.taskContainer {
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(0 0% 50%);
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.infoAndAction {
+    padding: 40px 75px 40px 75px;
+    gap: 0px;
+    justify-content: space-between;
+    opacity: 0px;
+
+}
+
+.infoContainer {
+    width: min-content
+}
+
+.taksa {
+    position: absolute;
+    top: 236px;
+    left: 1069px
+}
+
+.headerText {
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 38.04px;
+    letter-spacing: 0.02em;
+    text-align: left;
+}
+
+.headerButton {
+    border: 2px solid #000000;
+    background: #FFFFFF;
+}

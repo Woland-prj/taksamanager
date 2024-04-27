@@ -2,10 +2,12 @@
 import { getTaskbyId } from "@/functions/getTaskbyId"
 import { getAccessToken } from "@/functions/jwt"
 import { ITask } from "@/types/tasks"
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import { PageHeader } from "../PageHeader/PageHeader"
 import { Info } from "./Info/Info"
 import { usePathname } from "next/navigation"
+import styles from './TaskInfo.module.css'
+import Image from "next/image"
 
 export const TaskInfo = () => {
     const taskId = usePathname().substring(11)
@@ -18,24 +20,27 @@ export const TaskInfo = () => {
             const token = getAccessToken()
             console.log(token)
             const taskDb = await getTaskbyId(taskId, token)
-            setTask(await taskDb)
+            console.log(taskDb)
+            setTask(taskDb)
         }
         catch {
             console.log('Такой задачи не существует')
         }
     }
-    getTask()
+    useEffect(() => {getTask()}, [])
     return (
-        <main>
+        <main className={styles.taskContainer}>
             <header>
                 <PageHeader
+                    textClassName={styles.headerText}
+                    buttonClassName={styles.headerButton}
                     sectionTitle={task?.name}
                     buttonText={task?.status}
                     buttonAction={async () => {}}
                 />
             </header>
-            <div>
-                <div>
+            <div className={styles.infoAndAction}>
+                <div className={styles.infoContainer}>
                     {task?.questions.map((question) => {
                         return (
                             <Info
@@ -48,6 +53,13 @@ export const TaskInfo = () => {
                 </div>
                 {/* <TaskActions/> */}
             </div>
+            <Image
+                className={styles.taksa}
+                src='/task_info_taksa.svg'
+                width='840'
+                height='718'
+                alt=''
+            />
         </main>
     )
 }

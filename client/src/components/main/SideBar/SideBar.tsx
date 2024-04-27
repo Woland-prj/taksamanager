@@ -1,8 +1,8 @@
 'use client'
 import { ProfileComponent } from "./ProfileComponent/ProfileComponent"
 import styles from "./SideBar.module.css"
-import exampleTaksa from '../../../../public/taksa.png'
 import { SideBarButton } from "./SideBarButton/SideBarButton"
+import { redirectToPage } from "@/functions/redirectToPage"
 
 export const SideBar = () => {
     return (
@@ -15,7 +15,7 @@ export const SideBar = () => {
             <SideBarButton
                 iconName='dashboard.png'
                 text='Доска задач'
-                action={() => {return new Promise(() => {})}}
+                action={async () => {console.log('кнопка'); redirectToPage('/dashboard')}}
             />
             <SideBarButton
                 iconName='team.png'

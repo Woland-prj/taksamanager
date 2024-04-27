@@ -1,3 +1,4 @@
+'use client'
 import { saveAccessToken, getTokensFromDb } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
 import { IForm, Status, TLoggingInUser } from '@/types/login_and_register'
@@ -6,6 +7,7 @@ import ErrorBlock from '../error/Error'
 import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
+import { useRouter } from 'next/navigation'
 
 type TLogInFormProps = {
 	setUser: Dispatch<SetStateAction<TLoggingInUser>>
@@ -15,6 +17,7 @@ type TLogInFormProps = {
 // 401 - Unauthorized
 
 export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
+	const router = useRouter()
 	const [isEmpty, setIsEmpty] = useState<boolean>(false)
 	const [formData, setFormData] = useState<IForm>({
 		email: '',
@@ -62,7 +65,7 @@ export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
 								const jwt = await getTokensFromDb(formData)
 								await saveAccessToken(jwt)
 								setStatus(Status.CREATED)
-								redirectToPage('/dashboard')
+								router.replace('/dashboard')
 							} catch (status) {
 								if (status === Status.FORBIDDEN) {setStatus(Status.FORBIDDEN)}
 							}

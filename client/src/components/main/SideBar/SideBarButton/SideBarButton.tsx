@@ -11,7 +11,7 @@ type TSideBarButtonProps = {
 
 export const SideBarButton: FC<TSideBarButtonProps> = ({iconName, text, action}) => {
     return (
-        <div className={styles.button} onClick={async () => await {action}}>
+        <div className={styles.button} onClick={action}>
             <Image
                 className={styles.image}
                 src={'/' + iconName}

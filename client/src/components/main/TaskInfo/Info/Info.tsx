@@ -7,7 +7,7 @@ type TInfoProps = {
 
 export const Info: FC<TInfoProps> = ({title, text}) => {
     return (
-        <div>
+        <div className={styles.info}>
             <span className={styles.title}>{title}</span>
             <p className={styles.text}>{text}</p>
         </div>

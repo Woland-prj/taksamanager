@@ -1,3 +1,4 @@
+'useclient'
 import { createUser } from '@/functions/createUser'
 import { saveAccessToken, getTokensFromDb } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
@@ -7,9 +8,11 @@ import ErrorBlock from '../error/Error'
 import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
+import { useRouter } from 'next/navigation'
 
 
 export const RegisterForm = () => {
+	const router = useRouter()
 	const [formData, setFormData] = useState<IForm>({
 		email: '',
 		password: '',
@@ -77,7 +80,7 @@ export const RegisterForm = () => {
 								})
 								await saveAccessToken(jwt)
 								setStatus(Status.CREATED)
-								redirectToPage('/dashboard')
+								router.replace('/dashboard')
 							} catch (status) {
 								console.log(status)
 								if (status === Status.BADREQUEST) setStatus(Status.BADREQUEST)

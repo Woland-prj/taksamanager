@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import styles from './TasksContainer.module.css'
 import { Task } from './task/Task'
 import { redirectToPage } from '@/functions/redirectToPage'
-
+import { renewQuestionTemplates } from '@/functions/renewQuestionTemplates'
 
 const TasksContainer = () => {
 	const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
@@ -23,7 +23,7 @@ const TasksContainer = () => {
 		}
     } 
 
-  	useEffect(() => {getExecuted()}, [])
+  	useEffect(() => {renewQuestionTemplates(); getExecuted()}, [])
 
 	return (
 		<div className={styles.blockContainer}>

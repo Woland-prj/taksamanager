@@ -3,11 +3,7 @@ import { PageHeader } from "@/components/main/PageHeader/PageHeader";
 import { useState } from "react";
 
 
-export default function TestTaskPage({
-    params,
-}: {
-    params: {id: string}
-}) {
+export default function TaskPage() {
     return (
         <TaskInfo></TaskInfo>
     )

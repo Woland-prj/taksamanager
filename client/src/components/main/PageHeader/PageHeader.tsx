@@ -9,6 +9,8 @@ interface IPageHeader {
 	sectionTitle?: string
 	buttonText?: string
 	buttonAction: () => Promise<void>
+	textClassName?: string
+	buttonClassName?: string
 }
 
 const euclid500 = localFont({
@@ -17,20 +19,22 @@ const euclid500 = localFont({
 		weight: '500',
 	}]
 })
-const buttonClassName = cn(euclid500.className, styles.button)
-
 export const PageHeader: FC<IPageHeader> = ({
 	sectionTitle,
 	buttonText,
-	buttonAction
+	buttonAction,
+	textClassName, 
+	buttonClassName,
 }) => {
-	const title = !sectionTitle ? 'Безымянная задача' : sectionTitle
-	const definedButtonText = !buttonText ? 'Неизвестно' : buttonText
+	const buttonCn = cn(buttonClassName, euclid500.className, styles.button)
+
+	const title = !sectionTitle ? '' : sectionTitle
+	const definedButtonText = !buttonText ? '' : buttonText
 	return (
 		<div className={styles.header}>
-			<h1 className={styles.section_name}>{title}</h1>
+			<h1 className={cn(styles.section_name, textClassName)}>{title}</h1>
 			<Button
-				className={buttonClassName}
+				className={buttonCn}
 				fgColor={'#FFFFFF'}
 				bgColor={'#545454'}
 				text={definedButtonText}

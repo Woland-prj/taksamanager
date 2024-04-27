@@ -16,7 +16,7 @@ import { TasksService } from './tasks/tasks.service'
 import { UsersModule } from './users/users.module'
 import { TelegrafModule } from 'nestjs-telegraf'
 import { BotModule } from './tgbot/bot.module'
-import { BotUpdate } from './tgbot/bot.service'
+import { BotService } from './tgbot/bot.service'
 
 @Module({
 	imports: [
@@ -38,7 +38,7 @@ import { BotUpdate } from './tgbot/bot.service'
 		MailService,
 		FormsService,
 		TasksService,
-		BotUpdate
+		BotService
 	],
 	controllers: [AppController]
 })

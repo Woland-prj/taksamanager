@@ -9,14 +9,10 @@ import Button, { ButtonType } from './button/button'
 import Field from './field/field'
 import { useRouter } from 'next/navigation'
 
-type TLogInFormProps = {
-	setUser: Dispatch<SetStateAction<TLoggingInUser>>
-}
-
 // 201 - Tokens generated succesfully
 // 401 - Unauthorized
 
-export const LogInForm: FC<TLogInFormProps> = ({ setUser }) => {
+export const LogInForm = () => {
 	const router = useRouter()
 	const [isEmpty, setIsEmpty] = useState<boolean>(false)
 	const [formData, setFormData] = useState<IForm>({

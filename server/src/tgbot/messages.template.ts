@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client'
+import { Task, UserRole } from '@prisma/client'
 
 export const getNotFoundMessage = (name: string) => {
 	return `Извините, ${name}. Такса не смогла обнаружить Вас среди своих знакомых. Но она нашла для вас несколько решений:
@@ -29,4 +29,12 @@ export const getStartMessage = (username: string, role: UserRole) => {
 			strRole = '¯\\_(ツ)_/¯ Попроси главу отдела назначить тебе роль'
 	}
 	return `Такса приветствует тебя, ${username}! Теперь ты можешь получать уведомления о назначенных и исполняемых тобой задачах. Боллее подробную информацию можно узнасть в приложении таксменеджера. На данный момент ты являешься <b><i>${strRole}</i></b>.`
+}
+
+export const getNewExecutedTaskMessage = (task: Task) => {
+	return `Вам назначена новая задача: <b>${task.name}</b>.
+Заказчик: <b>${task.formClientName}</b>.
+Заказ поступил от: <b>${task.clientName ? task.clientName : 'Анонимного аккаунта'}</b>.
+Вид задачи: <b>${task.type}</b>.
+Дедлайн: <b>${task.deadline}</b>.`
 }

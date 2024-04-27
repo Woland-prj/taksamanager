@@ -12,6 +12,11 @@ services:
       - taksanet
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    profiles:
+      - prod
+      - dev
+      - dev-client
+      - dev-server
 
   studio:
     links:
@@ -31,7 +36,11 @@ services:
     networks:
       - taksanet
     volumes:
-      - /opt/app/prisma 
+      - /opt/app/prisma
+    profiles:
+      - dev
+      - dev-client
+      - dev-server
 
   server:
     container_name: server
@@ -44,11 +53,46 @@ services:
     env_file:
       - ./server/.env.prod
     environment:
-      API_HOST: postgres 
+      API_HOST: postgres
     networks:
       - taksanet
     depends_on:
       - postgres
+    profiles:
+      - prod
+      - dev
+      - dev-client
+
+  client:
+    container_name: client
+    build:
+      dockerfile: Dockerfile
+      context: client
+    restart: on-failure
+    ports:
+      - '3100:3100'
+    networks:
+      - taksanet
+    depends_on:
+      - postgres
+    profiles:
+      - prod
+      - dev
+      - dev-server
+
+  proxy:
+    container_name: proxy
+    build:
+      dockerfile: Dockerfile
+      context: scripts
+    restart: on-failure
+    ports:
+      - '3000:3000'
+    networks:
+      - taksanet
+    profiles:
+      - prod
+      - dev
 
 networks:
   taksanet:

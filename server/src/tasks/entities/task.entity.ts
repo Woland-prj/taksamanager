@@ -1,7 +1,5 @@
 import { QuestionTemplate } from '@prisma/client'
 
-export class Task {}
-
 export class TaskQ {
 	questionText: string
 	answerText: string

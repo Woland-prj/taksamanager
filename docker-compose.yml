@@ -36,7 +36,7 @@ services:
     networks:
       - taksanet
     volumes:
-      - /opt/app/prisma 
+      - /opt/app/prisma
     profiles:
       - dev
       - dev-client
@@ -53,7 +53,7 @@ services:
     env_file:
       - ./server/.env.prod
     environment:
-      API_HOST: postgres 
+      API_HOST: postgres
     networks:
       - taksanet
     depends_on:

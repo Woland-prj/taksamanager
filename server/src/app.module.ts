@@ -13,14 +13,16 @@ import { PollingModule } from './polling/polling.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { TasksModule } from './tasks/tasks.module'
 import { TasksService } from './tasks/tasks.service'
-import { UsersModule } from './users/users.module'
-import { TelegrafModule } from 'nestjs-telegraf'
 import { BotModule } from './tgbot/bot.module'
 import { BotService } from './tgbot/bot.service'
+import { UsersModule } from './users/users.module'
 
 @Module({
 	imports: [
-		ConfigModule.forRoot(),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			envFilePath: '../.env.prod'
+		}),
 		BotModule,
 		UsersModule,
 		PrismaModule,

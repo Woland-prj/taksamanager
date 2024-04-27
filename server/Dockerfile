@@ -1,23 +1,24 @@
 FROM node:21-alpine as deps
 WORKDIR /opt/server
 COPY package.json yarn.lock ./
-RUN yarn install --production --frozen-lockfile
+RUN yarn install --frozen-lockfile
 
-FROM node:21-alpine as build
+FROM deps as build
 WORKDIR /opt/server
 COPY . .
 COPY --from=deps /opt/server/node_modules ./node_modules
 RUN yarn prisma generate
 RUN yarn build
 
-FROM node:21-alpine as runner
+FROM build as runner
 WORKDIR /opt/server
 ENV NODE_ENV production
 
 COPY --from=build /opt/server/dist ./dist
-COPY --from=build /opt/app/prisma ./prisma
-COPY --from=build /opt/client/package.json ./package.json
-ADD .env ./
+COPY --from=build /opt/server/prisma ./prisma
+COPY --from=build /opt/server/package.json ./package.json
+RUN yarn add @prisma/client --frozen-lockfile
+ADD .env.prod ./
 ADD service_account.json ./
 
 EXPOSE 3200

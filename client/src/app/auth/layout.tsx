@@ -7,7 +7,7 @@ import { refreshJWT } from '@/functions/jwt'
 import { useLayoutEffect } from 'react'
 import { redirectToPage } from '@/functions/redirectToPage'
 import { useRouter } from 'next/navigation'
-import useRedirectByJWT from '@/functions/useRedirectByJWT'
+import redirectByJWT from '@/functions/redirectByJWT'
 
 const euclidMedium = localFont({
 	src: '../../fonts/EuclidCircularBMedium.ttf',
@@ -24,7 +24,7 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode
 }>) {
-	useRedirectByJWT()
+	redirectByJWT()
 	return (
 		<main className={styles.main}>
 			<div className={styles.taksa}>

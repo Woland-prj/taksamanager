@@ -4,13 +4,13 @@ import TasksContainer from '@/components/main/TasksContainer/TasksContainer'
 import styles from './page.module.css'
 import { SideBar } from '@/components/main/SideBar/SideBar'
 import { redirectToPage } from '@/functions/redirectToPage'
-import useRedirectByJWT from '@/functions/useRedirectByJWT'
+import redirectByJWT from '@/functions/redirectByJWT'
 
 export default function Dashboard() {
 	const createTaskAction = async () => {
 		redirectToPage('https://forms.gle/aevQapAyVCtDbPsSA')
 	}
-	useRedirectByJWT()
+	redirectByJWT()
 	return (
 		<main className={styles.workingField}>
 			<header>

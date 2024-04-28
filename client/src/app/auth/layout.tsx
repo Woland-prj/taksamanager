@@ -1,7 +1,13 @@
+'use client'
 import cn from 'clsx'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import styles from './layout.module.css'
+import { refreshJWT } from '@/functions/jwt'
+import { useLayoutEffect } from 'react'
+import { redirectToPage } from '@/functions/redirectToPage'
+import { useRouter } from 'next/navigation'
+import useRedirectByJWT from '@/functions/useRedirectByJWT'
 
 const euclidMedium = localFont({
 	src: '../../fonts/EuclidCircularBMedium.ttf',
@@ -18,6 +24,7 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode
 }>) {
+	useRedirectByJWT()
 	return (
 		<main className={styles.main}>
 			<div className={styles.taksa}>

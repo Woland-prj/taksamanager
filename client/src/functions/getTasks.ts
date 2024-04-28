@@ -1,10 +1,12 @@
 import { Status } from '@/types/login_and_register'
 import { ITask } from '@/types/tasks'
 import { renewTasks } from './renewTasks'
+import { getAccessToken } from './jwt'
 
 export enum TaskType {EXECUTED = 'executed', APPOINTED = 'appointed'}
 
-export const getTasks = async (token: string | null, type: TaskType): Promise<ITask[]> => {
+export const getTasks = async (type: TaskType): Promise<ITask[]> => {
+	const token = getAccessToken()
 	if (!token) throw Status.FORBIDDEN
 	const urlType: string = type
 	renewTasks()

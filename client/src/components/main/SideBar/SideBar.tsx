@@ -8,7 +8,6 @@ export const SideBar = () => {
     return (
         <div className={styles.sideBar}>
             <ProfileComponent
-                username='EXAMPLE'
                 imageName='taksa.png'
                 action={() => {return new Promise(() => {})}}
             />

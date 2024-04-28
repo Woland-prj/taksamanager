@@ -8,23 +8,25 @@ import styles from './TasksContainer.module.css'
 import { Task } from './task/Task'
 import { redirectToPage } from '@/functions/redirectToPage'
 import { renewQuestionTemplates } from '@/functions/renewQuestionTemplates'
+import { getUser } from '@/functions/userOperations'
+import { TUser } from '@/types/user'
+import { useRouter } from 'next/navigation'
 
 const TasksContainer = () => {
+	const router = useRouter()
 	const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
     const getExecuted = async () => {
 		try {
-			const token = getAccessToken()
-			const tasksDb = await getTasks(token, TaskType.EXECUTED)
+			refreshJWT()
+			const tasksDb = await getTasks(TaskType.EXECUTED)
 			setExecutedTasks(tasksDb)
 		}
 		catch {
-			console.log('renew token') 
-			redirectToPage('http://localhost:3000/auth/login')
+			console.log('renew refresh token') 
+			router.replace('/auth/login')
 		}
-    } 
-
+    }
   	useEffect(() => {renewQuestionTemplates(); getExecuted()}, [])
-
 	return (
 		<div className={styles.blockContainer}>
 			<div className={styles.tasksContainer}>

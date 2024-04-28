@@ -1,4 +1,4 @@
-'useclient'
+'use client'
 import { createUser } from '@/functions/createUser'
 import { saveAccessToken, getTokensFromDb } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
@@ -9,6 +9,7 @@ import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
 import { useRouter } from 'next/navigation'
+import { saveLoggedInToken } from '@/functions/isLoggedIn'
 
 
 export const RegisterForm = () => {
@@ -80,9 +81,11 @@ export const RegisterForm = () => {
 								})
 								await saveAccessToken(jwt)
 								setStatus(Status.CREATED)
+								saveLoggedInToken('true')
 								router.replace('/dashboard')
 							} catch (status) {
 								console.log(status)
+								saveLoggedInToken('false')
 								if (status === Status.BADREQUEST) setStatus(Status.BADREQUEST)
 								if (status === Status.EXIST) setStatus(Status.EXIST)
 							}

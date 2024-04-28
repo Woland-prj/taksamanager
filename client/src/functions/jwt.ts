@@ -1,6 +1,6 @@
 import { IJwt } from '@/types/jwt'
 import { Status, TLoggingInUser } from '@/types/login_and_register'
-
+import { saveLoggedInToken } from './isLoggedIn'
 export const saveAccessToken = async (tokens: IJwt) => {
 	localStorage.setItem('accessToken', tokens.accessToken)
 }
@@ -13,11 +13,16 @@ export const refreshJWT = async () => {
 	const response = await fetch('http://localhost:3000/api/v1/auth/refresh', {
 		method: 'GET'
 	})
+
 	if (response.ok) {
 		const data: IJwt = await response.json() as IJwt
-		saveAccessToken(data)
+		await saveAccessToken(data)
+		await saveLoggedInToken('true')
 	}
-	else throw Status.FORBIDDEN
+	else {
+		await saveLoggedInToken('false')
+		throw Status.FORBIDDEN
+	}
 }
 
 export const getTokensFromDb = async (user: TLoggingInUser): Promise<IJwt> => {

@@ -10,17 +10,12 @@ import styles from './TaskInfo.module.css'
 import Image from "next/image"
 
 export const TaskInfo = () => {
-    const taskId = usePathname().substring(11)
-
+    const taskId = usePathname().substring('/dashboard/'.length)
     const [task, setTask] = useState<ITask | null>(null)
     const getTask = async () => {
-        console.log('token')
         try {
-            console.log('token')
             const token = getAccessToken()
-            console.log(token)
             const taskDb = await getTaskbyId(taskId, token)
-            console.log(taskDb)
             setTask(taskDb)
         }
         catch {

@@ -17,7 +17,7 @@
 		"inst:server": "yarn --cwd server install",
 		"inst:client": "yarn --cwd client install",
 		"dev:client": "yarn --cwd client dev",
-    "dev:c:p": "concurrently \"yarn dev:client\" \"node ./scripts/proxy.mjs\"",
+    "dev:client:proxy": "concurrently \"yarn dev:client\" \"node ./scripts/proxy.mjs\"",
 		"dev:server": "yarn --cwd server start:dev",
 		"dev": "concurrently \"yarn dev:client\" \"yarn dev:server\" \"node ./scripts/proxy.mjs\""
 	}

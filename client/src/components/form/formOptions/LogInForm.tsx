@@ -8,6 +8,7 @@ import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
 import Field from './field/field'
 import { useRouter } from 'next/navigation'
+import { saveLoggedInToken } from '@/functions/isLoggedIn'
 
 // 201 - Tokens generated succesfully
 // 401 - Unauthorized
@@ -61,6 +62,7 @@ export const LogInForm = () => {
 								const jwt = await getTokensFromDb(formData)
 								await saveAccessToken(jwt)
 								setStatus(Status.CREATED)
+								saveLoggedInToken('true')
 								router.replace('/dashboard')
 							} catch (status) {
 								if (status === Status.FORBIDDEN) {setStatus(Status.FORBIDDEN)}

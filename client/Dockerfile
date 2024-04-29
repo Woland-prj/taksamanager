@@ -19,4 +19,5 @@ COPY --from=build /opt/client/.next ./.next
 COPY --from=build /opt/client/node_modules ./node_modules
 
 EXPOSE 3100
+EXPOSE 3200
 CMD ["yarn", "start"]

@@ -29,6 +29,8 @@ export const TaskInfo = () => {
                 <PageHeader
                     textClassName={styles.headerText}
                     buttonClassName={styles.headerButton}
+                    backgroundColor="#FFFFFF"
+                    fontColor="#000000"
                     sectionTitle={task?.name}
                     buttonText={task?.status}
                     buttonAction={async () => {}}

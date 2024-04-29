@@ -11,6 +11,8 @@ interface IPageHeader {
 	buttonAction: () => Promise<void>
 	textClassName?: string
 	buttonClassName?: string
+	fontColor?: string
+	backgroundColor?: string
 }
 
 const euclid500 = localFont({
@@ -25,18 +27,22 @@ export const PageHeader: FC<IPageHeader> = ({
 	buttonAction,
 	textClassName, 
 	buttonClassName,
+	fontColor,
+	backgroundColor,
 }) => {
-	const buttonCn = cn(buttonClassName, euclid500.className, styles.button)
+	const buttonCn = cn(euclid500.className, styles.button, buttonClassName)
 
 	const title = !sectionTitle ? '' : sectionTitle
 	const definedButtonText = !buttonText ? '' : buttonText
+	const fgColor = fontColor ? fontColor : '#FFFFFF'
+	const bgColor = backgroundColor ? backgroundColor : '#545454'
 	return (
 		<div className={styles.header}>
 			<h1 className={cn(styles.section_name, textClassName)}>{title}</h1>
 			<Button
 				className={buttonCn}
-				fgColor={'#FFFFFF'}
-				bgColor={'#545454'}
+				fgColor={fgColor}
+				bgColor={bgColor}
 				text={definedButtonText}
 				action={async () => {
 					await buttonAction()

@@ -8,3 +8,10 @@ export type TUser = {
     tgChatId: 0,
     teamId: string
 }
+
+export const enum UserRole {
+    ROOT = 'ROOT',
+    ADMIN = 'ADMIN',
+    EXECUTOR = 'EXECUTOR',
+    CLIENT = 'CLIENT',
+}

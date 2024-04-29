@@ -14,7 +14,6 @@
     gap: 0px;
     justify-content: space-between;
     opacity: 0px;
-
 }
 
 .infoContainer {
@@ -23,10 +22,12 @@
 
 .taksa {
     position: absolute;
-    top: 236px;
-    left: 1069px
+    right: 0;
+    bottom: 0;
 }
-
+.taksa::selection{
+    background: transparent;
+}
 .headerText {
     font-size: 30px;
     font-weight: 300;
@@ -37,5 +38,9 @@
 
 .headerButton {
     border: 2px solid #000000;
-    background: #FFFFFF;
+    background-color: #FFFFFF;
+
+    width: 274px;
+    height: 59px;
+
 }

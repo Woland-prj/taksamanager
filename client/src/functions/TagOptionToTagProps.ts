@@ -43,9 +43,14 @@ export const TagOptionToTagParameters = (option: TagOption, date?: string): TTag
         case TagOption.MODIFIED: return {
             tagClassName: styles.yellowTag,
             src: '/modified.svg',
-            text: 'Модерирование',
+            text: 'Модерация',
         }
         case TagOption.IN_WORK: return {
+            tagClassName: styles.blueTag,
+            src: '/in_work.svg',
+            text: 'В работе',
+        }
+        case TagOption.COMPLETED: return {
             tagClassName: styles.blueTag,
             src: '/in_work.svg',
             text: 'В работе',
@@ -55,15 +60,10 @@ export const TagOptionToTagParameters = (option: TagOption, date?: string): TTag
             src: '/expired.svg',
             text: 'Просрочено',
         }
-        case TagOption.COMPLETED: return {
-            tagClassName: styles.greenTag,
-            src: '/completed.svg',
-            text: 'Выполнено',
-        }
         case TagOption.VERIFY_COMPLETED: return {
             tagClassName: styles.greenTag,
             src: '/verify_completed_tag.svg',
-            text: 'Выполнено, просмотрено'
+            text: 'Выполнено'
         }
         case TagOption.REJECTED: return {
             tagClassName: styles.redTag,
@@ -72,8 +72,8 @@ export const TagOptionToTagParameters = (option: TagOption, date?: string): TTag
         }
         case TagOption.REJECTED_BY_ADMIN: return {
             tagClassName: styles.redTag,
-            src: '/rejected_by_admin.svg',
-            text: 'Отклонено, просмотрено',
+            src: '/rejected.svg',
+            text: 'Отклонено',
         }
         default: return {
             tagClassName: 'Класс необрабатываемого тэга',

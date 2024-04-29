@@ -1,24 +1,24 @@
 {
-	"name": "taksamanager",
-	"version": "1.0.0",
-	"license": "MIT",
-	"private": true,
-	"devDependencies": {
-		"concurrently": "^8.2.2",
-		"prisma": "5.11.0"
-	},
-	"dependencies": {
-		"@prisma/client": "5.11.0",
-		"dotenv": "^16.4.1",
-		"reverse_proxy_pathmapper": "^2.0.0"
-	},
-	"scripts": {
-		"inst": "yarn && yarn inst:server && yarn inst:client",
-		"inst:server": "yarn --cwd server install",
-		"inst:client": "yarn --cwd client install",
-		"dev:client": "yarn --cwd client dev",
+  "name": "taksamanager",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "prisma": "5.11.0"
+  },
+  "dependencies": {
+    "@prisma/client": "5.11.0",
+    "dotenv": "^16.4.1",
+    "reverse_proxy_pathmapper": "^2.0.0"
+  },
+  "scripts": {
+    "inst": "yarn && yarn inst:server && yarn inst:client",
+    "inst:server": "yarn --cwd server install",
+    "inst:client": "yarn --cwd client install",
+    "dev:client": "yarn --cwd client dev",
     "dev:c:p": "concurrently \"yarn dev:client\" \"node ./scripts/proxy.mjs\"",
-		"dev:server": "yarn --cwd server start:dev",
-		"dev": "concurrently \"yarn dev:client\" \"yarn dev:server\" \"node ./scripts/proxy.mjs\""
-	}
+    "dev:server": "yarn --cwd server start:dev",
+    "dev": "concurrently \"yarn dev:client\" \"yarn dev:server\" "
+  }
 }

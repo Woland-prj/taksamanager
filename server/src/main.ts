@@ -13,6 +13,13 @@ async function bootstrap() {
 		type: VersioningType.URI
 	})
 	app.useGlobalPipes(new ValidationPipe())
+	app.enableCors({
+		origin: '*',
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+		allowedHeaders:
+			'Origin, Content-Type, Accept, Authorization, X-Requested-With',
+		credentials: true
+	})
 
 	const docConfig = new DocumentBuilder()
 		.setTitle('Taksamanager')

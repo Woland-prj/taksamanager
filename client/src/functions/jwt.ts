@@ -16,7 +16,6 @@ export const refreshJWT = async () => {
 			method: 'GET'
 		}
 	)
-
 	if (response.ok) {
 		const data: IJwt = (await response.json()) as IJwt
 		await saveAccessToken(data)

@@ -14,10 +14,14 @@ async function bootstrap() {
 	})
 	app.useGlobalPipes(new ValidationPipe())
 	app.enableCors({
-		origin: '*',
+		origin: [
+			'http://localhost:3100',
+			'http://client:3100',
+			'http://127.0.0.1:3100'
+		],
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		allowedHeaders:
-			'Origin, Content-Type, Accept, Authorization, X-Requested-With',
+			'Origin, Content-Type, Accept, Authorization, X-Requested-With, token',
 		credentials: true
 	})
 

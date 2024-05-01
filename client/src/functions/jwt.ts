@@ -13,7 +13,8 @@ export const refreshJWT = async () => {
 	const response = await fetch(
 		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/auth/refresh`,
 		{
-			method: 'GET'
+			method: 'GET',
+			credentials: 'include'
 		}
 	)
 
@@ -35,7 +36,8 @@ export const getTokensFromDb = async (user: TLoggingInUser): Promise<IJwt> => {
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8'
 			},
-			body: JSON.stringify(user)
+			body: JSON.stringify(user),
+			credentials: 'include'
 		}
 	)
 

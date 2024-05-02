@@ -11,9 +11,10 @@ datasource db {
 
 model Team {
   id      String @id @default(uuid()) @db.Uuid
-  name    String
   color   String
   members User[]
+
+  @@unique([id, color])
 }
 
 model JwtToken {
@@ -33,8 +34,10 @@ model User {
   isActivated   Boolean  @default(false)
   clientTasks   Task[]   @relation("clientUser")
   executorTasks Task[]   @relation("executorUser")
-  team          Team?    @relation(fields: [teamId], references: [id])
+  team          Team?    @relation(fields: [teamId, teamColor], references: [id, color])
   teamId        String?  @unique @db.Uuid
+  teamColor     String?  @default("#808080") @db.VarChar(7)
+  avatar        Bytes?   @db.ByteA
 
   @@unique([id, username])
 }

@@ -80,13 +80,21 @@ export class UsersService {
 		updateUserDto: UpdateUserDto
 	): Promise<GetUserResDto> {
 		const regExp = /\@| |\$/g
-		updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
+		if (updateUserDto.tgUsername)
+			updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
+		let avatar: Buffer | null = null
+		if (updateUserDto.avatar) {
+			avatar = Buffer.from(updateUserDto.avatar, 'base64')
+		}
+		console.log(updateUserDto)
+		console.log(avatar)
 		const updetedUser = await this.prismaService.user.update({
 			where: {
 				id: id
 			},
 			data: {
-				...updateUserDto
+				...updateUserDto,
+				avatar: avatar
 			}
 		})
 		if (!updetedUser)

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional } from 'class-validator'
+import { IsBase64, IsNotEmpty, IsOptional } from 'class-validator'
 
 export class UpdateUserDto {
 	@IsOptional()
@@ -12,4 +12,9 @@ export class UpdateUserDto {
 	@IsOptional()
 	@IsNotEmpty()
 	tgUsername: string
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsBase64()
+	avatar: string
 }

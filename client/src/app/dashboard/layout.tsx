@@ -1,4 +1,3 @@
-import { PageHeader } from "@/components/main/PageHeader/PageHeader"
 import { SideBar } from "@/components/main/SideBar/SideBar"
 import styles from "./layout.module.css"
 export default function DashboardLayout({

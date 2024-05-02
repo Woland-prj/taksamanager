@@ -29,6 +29,7 @@ export interface ITask {
 	clientId?: string
 	clientName?: string
 	questions: ITaskQuestion[]
+	//result: string 				// Готовый результат по задаче (ссылка на работу)
 }
 
 export interface ITaskQuestion {
@@ -45,8 +46,8 @@ export const enum TagOption {
     PHOTO = 'PHOTO',
 	ANIMATION = 'ANIMATION',
 
-	MODIFIED = 'MODIFIED', // В процессе модерации
-	WAIT_CONSENT = 'WAIT_CONSENT',   // Задача ожидает подтверждения исполнителя
+	MODIFIED = 'MODIFIED', 			// В процессе модерации
+	WAIT_CONSENT = 'WAIT_CONSENT',	// Задача ожидает подтверждения исполнителя
 	IN_WORK = 'INWORK',
 	COMPLETED = 'COMPLETED',
 	VERIFY_COMPLETED = 'VERIFYCOMPLETED',

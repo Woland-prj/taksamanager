@@ -7,7 +7,7 @@ import { useState } from 'react'
 import ErrorBlock from '../error/Error'
 import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
-import Field from './field/field'
+import Field from '../Field/field'
 import { useRouter } from 'next/navigation'
 import { saveLoggedInToken } from '@/functions/isLoggedIn'
 

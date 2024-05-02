@@ -1,6 +1,6 @@
 import { Status } from "@/types/login_and_register"
 import { getAccessToken } from "./jwt"
-import { TUser } from "@/types/user"
+import { TUser, UserRole } from "@/types/user"
 export const activateUser = async (linkUuid: string): Promise<TUser> => {
     const response = await fetch(
         '/api/v1/users/activate/' + `${linkUuid}`,{ 
@@ -47,3 +47,28 @@ export const getUser = async () => {
     if (response.status == 404) throw Status.NOTFOUND
     return await response.json()
 }
+
+export const getUserById = async (userId: string): Promise<TUser> => {
+    // const token = await getAccessToken()
+    // if (!token) {throw Status.FORBIDDEN}
+    return {
+        id: userId,
+        username: 'Тестовое имя',
+        email: 'Тестовый email',
+        role: UserRole.EXECUTOR,
+        isActivated: true,
+        tgUsername: '',
+        tgChatId: 0,
+        teamId: '',
+    }
+}
+// (alias) type TUser = {
+//     id: string;
+//     username: string;
+//     email: string;
+//     role: string;
+//     isActivated: true;
+//     tgUsername: string;
+//     tgChatId: 0;
+//     teamId: string;
+// }

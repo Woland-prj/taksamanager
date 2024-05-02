@@ -7,9 +7,10 @@ import { redirectToPage } from '@/functions/redirectToPage'
 import redirectByJWT from '@/functions/redirectByJWT'
 
 export default function Dashboard() {
-	const createTaskAction = async () => {
-		redirectToPage('https://forms.gle/aevQapAyVCtDbPsSA')
-	}
+	// const createTaskAction = async () => {
+	// 	redirectToPage('https://forms.gle/aevQapAyVCtDbPsSA')
+	// }
+	const createTaskURL = 'https://forms.gle/aevQapAyVCtDbPsSA'
 	redirectByJWT()
 	return (
 		<main className={styles.workingField}>
@@ -17,7 +18,8 @@ export default function Dashboard() {
 				<PageHeader
 					sectionTitle='Доска задач'
 					buttonText='Создать задачу'
-					buttonAction={createTaskAction}
+					buttonAction={async () => {}}
+					href={createTaskURL}
 				/>
 			</header>
 			<TasksContainer />	

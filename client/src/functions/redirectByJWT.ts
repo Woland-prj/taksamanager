@@ -1,6 +1,5 @@
 'use client'
 
-import { useLayoutEffect } from "react"
 import { refreshJWT } from "./jwt"
 import { usePathname, useRouter } from "next/navigation"
 import { getLoggedInToken, saveLoggedInToken } from "./isLoggedIn"
@@ -11,7 +10,7 @@ export default function redirectByJWT() {
 	const isLoggedInSTRING = getLoggedInToken()
 	const isLoggedIn = isLoggedInSTRING == 'true' ? true : isLoggedInSTRING == 'false' ? false : null
 	try {
-		refreshJWT()
+		if (!pathname.startsWith('/auth')) {refreshJWT()}
 		if (pathname.startsWith('/auth') && isLoggedIn){
 			saveLoggedInToken('true')
 			router.replace('/dashboard')

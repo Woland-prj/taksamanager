@@ -12,7 +12,8 @@ export interface IField {
 	setValue: Dispatch<SetStateAction<IForm>>
 	status: Status | null
 	fieldType: 'password' | 'email' | 'username'
-	isEmpty?: boolean
+	isEmpty?: boolean,
+	className?: string,
 }
 
 const Field: FC<IField> = ({
@@ -22,7 +23,8 @@ const Field: FC<IField> = ({
 	setValue,
 	fieldType,
 	status,
-	isEmpty
+	isEmpty,
+	className,
 }) => {
 	const [isActive, setIsActive] = useState<boolean>(false)
 	const classes = cn(
@@ -32,7 +34,8 @@ const Field: FC<IField> = ({
 			status === Status.BADREQUEST ||
 			status === Status.EXIST ||
 			isEmpty) &&
-			styles.error
+			styles.error,
+		className
 	)
 
 	return (

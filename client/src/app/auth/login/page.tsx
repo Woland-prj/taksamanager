@@ -1,12 +1,10 @@
 'use client'
 import Form from '@/components/form/form'
 import styles from '../login.module.css'
-import { useEffect, useLayoutEffect } from 'react'
-import { getAccessToken, refreshJWT } from '@/functions/jwt'
-import { redirectToPage } from '@/functions/redirectToPage'
+import redirectByJWT from '@/functions/redirectByJWT'
 
 export default function LoginPage() {
-
+	redirectByJWT()
 	return (
 		<main className={styles.wrapper}>
 			<Form formOption='login' />

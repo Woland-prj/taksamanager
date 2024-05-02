@@ -1,5 +1,11 @@
+export const enum UserRole {
+    ROOT = 'ROOT',
+    ADMIN = 'ADMIN',
+    EXECUTOR = 'EXECUTOR',
+    CLIENT = 'CLIENT',
+}
 export type TUser = {
-    id: string,
+    id: string,         // Также служит и для получения картинок
     username: string,
     email: string,
     role: string,
@@ -7,11 +13,28 @@ export type TUser = {
     tgUsername: string,
     tgChatId: 0,
     teamId: string
+    //teamColor: string   // Цвет команды
+}
+// GET /api/v1/users/avatar
+type TProfileImageIn = { 
+    id: string // обращаюсь к серверу за картинкой по айдишнику user
+}
+type TProfileImageOut = {
+    avatar: string // После обработки возвращает base64 строку в которой закодирована картинка
 }
 
-export const enum UserRole {
-    ROOT = 'ROOT',
-    ADMIN = 'ADMIN',
-    EXECUTOR = 'EXECUTOR',
-    CLIENT = 'CLIENT',
+// PATCH /api/v1/users
+type TUpdateUserProfileIn = {
+    email: string,
+    username: string,
+    tgUsername: string,
+    avatar: string,     //base 64 картинка
 }
+// Output такой же, как и был
+
+// GET /api/v1/users/team
+// API достает по запросу массив всех пользователей
+// На входе просто JWT
+// На выходе тип:
+type TGetAllUsers = {users: TUser[]}
+// По ролям я их сам раскидаю

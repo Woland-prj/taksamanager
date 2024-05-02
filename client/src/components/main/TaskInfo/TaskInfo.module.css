@@ -14,16 +14,19 @@
     gap: 0px;
     justify-content: space-between;
     opacity: 0px;
+
+    display: flex;
 }
 
 .infoContainer {
-    width: min-content
+    width: max-content
 }
 
 .taksa {
     position: absolute;
     right: 0;
     bottom: 0;
+    z-index: -1;
 }
 .taksa::selection{
     background: transparent;

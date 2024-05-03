@@ -58,6 +58,7 @@ model Task {
   questions      TaskQuestion[]
   client         User?          @relation("clientUser", fields: [clientId, clientName], references: [id, username])
   executor       User?          @relation("executorUser", fields: [executorId, executorName], references: [id, username])
+  result         String?
 }
 
 model QuestionTemplate {

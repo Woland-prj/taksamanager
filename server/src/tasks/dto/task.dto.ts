@@ -29,6 +29,7 @@ export class GetTaskDto {
 	executorName: string
 	clientId: string
 	clientName: string
+	result: string | null
 	@ApiProperty({ type: () => [TaskQ] })
 	questions: {
 		id: string
@@ -77,10 +78,16 @@ export class TaskAdminUpdateDto {
 	@IsOptional()
 	@IsUUID()
 	executorId: string
+
+	@IsOptional()
+	result: string
 }
 
 export class TaskExecutorUpdateDto {
 	@IsOptional()
 	@IsIn(['INWORK', 'COMPLETED', 'REJECTED'])
 	status: string
+
+	@IsOptional()
+	result: string
 }

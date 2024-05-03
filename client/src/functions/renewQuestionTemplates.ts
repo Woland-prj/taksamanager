@@ -1,6 +1,9 @@
-'use server' 
+'use server'
 export const renewQuestionTemplates = async () => {
-    const response = await fetch('http://localhost:3000/api/v1/tasks/template', {
-        method: 'PATCH'
-    })
+	const response = await fetch(
+		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/templates`,
+		{
+			method: 'PATCH'
+		}
+	)
 }

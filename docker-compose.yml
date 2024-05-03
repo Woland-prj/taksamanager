@@ -65,10 +65,12 @@ services:
 
   client:
     container_name: client
-    build:
+    build:      
       dockerfile: Dockerfile
       context: client
     restart: on-failure
+    environment:
+        NEXT_PUBLIC_API_HOST: 'server:3200'
     ports:
       - '3100:3100'
     networks:
@@ -92,7 +94,7 @@ services:
       - taksanet
     profiles:
       - prod
-      - dev
+      # - dev
 
 networks:
   taksanet:

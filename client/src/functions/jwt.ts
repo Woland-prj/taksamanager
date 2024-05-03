@@ -10,29 +10,33 @@ export const getAccessToken = () => {
 }
 
 export const refreshJWT = async () => {
-	const response = await fetch('http://localhost:3000/api/v1/auth/refresh', {
-		method: 'GET'
-	})
-
+	const response = await fetch(
+		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/auth/refresh`,
+		{
+			method: 'GET'
+		}
+	)
 	if (response.ok) {
-		const data: IJwt = await response.json() as IJwt
+		const data: IJwt = (await response.json()) as IJwt
 		await saveAccessToken(data)
 		await saveLoggedInToken('true')
-	}
-	else {
+	} else {
 		await saveLoggedInToken('false')
 		throw Status.FORBIDDEN
 	}
 }
 
 export const getTokensFromDb = async (user: TLoggingInUser): Promise<IJwt> => {
-	const response = await fetch('http://localhost:3000/api/v1/auth/login', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8'
-		},
-		body: JSON.stringify(user)
-	})
+	const response = await fetch(
+		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/auth/login`,
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify(user)
+		}
+	)
 
 	if (response.status == 201) {
 		return await response.json()

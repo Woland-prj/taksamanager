@@ -20,6 +20,7 @@ export const TaskInfo = () => {
     const taskId = usePathname().substring('/dashboard/'.length)
     const [task, setTask] = useState<ITask | null>(null)
     const [userRole, setUserRole] = useState<string>('')
+    const [isUserExecutor, setIsUserExecutor] = useState<boolean>(false)
     const saveTask = async () => {
         try {
             const taskDb = await getTaskbyId(taskId)
@@ -28,8 +29,9 @@ export const TaskInfo = () => {
     }
     const saveUser = async () => {
         try {
-            const userRoleDb = ((await getUser()) as TUser).role
-            setUserRole(userRoleDb)
+            const user = (await getUser()) as TUser
+            setIsUserExecutor(task?.executorId == user?.id)
+            setUserRole(user.role)
         } catch {
             try {refreshJWT()}
             catch{router.replace('/auth/login')}
@@ -64,7 +66,7 @@ export const TaskInfo = () => {
                 <TaskActions
                     taskStatus={task?.status}
                     userRole={userRole as UserRole}
-                    taskId={taskId}
+                    isUserExecutor={isUserExecutor}
                 />
             </div>
             <Image

@@ -2,16 +2,18 @@ import { Actions } from "@/components/main/TaskInfo/TaskActions/TaskActions"
 import { TaskStatus } from "@/types/tasks"
 import { UserRole } from "@/types/user"
 
-export const roleAndStatusToActions = (role: UserRole, status: TaskStatus | undefined): Actions => {
-    // if ( status == TaskStatus.MODIFIED )
-    //     return Actions.MODIFIED
-    // if ( status == TaskStatus.WAITCONSENT && role != UserRole.EXECUTOR )
+export const roleAndStatusToActions = (role: UserRole, status: TaskStatus | undefined, isUserExecutor: boolean): Actions => {
+    // if ( status == TaskStatus.MODIFIED && role == UserRole.CLIENT )
+    //     return Actions.MODIFIED_CLIENT
+    // if ( status == TaskStatus.MODIFIED && role == UserRole.ADMIN || UserRole.ROOT )
+    //     return Actions.MODIFIED_ADMIN
+    // if ( status == TaskStatus.WAITCONSENT && (role != UserRole.EXECUTOR || !isUserExecutor) )
     //     return Actions.WAITCONSENT_CLIENT
-    // if ( status == TaskStatus.WAITCONSENT && role == UserRole.EXECUTOR )
+    // if ( status == TaskStatus.WAITCONSENT && (role == UserRole.EXECUTOR || isUserExecutor) )
     //     return Actions.WAITCONSENT_EXECUTOR
-    // if ( status == TaskStatus.INWORK && role != UserRole.EXECUTOR )
+    // if ( status == TaskStatus.INWORK && (role != UserRole.EXECUTOR || !isUserExecutor) )
     //     return Actions.IN_WORK_CLIENT
-    // if ( status == TaskStatus.INWORK && role == UserRole.EXECUTOR )
+    // if ( status == TaskStatus.INWORK && (role == UserRole.EXECUTOR || isUserExecutor) )
     //     return Actions.IN_WORK_EXECUTOR
     // if ( status == TaskStatus.COMPLETED )
     //     return Actions.COMPLETED
@@ -22,7 +24,7 @@ export const roleAndStatusToActions = (role: UserRole, status: TaskStatus | unde
     // if ( status == TaskStatus.EXPIRED )
     //     return Actions.EXPIRED
     // return Actions.BLANK
-    return Actions.REJECTED
+    return Actions.COMPLETED
 }
 // MODIFIED = 'MODIFIED',
 // WAITCONSENT_CLIENT = 'WAITCONSENT_CLIENT',

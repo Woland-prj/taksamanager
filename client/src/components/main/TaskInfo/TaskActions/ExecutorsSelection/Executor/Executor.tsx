@@ -1,18 +1,26 @@
 import { TUser } from '@/types/user'
 import styles from './Executor.module.css'
 import Image from 'next/image'
-import { FC, MutableRefObject } from 'react'
+import { Dispatch, FC, MutableRefObject, SetStateAction, useState } from 'react'
 
 type TExecutorProps = {
-    user: TUser | null
+    user: TUser | null,
+    onClick: () => Promise<void>
 }
 
 const userClass = 11        // На время отсутствия в api необходимой информации
 const teamColor = '#FF0000' // константы содержат тестовые данные
+export const Executor: FC<TExecutorProps> = ({user, onClick}) => {
+    // const [activeStyle, setActiveStyle] = useState<'rgba(114, 255, 184, 0.3)' | '#FFFFFF'>('#FFFFFF')
+    // const switchActive = () => {
+    //     setIsActive(!isActive)
+    //     if (isActive) {
+    //         setActiveStyle('rgba(114, 255, 184, 0.3)')
+    //     } else { setActiveStyle('#FFFFFF')}
+    // }
 
-export const Executor: FC<TExecutorProps> = ({user}) => {
     return (
-        <div className={styles.executor}>
+        <div className={styles.executor} onClick={onClick}>
             <Image className={styles.image} src='/no_avatar.svg' alt='' height={50} width={50}/> {/*TODO: надо сделать добавление изображения пользователя*/} 
             <div className={styles.executor_info}>
                 <span className={styles.text}>{user?.username}</span>

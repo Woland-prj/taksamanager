@@ -67,6 +67,7 @@ export const TaskInfo = () => {
                     taskStatus={task?.status}
                     userRole={userRole as UserRole}
                     isUserExecutor={isUserExecutor}
+                    taskId={taskId}
                 />
             </div>
             <Image

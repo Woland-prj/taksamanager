@@ -1,10 +1,14 @@
 import Button from "@/components/ui/Button/Button"
 import { IForm, Status } from "@/types/login_and_register"
-import { SetStateAction, useState } from "react"
+import { FC, SetStateAction, useState } from "react"
 import { ResultField } from "./ResultField/ResultField"
 import styles from './InsertLinkForm.module.css'
-
-export const InsertLinkForm = () => {
+import { changeTaskByExecutor } from "@/functions/taskOperations"
+import { TaskStatus } from "@/types/tasks"
+type TInsertLinkFormProps = {
+    taskId: string
+}
+export const InsertLinkForm: FC<TInsertLinkFormProps> = ({taskId}) => {
     const [isEmpty, setIsEmpty] = useState<boolean>(false)
 	const [formData, setFormData] = useState<string>('')
 	const [status, setStatus] = useState<Status | null>(null)
@@ -30,8 +34,8 @@ export const InsertLinkForm = () => {
                 action={async () => {
                     if (isNotEmpty(formData)) {
                         setIsEmpty(false)
-                        try {
-                            
+                        try {/* При заполнении и подтверждении переводит в статус COMPLETED */
+                            changeTaskByExecutor(taskId, TaskStatus.COMPLETED)
                         } catch (status) {
                             if (status === Status.FORBIDDEN) {
                                 setStatus(Status.FORBIDDEN)

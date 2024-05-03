@@ -11,6 +11,7 @@ interface IButton {
 	fgColor: string
 	text: string
 	action: () => Promise<void>
+	isSelectable?: boolean
 }
 
 const euclid500 = localFont({
@@ -20,13 +21,19 @@ const euclid500 = localFont({
 	}]
 })
 
-const Button: FC<IButton> = ({ className, bgColor, fgColor, borderColor, text, action }) => {
+const Button: FC<IButton> = ({ className, bgColor, fgColor, borderColor, text, action, isSelectable }) => {
+	const userSelect = isSelectable ? 'text' : 'none'
 	const buttonCn = className ? className : ''
 	const border = borderColor ? borderColor : fgColor
 	return (
 		<button
 			className={cn(styles.button, buttonCn, euclid500.className)}
-			style={{ backgroundColor: bgColor, color: fgColor, border: '1px solid ' + border }}
+			style={{ 
+				backgroundColor: bgColor,
+				color: fgColor,
+				border: '1px solid ' + border,
+				userSelect: userSelect
+			}}
 			onClick={async () => {
 				await action()
 			}}

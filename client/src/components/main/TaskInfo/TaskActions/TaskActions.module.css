@@ -44,3 +44,7 @@
     flex-direction: column;
     gap: 30px;
 }
+
+.buttonWithText {
+    user-select: 'text'
+}

@@ -21,7 +21,8 @@ export const getTasks = async (type: TaskType): Promise<ITask[]> => {
 			method: 'GET',
 			headers: {
 				Authorization: 'Bearer ' + `${token}`
-			}
+			},
+			credentials: 'include'
 		}
 	)
 	if (response.ok) return await response.json()

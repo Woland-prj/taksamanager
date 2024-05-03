@@ -48,6 +48,7 @@ export class TasksService {
 				deadline: true,
 				status: true,
 				type: true,
+				result: true,
 				questions: {
 					select: {
 						id: true,
@@ -74,6 +75,7 @@ export class TasksService {
 				deadline: true,
 				status: true,
 				type: true,
+				result: true,
 				questions: {
 					select: {
 						id: true,
@@ -106,6 +108,7 @@ export class TasksService {
 				name: true,
 				deadline: true,
 				status: true,
+				result: true,
 				type: true,
 				questions: {
 					select: {
@@ -133,6 +136,7 @@ export class TasksService {
 				deadline: true,
 				status: true,
 				type: true,
+				result: true,
 				questions: {
 					select: {
 						id: true,

@@ -8,7 +8,8 @@ export const createUser = async (user: IForm): Promise<TConfirmedNewUser> => {
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8'
 			},
-			body: JSON.stringify(user)
+			body: JSON.stringify(user),
+      credentials: 'include'
 		}
 	)
 

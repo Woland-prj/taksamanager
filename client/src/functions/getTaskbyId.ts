@@ -13,7 +13,8 @@ export const getTaskbyId = async (id: string) => {
 			method: 'GET',
 			headers: {
 				Authorization: 'Bearer ' + `${token}`
-			}
+			},
+			credentials: 'include'
 		}
 	)
 	if (response.ok) return await response.json()

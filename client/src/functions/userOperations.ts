@@ -6,7 +6,8 @@ export const activateUser = async (linkUuid: string): Promise<TUser> => {
 		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users/activate/` +
 			`${linkUuid}`,
 		{
-			method: 'PATCH'
+			method: 'PATCH',
+			credentials: 'include'
 		}
 	)
 	if (response.status == 403) {
@@ -36,7 +37,8 @@ export const changeUserInfo = async (
 		method: 'PATCH',
 		headers: {
 			Authorization: 'Bearer ' + `${token}`
-		}
+		},
+		credentials: 'include'
 	})
 	if (response.status == 401 || response.status == 403) throw Status.FORBIDDEN
 	if (response.status == 404) throw Status.NOTFOUND
@@ -54,7 +56,8 @@ export const getUser = async () => {
 			method: 'GET',
 			headers: {
 				Authorization: 'Bearer ' + `${token}`
-			}
+			},
+			credentials: 'include'
 		}
 	)
 	if (response.status == 401 || response.status == 403) throw Status.FORBIDDEN

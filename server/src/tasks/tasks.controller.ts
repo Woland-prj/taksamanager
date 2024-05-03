@@ -56,7 +56,7 @@ export class TasksController {
 	@Patch('/templates')
 	@HttpCode(204)
 	@ApiOperation({
-		summary: 'Forced renew tempates for questions'
+		summary: 'Forced renew templates for questions'
 	})
 	async updateTemplates() {
 		await this.tasksService.updateTemplatesClient()
@@ -128,10 +128,11 @@ export class TasksController {
 	@JwtAdminAuth()
 	@Patch('/admin/:id')
 	async updateByAdmin(
+		@Request() req: ValidatedRequest,
 		@Body() taskAdminUpdateDto: TaskAdminUpdateDto,
 		@Param('id', new ParseUUIDPipe()) id: string
 	) {
-		return this.tasksService.updateByAdmin(id, taskAdminUpdateDto)
+		return this.tasksService.updateByAdmin(req.user.id, id, taskAdminUpdateDto)
 	}
 
 	@ApiOperation({

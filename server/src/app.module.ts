@@ -14,8 +14,9 @@ import { PrismaModule } from './prisma/prisma.module'
 import { TasksModule } from './tasks/tasks.module'
 import { TasksService } from './tasks/tasks.service'
 import { BotModule } from './tgbot/bot.module'
-import { BotService } from './tgbot/bot.service'
+import { BotUpdate } from './tgbot/bot.update'
 import { UsersModule } from './users/users.module'
+import { BotService } from './tgbot/bot.service'
 
 @Module({
 	imports: [
@@ -40,6 +41,7 @@ import { UsersModule } from './users/users.module'
 		MailService,
 		FormsService,
 		TasksService,
+		BotUpdate,
 		BotService
 	],
 	controllers: [AppController]

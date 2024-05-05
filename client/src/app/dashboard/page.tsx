@@ -11,7 +11,7 @@ export default function Dashboard() {
 	// const createTaskAction = async () => {
 	// 	redirectToPage('https://forms.gle/aevQapAyVCtDbPsSA')
 	// }
-	redirectByJWT()
+	// redirectByJWT()
 	return (
 		<main className={styles.workingField}>
 			<header>
@@ -22,7 +22,9 @@ export default function Dashboard() {
 					href={createTaskURL}
 				/>
 			</header>
-			<TasksContainer />	
+			<div className={styles.scrollbar}>
+				<TasksContainer />
+			</div>	
 		</main>
 	)
 }

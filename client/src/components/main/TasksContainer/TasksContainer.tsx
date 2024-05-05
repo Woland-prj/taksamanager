@@ -1,36 +1,52 @@
 'use client'
-import { TaskType, getTasks } from '@/functions/getTasks'
-import { getAccessToken, refreshJWT } from '@/functions/jwt'
-import { Status } from '@/types/login_and_register'
-import { ITask } from '@/types/tasks'
-import { useEffect, useState } from 'react'
+import { TaskOption, getTasks, getUserTasks } from '@/functions/getTasks'
+import { refreshJWT } from '@/functions/jwt'
+import { ITask, TaskStatus } from '@/types/tasks'
+import { FC, useEffect, useState } from 'react'
 import styles from './TasksContainer.module.css'
 import { Task } from './task/Task'
-import { redirectToPage } from '@/functions/redirectToPage'
 import { renewQuestionTemplates } from '@/functions/renewQuestionTemplates'
-import { getUser } from '@/functions/userOperations'
-import { TUser } from '@/types/user'
 import { useRouter } from 'next/navigation'
+import { TaskType } from '@/types/tasks'
 
-const TasksContainer = () => {
+type TTaskContainerProps = {
+	statusFilter?: TaskStatus   // Параметр по которому фильтруются задачи по статусу. При отсутствии на выходе будут все задачи
+	userId?: string				// Параметр, по которому мы получим задачи конкретного пользователя
+	optionFilter?: TaskOption   // Параметр по которому мы фильтруются задачи в статусе EXECUTED и APPOINTED. При отсутствии выдаст все задачи
+}
+
+const TasksContainer: FC<TTaskContainerProps> = ({statusFilter, userId, optionFilter}) => {
 	const router = useRouter()
-	const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
-    const getExecuted = async () => {
+	const definedUserId = userId ? userId : null
+	const option = optionFilter ? optionFilter : TaskOption.EXECUTED
+	const [tasks, setTasks] = useState<ITask[] | null>(null)
+	const exampleTask = {
+		id: '1',
+		name: 'Имя',
+		status: TaskStatus.INWORK,
+		deadline: new Date('12/12/12'),
+		type: TaskType.POST,
+		questions: []
+	}
+    const getAllUserTasks = async () => {
 		try {
 			refreshJWT()
-			const tasksDb = await getTasks(TaskType.EXECUTED)
-			setExecutedTasks(tasksDb)
+			if (definedUserId) {
+				setTasks(await getUserTasks(definedUserId))
+			} else {	
+				setTasks(await getTasks(option))
+			}
 		}
 		catch {
-			console.log('renew refresh token') 
+			//console.log('renew refresh token') 
 			router.replace('/auth/login')
 		}
     }
-  	useEffect(() => {renewQuestionTemplates(); getExecuted()}, [])
+  	useEffect(() => {renewQuestionTemplates(); getAllUserTasks()}, [])
 	return (
 		<div className={styles.blockContainer}>
 			<div className={styles.tasksContainer}>
-				{executedTasks?.map(task => { 
+				{tasks?.map(task => { 
 					return (
 						<Task 
 							key={task.id}

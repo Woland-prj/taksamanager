@@ -1,5 +1,5 @@
-import { redirectToPage } from "./redirectToPage"
-import { createTaskURL } from "@/app/dashboard/page"
+import { createTaskURL } from '@/types/tasks'
+import { redirectToPage } from './redirectToPage'
 export const redirectToTaskForm = async () => {
-    redirectToPage(createTaskURL)
+	redirectToPage(createTaskURL)
 }

@@ -1,3 +1,5 @@
+export const createTaskURL = 'https://forms.gle/aevQapAyVCtDbPsSA'
+
 export const enum TaskStatus {
 	MODIFIED = 'MODIFIED',
 	WAITCONSENT = 'WAITCONSENT',

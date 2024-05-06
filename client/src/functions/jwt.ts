@@ -17,6 +17,7 @@ export const refreshJWT = async () => {
 			credentials: 'include'
 		}
 	)
+	console.log(response.status)
 	if (response.ok) {
 		const data: IJwt = (await response.json()) as IJwt
 		await saveAccessToken(data)

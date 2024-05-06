@@ -1,9 +1,10 @@
 import { Status } from '@/types/login_and_register'
 import { getAccessToken } from './jwt'
+import { TaskStatus } from '@/types/tasks'
 
 export const changeTaskByAdmin = async (
 	taskId: string,
-	newStatus?: Status,
+	newStatus?: TaskStatus,
 	newExecutorId?: string
 ) => {
 	const token = getAccessToken()
@@ -47,7 +48,7 @@ export const changeTaskByAdmin = async (
 
 export const changeTaskByExecutor = async (
 	taskId: string,
-	newStatus: Status
+	newStatus: TaskStatus
 ) => {
 	const token = getAccessToken()
 	if (!token) {

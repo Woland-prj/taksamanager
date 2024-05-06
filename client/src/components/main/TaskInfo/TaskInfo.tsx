@@ -1,36 +1,53 @@
 'use client'
 import { getTaskbyId } from "@/functions/getTaskbyId"
-import { getAccessToken } from "@/functions/jwt"
-import { ITask } from "@/types/tasks"
-import { useEffect, useLayoutEffect, useState } from "react"
+import { refreshJWT } from "@/functions/jwt"
+import { ITask} from "@/types/tasks"
+import { useEffect, useState } from "react"
 import { PageHeader } from "../PageHeader/PageHeader"
 import { Info } from "./Info/Info"
 import { usePathname } from "next/navigation"
 import styles from './TaskInfo.module.css'
 import Image from "next/image"
+import { translateTaskStatus } from "@/functions/translateTaskStatus"
+import { TaskActions } from "./TaskActions/TaskActions"
+import { TUser, UserRole } from "@/types/user"
+import { getUser } from "@/functions/userOperations"
+import { useRouter } from "next/navigation"
+import redirectByJWT from "@/functions/redirectByJWT"
 
 export const TaskInfo = () => {
+    const router = useRouter()
     const taskId = usePathname().substring('/dashboard/'.length)
     const [task, setTask] = useState<ITask | null>(null)
-    const getTask = async () => {
+    const [userRole, setUserRole] = useState<string>('')
+    const [isUserExecutor, setIsUserExecutor] = useState<boolean>(false)
+    const saveTask = async () => {
         try {
-            const token = getAccessToken()
-            const taskDb = await getTaskbyId(taskId, token)
+            const taskDb = await getTaskbyId(taskId)
             setTask(taskDb)
-        }
-        catch {
-            console.log('Такой задачи не существует')
+        } catch {console.log('Такой задачи не существует')}
+    }
+    const saveUser = async () => {
+        try {
+            const user = (await getUser()) as TUser
+            setIsUserExecutor(task?.executorId == user?.id)
+            setUserRole(user.role)
+        } catch {
+            try {refreshJWT()}
+            catch{router.replace('/auth/login')}
         }
     }
-    useEffect(() => {getTask()}, [])
+    useEffect(() => {saveTask(); saveUser()}, [])
     return (
         <main className={styles.taskContainer}>
             <header>
                 <PageHeader
                     textClassName={styles.headerText}
                     buttonClassName={styles.headerButton}
+                    backgroundColor="#FFFFFF"
+                    fontColor="#000000"
                     sectionTitle={task?.name}
-                    buttonText={task?.status}
+                    buttonText={translateTaskStatus(task?.status)}
                     buttonAction={async () => {}}
                 />
             </header>
@@ -46,7 +63,12 @@ export const TaskInfo = () => {
                         )
                     })}
                 </div>
-                {/* <TaskActions/> */}
+                <TaskActions
+                    taskStatus={task?.status}
+                    userRole={userRole as UserRole}
+                    isUserExecutor={isUserExecutor}
+                    taskId={taskId}
+                />
             </div>
             <Image
                 className={styles.taksa}

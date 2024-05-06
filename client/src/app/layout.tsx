@@ -3,7 +3,8 @@ import localFont from 'next/font/local'
 import '../styles/globals.css'
 import cn from 'clsx'
 import styles from './layout.module.css'
-import StoreProvider from './StoreProvider'
+import { useEffect } from 'react'
+import redirectByJWT from '@/functions/redirectByJWT'
 
 const euclidRegular = localFont({
 	src: [{
@@ -44,9 +45,7 @@ export default function RootLayout({
 	return (
 		<html lang='ru' data-lt-installed='true'>
 			<body className={cn(euclidRegular.className, styles.body)} data-gr-ext-installed cz-shortcut-listen='true'>
-				<StoreProvider>
 					{children}
-				</StoreProvider>
 			</body>
 		</html>
 	)

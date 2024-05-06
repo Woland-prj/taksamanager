@@ -15,18 +15,22 @@
     justify-content: space-between;
     opacity: 0px;
 
+    display: flex;
 }
 
 .infoContainer {
-    width: min-content
+    width: max-content
 }
 
 .taksa {
     position: absolute;
-    top: 236px;
-    left: 1069px
+    right: 0;
+    bottom: 0;
+    z-index: -1;
 }
-
+.taksa::selection{
+    background: transparent;
+}
 .headerText {
     font-size: 30px;
     font-weight: 300;
@@ -37,5 +41,9 @@
 
 .headerButton {
     border: 2px solid #000000;
-    background: #FFFFFF;
+    background-color: #FFFFFF;
+
+    width: 274px;
+    height: 59px;
+
 }

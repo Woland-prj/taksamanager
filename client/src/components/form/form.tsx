@@ -22,19 +22,6 @@ type TFormProps = { formOption: 'register' | 'login' }
  * @return {JSX.Element} the form component JSX
  */
 const Form: FC<TFormProps> = ({ formOption }) => {
-	// const exampleLogInData: TLoggingInUser = {
-	// 	email: 'email@example.com',
-	// 	password: ''
-	// }
-	// const exampleRegisterData: TNewUser = {
-	// 	username: '',
-	// 	email: '',
-	// 	password: ''
-	// }
-	// const [registerUser, setRegisterUser] =
-	// 	useState<TNewUser>(exampleRegisterData)
-	// const [logInUser, setLogInUser] = useState<TLoggingInUser>(exampleLogInData)
-
 	return (
 		<div className={styles.form}>
 			<div className={cn(styles.entrance, euclidMedium.className)}>

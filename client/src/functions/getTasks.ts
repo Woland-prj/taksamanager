@@ -6,7 +6,7 @@ import { redirectToPage } from './redirectToPage'
 import { redirect } from 'next/navigation'
 import { refreshWithThrow } from './refreshWithThrow'
 
-export enum TaskAffilationType {
+export enum TaskOption {
 	EXECUTED = 'executed',
 	APPOINTED = 'appointed'
 }
@@ -24,7 +24,7 @@ export enum TaskAffilationType {
 // }
 
 export const getTasks = async (
-	type: TaskAffilationType
+	type: TaskOption
 ): Promise<ITask[] | null> => {
 	const token = getAccessToken()
 	if (!token) {
@@ -51,4 +51,25 @@ export const getTasks = async (
 		// return await refreshWithCallback<ITask[] | undefined>(() => getTasks(type))
 		return await refreshWithThrow()
 	} else throw new Error(Status.NOTFOUND)
+}
+
+export const getUserTasks = async (userId: string): Promise<ITask[]> => {
+	const token = getAccessToken()
+	if (!token) throw Status.FORBIDDEN
+	renewTasks()
+	const response = await fetch(
+		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/user` +
+			userId +
+			'/',
+		{
+			method: 'GET',
+			headers: {
+				Authorization: 'Bearer ' + `${token}`
+			},
+			credentials: 'include'
+		}
+	)
+	if (response.ok) return await response.json()
+	if (response.status === +Status.FORBIDDEN) throw Status.FORBIDDEN
+	else throw Status.NOTFOUND
 }

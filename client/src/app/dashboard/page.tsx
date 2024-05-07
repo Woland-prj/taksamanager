@@ -5,7 +5,7 @@ import styles from './page.module.css'
 import { ITask, TaskType, createTaskURL } from '@/types/tasks'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { TaskAffilationType, getTasks } from '@/functions/getTasks'
+import { TaskOption, getTasks } from '@/functions/getTasks'
 import { Status } from '@/types/login_and_register'
 
 export default function Dashboard() {
@@ -13,8 +13,8 @@ export default function Dashboard() {
   const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
   const getExecuted = async () => {
     try {
-      let tasksDb = await getTasks(TaskAffilationType.EXECUTED)
-      if (!tasksDb) tasksDb = await getTasks(TaskAffilationType.EXECUTED)
+      let tasksDb = await getTasks(TaskOption.EXECUTED)
+      if (!tasksDb) tasksDb = await getTasks(TaskOption.EXECUTED)
       // console.log(tasksDb)
       setExecutedTasks(tasksDb)
     } catch (status) {
@@ -35,7 +35,9 @@ export default function Dashboard() {
           href={createTaskURL}
         />
       </header>
-      <TasksContainer tasks={executedTasks} />
+      <div className={styles.scrollbar}>
+        <TasksContainer tasks={executedTasks} />
+      </div>
     </main>
   )
 }

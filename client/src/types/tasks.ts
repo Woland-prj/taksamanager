@@ -8,16 +8,17 @@ export const enum TaskStatus {
 	VERIFYCOMPLETED = 'VERIFYCOMPLETED',
 	REJECTED = 'REJECTED',
 	REJECTEDBYLEAD = 'REJECTEDBYADMIN',
-	EXPIRED = 'EXPIRED',
+	EXPIRED = 'EXPIRED'
 }
 
 export const enum TaskType {
 	POST = 'POST',
-    DESIGN = 'DESIGN',
-    VIDEO = 'VIDEO',
-    MONTAGE = 'MONTAGE',
-    PHOTO = 'PHOTO',
-	ANIMATION = 'ANIMATION'
+	DESIGN = 'DESIGN',
+	VIDEO = 'VIDEO',
+	MONTAGE = 'MONTAGE',
+	PHOTO = 'PHOTO',
+	ANIMATION = 'ANIMATION',
+	EXECUTED = 'EXECUTED'
 }
 
 export interface ITask {
@@ -41,15 +42,15 @@ export interface ITaskQuestion {
 }
 
 export const enum TagOption {
-    POST = 'POST',
-    DESIGN = 'DESIGN',
-    VIDEO = 'VIDEO',
-    MONTAGE = 'MONTAGE',
-    PHOTO = 'PHOTO',
+	POST = 'POST',
+	DESIGN = 'DESIGN',
+	VIDEO = 'VIDEO',
+	MONTAGE = 'MONTAGE',
+	PHOTO = 'PHOTO',
 	ANIMATION = 'ANIMATION',
 
-	MODIFIED = 'MODIFIED', 			// В процессе модерации
-	WAIT_CONSENT = 'WAIT_CONSENT',	// Задача ожидает подтверждения исполнителя
+	MODIFIED = 'MODIFIED', // В процессе модерации
+	WAIT_CONSENT = 'WAIT_CONSENT', // Задача ожидает подтверждения исполнителя
 	IN_WORK = 'INWORK',
 	COMPLETED = 'COMPLETED',
 	VERIFY_COMPLETED = 'VERIFYCOMPLETED',
@@ -57,5 +58,5 @@ export const enum TagOption {
 	REJECTED_BY_ADMIN = 'REJECTEDBYADMIN',
 	EXPIRED = 'EXPIRED',
 
-    UNDEFINED = 'UNDEFINED',
+	UNDEFINED = 'UNDEFINED'
 }

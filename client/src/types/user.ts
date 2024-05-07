@@ -13,7 +13,8 @@ export type TUser = {
     tgUsername: string,
     tgChatId: 0,
     teamId: string
-    //teamColor: string   // Цвет команды
+    teamColor: string   // Цвет команды
+    avatar: string     
 }
 // GET /api/v1/users/avatar
 type TProfileImageIn = { 

@@ -4,8 +4,10 @@ import redirectByJWT from "@/functions/redirectByJWT";
 
 
 export default function TaskPage() {
-	redirectByJWT()
-    return (<>
-        <TaskInfo></TaskInfo>
-    </>)
+  // redirectByJWT()
+  return (
+    <>
+      <TaskInfo></TaskInfo>
+    </>
+  )
 }

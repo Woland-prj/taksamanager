@@ -2,15 +2,29 @@
 import { PageHeader } from '@/components/main/PageHeader/PageHeader'
 import TasksContainer from '@/components/main/TasksContainer/TasksContainer'
 import styles from './page.module.css'
-import { redirectToPage } from '@/functions/redirectToPage'
-import redirectByJWT from '@/functions/redirectByJWT'
-import { createTaskURL } from '@/types/tasks'
+import { ITask, TaskType, createTaskURL } from '@/types/tasks'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { TaskAffilationType, getTasks } from '@/functions/getTasks'
+import { Status } from '@/types/login_and_register'
 
 export default function Dashboard() {
-  // const createTaskAction = async () => {
-  // 	redirectToPage('https://forms.gle/aevQapAyVCtDbPsSA')
-  // }
-  // redirectByJWT()
+  const router = useRouter()
+  const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
+  const getExecuted = async () => {
+    try {
+      let tasksDb = await getTasks(TaskAffilationType.EXECUTED)
+      if (!tasksDb) tasksDb = await getTasks(TaskAffilationType.EXECUTED)
+      // console.log(tasksDb)
+      setExecutedTasks(tasksDb)
+    } catch (status) {
+      if (status === Status.FORBIDDEN) router.push('/auth/login')
+      console.log('eroroooor', status)
+    }
+  }
+  useEffect(() => {
+    getExecuted()
+  }, [])
   return (
     <main className={styles.workingField}>
       <header>
@@ -21,7 +35,7 @@ export default function Dashboard() {
           href={createTaskURL}
         />
       </header>
-      <TasksContainer />
+      <TasksContainer tasks={executedTasks} />
     </main>
   )
 }

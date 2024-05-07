@@ -6,7 +6,7 @@ import { redirectToPage } from './redirectToPage'
 import { redirect } from 'next/navigation'
 import { refreshWithThrow } from './refreshWithThrow'
 
-export enum TaskType {
+export enum TaskAffilationType {
 	EXECUTED = 'executed',
 	APPOINTED = 'appointed'
 }
@@ -23,7 +23,9 @@ export enum TaskType {
 // 	}
 // }
 
-export const getTasks = async (type: TaskType): Promise<ITask[] | null> => {
+export const getTasks = async (
+	type: TaskAffilationType
+): Promise<ITask[] | null> => {
 	const token = getAccessToken()
 	if (!token) {
 		// await refreshWithCallback<ITask[] | undefined>(() => getTasks(type))

@@ -4,6 +4,7 @@ import { renewTasks } from './renewTasks'
 import { getAccessToken, refreshJWT } from './jwt'
 import { redirectToPage } from './redirectToPage'
 import { redirect } from 'next/navigation'
+import { refreshWithThrow } from './refreshWithThrow'
 
 export enum TaskType {
 	EXECUTED = 'executed',
@@ -21,15 +22,6 @@ export enum TaskType {
 // 		throw status
 // 	}
 // }
-const refreshWithThrow = async () => {
-	try {
-		await refreshJWT()
-		return null
-	} catch (status) {
-		console.log('catched status', status)
-		throw status
-	}
-}
 
 export const getTasks = async (type: TaskType): Promise<ITask[] | null> => {
 	const token = getAccessToken()

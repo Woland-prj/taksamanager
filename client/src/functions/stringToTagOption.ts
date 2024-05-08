@@ -1,5 +1,5 @@
 import { TagOption, TaskStatus, TaskType } from '@/types/tasks'
-export const stringToTagOption = (text: string): TagOption => {
+export const stringToTagOption = (text: string | null): TagOption => {
 	switch (text) {
 		case TaskStatus.MODIFIED:
 			return TagOption.MODIFIED

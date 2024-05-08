@@ -11,7 +11,7 @@ datasource db {
 
 model Team {
   id      String @id @default(uuid()) @db.Uuid
-  color   String
+  color   String @unique @db.VarChar(7)
   members User[]
 
   @@unique([id, color])
@@ -35,9 +35,10 @@ model User {
   clientTasks   Task[]   @relation("clientUser")
   executorTasks Task[]   @relation("executorUser")
   team          Team?    @relation(fields: [teamId, teamColor], references: [id, color])
-  teamId        String?  @unique @db.Uuid
+  teamId        String?  @db.Uuid
   teamColor     String?  @default("#808080") @db.VarChar(7)
   avatar        Bytes?   @db.ByteA
+  class         Int?
 
   @@unique([id, username])
 }
@@ -91,6 +92,7 @@ enum TaskStatus {
   VERIFYCOMPLETED
   REJECTED
   VERIFYREJECTED
+  EXPIRED
 }
 
 enum TaskType {

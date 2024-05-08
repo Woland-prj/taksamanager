@@ -12,12 +12,12 @@ export const SideBar = () => {
                 action={() => {return new Promise(() => {})}}
             />
             <SideBarButton
-                iconName='dashboard.png'
+                iconName='dashboard.svg'
                 text='Доска задач'
                 action={async () => {console.log('кнопка'); redirectToPage('/dashboard')}}
             />
             <SideBarButton
-                iconName='team.png'
+                iconName='team.svg'
                 text='Команда'
                 action={() => {return new Promise(() => {})}}
             />

@@ -32,7 +32,7 @@ export default async function redirectByJWT() {
 	} catch {
 		console.log('refresh токен устарел')
 		saveLoggedInToken('false')
-		router.replace('/auth/login')
+		if (!pathname.startsWith('/auth')) { router.replace('/auth/login') }
 	}
 }
 

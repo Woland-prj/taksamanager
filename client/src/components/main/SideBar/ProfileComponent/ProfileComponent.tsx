@@ -7,6 +7,7 @@ import { getUser } from "@/functions/userOperations"
 import { TUser } from "@/types/user"
 import { refreshJWT } from "@/functions/jwt"
 import { useRouter } from "next/navigation"
+import { refreshWithThrow } from "@/functions/refreshWithThrow"
 type TProfileComponentProps = {
     imageName: string
 	action: () => Promise<void>}
@@ -24,7 +25,7 @@ export const ProfileComponent: FC<TProfileComponentProps> = ({
         }
         catch (status) {
             if (status == Status.FORBIDDEN) {
-                try {refreshJWT()}
+                try {refreshWithThrow()}
                 catch {router.replace('/auth/login')}
             }
         }

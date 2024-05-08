@@ -50,4 +50,13 @@ export class GetUserResDto {
 
 	@ApiProperty()
 	teamId: string | null
+
+	@ApiProperty()
+	avatar: string | null
+
+	@ApiProperty()
+	teamColor: string | null
+
+	@ApiProperty()
+	class: number | null
 }

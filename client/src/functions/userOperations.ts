@@ -44,8 +44,7 @@ export const changeUserInfo = async (
 	}
 	let requestBody = {}
 	if (newEmail) requestBody = Object.assign(requestBody, { email: newEmail })
-	if (newUsername)
-		requestBody = Object.assign(requestBody, { username: newUsername })
+	if (newUsername) requestBody = Object.assign(requestBody, { username: newUsername })
 	if (newTgName) requestBody = Object.assign(requestBody, { tgName: newTgName })
 	const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users`, {
 		method: 'PATCH',

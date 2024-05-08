@@ -1,8 +1,8 @@
 import { TaskStatus } from "@/types/tasks";
 import { UserRole } from "@/types/user";
 
-export const convertTaskStatus = (status: TaskStatus, userRole: string | undefined): TaskStatus | null => {
-    if (userRole == UserRole.CLIENT) {
+export const convertTaskStatus = (status: TaskStatus, userRole: string): TaskStatus | null => {
+    if (userRole == UserRole.CLIENT.toString()) {
         switch (status) {
             case TaskStatus.MODIFIED: return TaskStatus.MODIFIED
             case TaskStatus.WAITCONSENT: return TaskStatus.WAITCONSENT

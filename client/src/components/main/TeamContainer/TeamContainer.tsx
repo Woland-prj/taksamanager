@@ -1,3 +1,5 @@
-export const TeamContainer = () => {
-  return (<div></div>)
+const TeamContainer = () => {
+  return (<div>aaaa</div>)
 }
+
+export default TeamContainer

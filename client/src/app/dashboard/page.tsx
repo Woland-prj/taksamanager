@@ -7,24 +7,43 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { TaskOption, getTasks } from '@/functions/getTasks'
 import { Status } from '@/types/login_and_register'
+import { TUser } from '@/types/user'
+import { getUser } from '@/functions/userOperations'
+import { refreshWithThrow } from '@/functions/refreshWithThrow'
 
 export default function Dashboard() {
   const router = useRouter()
-  const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
-  const getExecuted = async () => {
-    try {
-      let tasksDb = await getTasks(TaskOption.EXECUTED)
-      if (!tasksDb) tasksDb = await getTasks(TaskOption.EXECUTED)
-      // console.log(tasksDb)
-      setExecutedTasks(tasksDb)
-    } catch (status) {
-      if (status === Status.FORBIDDEN) router.push('/auth/login')
-      console.log('eroroooor', status)
+  const [viewingUser, setViewingUser] = useState<TUser | null>(null)
+  const getViewingUser = async () => {
+    const user = await getUser()
+    setViewingUser(await user ? user : null)
+    if (viewingUser == null) {
+      throw Status.FORBIDDEN
     }
   }
-  useEffect(() => {
-    getExecuted()
-  }, [])
+
+  const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
+  const getExecuted = async () => {
+    let tasksDb = await getTasks(TaskOption.EXECUTED)
+    if (!tasksDb) tasksDb = await getTasks(TaskOption.EXECUTED)
+    // console.log(tasksDb)
+    setExecutedTasks(tasksDb)
+  }
+  const fetchData = async () => {
+      try {
+        getViewingUser()
+        getExecuted()
+      }
+      catch {
+        try {
+          refreshWithThrow()
+          getViewingUser()
+          getExecuted()
+        }
+        catch {router.replace('/auth/login')}
+      }
+  }
+  useEffect(() => {fetchData()}, [])
   return (
     <main className={styles.workingField}>
       <header>

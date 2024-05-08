@@ -68,8 +68,19 @@ export class UsersService {
 		return { id, username, email }
 	}
 
-	findAll() {
-		return `This action returns all users`
+	async findAll(): Promise<GetUserResDto[]> {
+		const res: GetUserResDto[] = []
+		const dbUsers = await this.prismaService.user.findMany()
+		dbUsers.forEach(user => {
+			if (user.role != UserRole.ROOT) {
+				let { password, actLink, ...other } = user
+				res.push({
+					...other,
+					avatar: other.avatar ? other.avatar.toString('base64') : null
+				})
+			}
+		})
+		return res
 	}
 
 	async findOne(id: string): Promise<GetUserResDto> {
@@ -78,8 +89,8 @@ export class UsersService {
 				id: id
 			}
 		})
-		let { password, actLink, ...other } = user
 		if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+		let { password, actLink, ...other } = user
 		return {
 			...other,
 			avatar: other.avatar ? other.avatar.toString('base64') : null
@@ -91,12 +102,15 @@ export class UsersService {
 		adminChange: boolean,
 		updateUserDto: UpdateSelfUserDto | UpdateAdminUserDto
 	): Promise<GetUserResDto> {
+		console.log(updateUserDto)
 		const regExp = /\@| |\$/g
 		if (updateUserDto.tgUsername)
 			updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
 		let avatar: Buffer | null = null
 		if (updateUserDto.avatar) {
+			console.log(updateUserDto.avatar)
 			avatar = Buffer.from(updateUserDto.avatar, 'base64')
+			console.log(avatar)
 		}
 		try {
 			const updetedUser = await this.prismaService.user.update({
@@ -110,7 +124,6 @@ export class UsersService {
 			})
 			if (!updetedUser)
 				throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-			console.log(tg<UpdateAdminUserDto>(updateUserDto))
 			let teamUpdatedUser = null
 			if (tg<UpdateAdminUserDto>(updateUserDto) && adminChange)
 				teamUpdatedUser = await this.teamsService.createOrUpdateTeam(

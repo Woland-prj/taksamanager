@@ -29,7 +29,7 @@ const testPage = () => {
       },
       body: JSON.stringify({ avatar: base64Avatar })
     })
-    console.log(response.status)
+    console.log(response)
     if (response.ok) {
       console.log('success')
       setAvatar(base64Avatar as string)

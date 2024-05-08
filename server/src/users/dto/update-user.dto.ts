@@ -1,6 +1,7 @@
 import { UserRole } from '@prisma/client'
 import {
 	IsBase64,
+	IsDataURI,
 	IsHexColor,
 	IsIn,
 	IsNotEmpty,
@@ -20,7 +21,7 @@ export class UpdateSelfUserDto {
 
 	@IsOptional()
 	@IsNotEmpty()
-	@IsBase64()
+	// @IsDataURI()
 	avatar: string
 }
 
@@ -39,7 +40,7 @@ export class UpdateAdminUserDto {
 
 	@IsOptional()
 	@IsNotEmpty()
-	@IsBase64()
+	// @IsDataURI()
 	avatar: string
 
 	@IsOptional()

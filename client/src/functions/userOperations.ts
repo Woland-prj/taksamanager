@@ -77,6 +77,8 @@ export const getUserById = async (userId: string): Promise<TUser> => {
         tgUsername: '',
         tgChatId: 0,
         teamId: '',
+        teamColor: '',
+        avatar: '',
     }
 }
 // (alias) type TUser = {

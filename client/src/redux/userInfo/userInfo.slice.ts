@@ -9,7 +9,9 @@ const initialState: TUser = {
 	isActivated: true,
 	tgUsername: '',
 	tgChatId: 0,
-	teamId: ''
+	teamId: '',
+	teamColor: '',
+	avatar: ''
 }
 
 export const userSlice = createSlice({
@@ -24,4 +26,3 @@ export const userSlice = createSlice({
 
 export const userReducer = userSlice.reducer
 export const userAction = userSlice.actions
-

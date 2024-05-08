@@ -404,4 +404,31 @@ export class TasksService {
 			}
 		})
 	}
+
+	async setExpiredStatus() {
+		const checkedTasks = await this.prismaService.task.findMany({
+			where: {
+				status: {
+					in: [TaskStatus.WAITCONSENT, TaskStatus.INWORK, TaskStatus.MODIFIED]
+				}
+			}
+		})
+		const taskIdsForUpdate = []
+		if (!checkedTasks) return
+		checkedTasks.forEach(task => {
+			if (task.deadline.getTime() < new Date().getTime()) {
+				taskIdsForUpdate.push(task.id)
+			}
+		})
+		await this.prismaService.task.updateMany({
+			where: {
+				id: {
+					in: taskIdsForUpdate
+				}
+			},
+			data: {
+				status: TaskStatus.EXPIRED
+			}
+		})
+	}
 }

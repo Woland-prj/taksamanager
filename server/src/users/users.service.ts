@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	ForbiddenException,
 	HttpException,
 	HttpStatus,
@@ -13,15 +14,22 @@ import {
 	CreateUserResDto,
 	GetUserResDto
 } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
+import {
+	UpdateSelfUserDto,
+	UpdateAdminUserDto,
+	tg
+} from './dto/update-user.dto'
 import { HashService } from './hashing.service'
+import { TeamsService } from 'src/teams/teams.service'
+import { IUser } from './entities/user.entity'
 
 @Injectable()
 export class UsersService {
 	constructor(
 		private prismaService: PrismaService,
 		private hashService: HashService,
-		private mailService: MailService
+		private mailService: MailService,
+		private teamsService: TeamsService
 	) {}
 
 	async create(createUserDto: CreateUserReqDto): Promise<CreateUserResDto> {
@@ -70,14 +78,18 @@ export class UsersService {
 				id: id
 			}
 		})
-		const { password, actLink, ...other } = user
+		let { password, actLink, ...other } = user
 		if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-		return other
+		return {
+			...other,
+			avatar: other.avatar ? other.avatar.toString('base64') : null
+		}
 	}
 
 	async update(
 		id: string,
-		updateUserDto: UpdateUserDto
+		adminChange: boolean,
+		updateUserDto: UpdateSelfUserDto | UpdateAdminUserDto
 	): Promise<GetUserResDto> {
 		const regExp = /\@| |\$/g
 		if (updateUserDto.tgUsername)
@@ -86,21 +98,36 @@ export class UsersService {
 		if (updateUserDto.avatar) {
 			avatar = Buffer.from(updateUserDto.avatar, 'base64')
 		}
-		console.log(updateUserDto)
-		console.log(avatar)
-		const updetedUser = await this.prismaService.user.update({
-			where: {
-				id: id
-			},
-			data: {
-				...updateUserDto,
-				avatar: avatar
+		try {
+			const updetedUser = await this.prismaService.user.update({
+				where: {
+					id: id
+				},
+				data: {
+					...updateUserDto,
+					avatar: avatar
+				}
+			})
+			if (!updetedUser)
+				throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+			console.log(tg<UpdateAdminUserDto>(updateUserDto))
+			let teamUpdatedUser = null
+			if (tg<UpdateAdminUserDto>(updateUserDto) && adminChange)
+				teamUpdatedUser = await this.teamsService.createOrUpdateTeam(
+					updateUserDto.teamColor,
+					updetedUser
+				)
+			const { password, actLink, ...other } = teamUpdatedUser
+				? teamUpdatedUser
+				: updetedUser
+			return {
+				...other,
+				avatar: other.avatar ? other.avatar.toString('base64') : null
 			}
-		})
-		if (!updetedUser)
-			throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-		const { password, actLink, ...other } = updetedUser
-		return other
+		} catch (error) {
+			console.log(error)
+			throw new BadRequestException()
+		}
 	}
 
 	remove(id: string) {

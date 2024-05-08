@@ -13,6 +13,7 @@ import {
 	ApiBearerAuth,
 	ApiForbiddenResponse,
 	ApiHeader,
+	ApiNoContentResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
@@ -93,6 +94,17 @@ export class TasksController {
 	@ApiBearerAuth()
 	async getAppointed(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
 		return this.tasksService.getAllAppointed(req.user)
+	}
+
+	@JwtAdminAuth()
+	@Patch('/status/expired')
+	@ApiOperation({
+		summary: 'Set expired tasks status (only by admin)'
+	})
+	@HttpCode(204)
+	@ApiNoContentResponse({ description: 'Data updated successfuly' })
+	async setExpiredStatus() {
+		await this.tasksService.setExpiredStatus()
 	}
 
 	@JwtAuth()

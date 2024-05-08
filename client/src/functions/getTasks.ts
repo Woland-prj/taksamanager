@@ -2,8 +2,6 @@ import { Status } from '@/types/login_and_register'
 import { ITask } from '@/types/tasks'
 import { renewTasks } from './renewTasks'
 import { getAccessToken, refreshJWT } from './jwt'
-import { redirectToPage } from './redirectToPage'
-import { redirect } from 'next/navigation'
 import { refreshWithThrow } from './refreshWithThrow'
 
 export enum TaskOption {
@@ -11,24 +9,11 @@ export enum TaskOption {
 	APPOINTED = 'appointed'
 }
 
-// const refreshWithCallback = async <T>(
-// 	callback: () => Promise<T>
-// ): Promise<T> => {
-// 	try {
-// 		await refreshJWT()
-// 		return callback()
-// 	} catch (status) {
-// 		console.log('catched status', status)
-// 		throw status
-// 	}
-// }
-
 export const getTasks = async (
 	type: TaskOption
 ): Promise<ITask[] | null> => {
 	const token = getAccessToken()
 	if (!token) {
-		// await refreshWithCallback<ITask[] | undefined>(() => getTasks(type))
 		console.log(token)
 		return await refreshWithThrow()
 	}
@@ -53,14 +38,15 @@ export const getTasks = async (
 	} else throw new Error(Status.NOTFOUND)
 }
 
-export const getUserTasks = async (userId: string): Promise<ITask[]> => {
+export const getAllTasks = async (): Promise<ITask[] | null> => { // Достает все-все-все задачи из БД
 	const token = getAccessToken()
-	if (!token) throw Status.FORBIDDEN
+	if (!token) {
+		console.log(token)
+		return await refreshWithThrow()
+	}
 	renewTasks()
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/user` +
-			userId +
-			'/',
+		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/all/`,
 		{
 			method: 'GET',
 			headers: {

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
 	BadRequestException,
 	Injectable,
@@ -129,6 +130,33 @@ export class TasksService {
 		})
 	}
 
+	// ВНИМАНИЕ!!! КОД ДЕНИСА КИСТАНОВА
+	async getVeryAll(): Promise<GetTaskDto[]> {
+		return this.prismaService.task.findMany({
+			select: {
+				id: true,
+				clientId: true,
+				executorId: true,
+				clientName: true,
+				executorName: true,
+				name: true,
+				deadline: true,
+				status: true,
+				result: true,
+				type: true,
+				formClientName: true,
+				questions: {
+					select: {
+						id: true,
+						questionText: true,
+						answerText: true
+					}
+				}
+			}
+		})
+	}
+	// ВНИМАНИЕ!!! КОНЕЦ КОДА ДЕНИСА КИСТАНОВА
+	
 	async getById(id: string): Promise<GetTaskDto> {
 		return this.prismaService.task.findUnique({
 			where: {

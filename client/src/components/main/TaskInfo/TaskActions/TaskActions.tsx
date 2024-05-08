@@ -11,7 +11,7 @@ import localFont from "next/font/local";
 import cn from 'clsx'
 import { redirectToTaskForm } from "@/functions/taskActions";
 import { ExecutorSelection } from "./ExecutorsSelection/ExecutorSelection";
-import { changeTaskByExecutor } from "@/functions/taskOperations";
+import { changeTaskByAdmin, changeTaskByExecutor } from "@/functions/taskOperations";
 
 type TTaskActionsProps = {
   taskStatus: TaskStatus | undefined
@@ -37,17 +37,16 @@ export const enum Actions {
   REJECTED = 'REJECTED', // Не используется
   VERIFY_COMPLETED = 'VERIFY_COMPLETED',
   VERIFY_REJECTED = 'VERIFY_REJECTED',
-  EXPIRED = 'EXPIRED',
+  EXPIRED_IN_MODERATION = 'EXPIRED_IN_MODERATION',
+  EXPIRED_IN_WORK = 'EXPIRED_IN_WORK',
   BLANK = 'BLANK'
 }
-
 const euclid500 = localFont({
   src: [{
     path: '../../../../fonts/EuclidCircularBMedium.ttf',
     weight: '600',
   }]
 })
-
 
 export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUserExecutor, taskId }) => {
   const [isSelectionActive, setIsSelectionActive] = useState<boolean>(false)
@@ -71,6 +70,13 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
             fgColor="#FFFFFF"
             action={async () => { setIsSelectionActive(!isSelectionActive) } /*Вывести окно с людьми, которые могут быть назначены*/}
           />
+          <Button
+            className={styles.button}
+            text='Отказаться от выполнения задачи'
+            fgColor="#FF5B5B"
+            bgColor="#FFC5C5"
+            action={async () => { changeTaskByAdmin(taskId, TaskStatus.REJECTEDBYLEAD)} /*Отправить на создание задачи*/}
+          ></Button>
           {isSelectionActive && (
             <ExecutorSelection className={cn(styles.actionsSet, euclid500.className)} taskId={taskId} />
           )}
@@ -90,14 +96,15 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
           <Button
             className={styles.button}
             text='Принять'
-            action={async () => { changeTaskByExecutor(taskId, TaskStatus.INWORK) } /* Перевести задачу в статус IN_WORK */}
+            action={async () => { changeTaskByExecutor(taskId, TaskStatus.INWORK); location.reload() } /* Перевести задачу в статус IN_WORK */}
             fgColor="#338D5F"
             bgColor="#C8FFE3"
           />
           <Button
             className={styles.button}
             text='Отклонить'
-            action={async () => { changeTaskByExecutor(taskId, TaskStatus.REJECTED) } /* Перевести задачу в статус REJECTED TODO: В будущем планируется несколько исполнителей */}
+            action={async () => { changeTaskByExecutor(taskId, TaskStatus.WAITCONSENT); location.reload() } 
+            /* Перевести задачу в статус WAITCONSENT TODO: В будущем планируется несколько исполнителей */}
             fgColor="#FF5B5B"
             bgColor="#FFC5C5"
           />
@@ -123,7 +130,7 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
             <div className={cn(styles.buttonsBunch, styles.buttonsBunch_narrowGap)}>
               <Button
                 className={cn(styles.button, styles.buttonWithText)}
-                text={taskResult}
+                text={'https://...'/*taskResult*/}
                 action={async () => { } /* Ничего */}
                 fgColor="#808080"
                 bgColor="#FFFFFF"
@@ -132,14 +139,14 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
               <Button
                 className={styles.button}
                 text='Подтвердить выполнение работы'
-                action={async () => { changeTaskByExecutor(taskId, TaskStatus.VERIFYCOMPLETED) } /* Перевести задачу в статус VERIFY_COMPLETED */}
+                action={async () => { changeTaskByExecutor(taskId, TaskStatus.VERIFYCOMPLETED); location.reload() } /* Перевести задачу в статус VERIFY_COMPLETED */}
                 fgColor="#338D5F"
                 bgColor="#C8FFE3"
               />
               <Button
                 className={styles.button}
                 text='Вернуть задачу в работу'
-                action={async () => { changeTaskByExecutor(taskId, TaskStatus.INWORK) } /* Перевести задачу в статус INWORK*/}
+                action={async () => { changeTaskByExecutor(taskId, TaskStatus.INWORK); location.reload() } /* Перевести задачу в статус INWORK*/}
                 fgColor="#FF5B5B"
                 bgColor="#FFC5C5"
               />

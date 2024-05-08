@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 type TasksContainerProps = {
   tasks: ITask[] | null
   user?: TUser
+  isAdmin?: boolean
 }
 
 const TasksContainer: React.FC<TasksContainerProps> = ({ tasks, user }) => {

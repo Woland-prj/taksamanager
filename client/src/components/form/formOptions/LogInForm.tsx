@@ -72,7 +72,7 @@ export const LogInForm = () => {
 						}
 					}}
 				/>
-				<div>
+				<div className={styles.plain_text}>
 					<span className={styles.plain_text}>
 						Если у вас нет аккаунта, то для начала вам нужно
 					</span>
@@ -82,7 +82,7 @@ export const LogInForm = () => {
 						text={'зарегистрироваться'}
 						action={async () => {
 							console.log('redirection')
-							redirectToPage('/auth/register')
+							router.push('/auth/register')
 						}}
 					/>
 				</div>

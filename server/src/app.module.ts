@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Module, OnModuleInit } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { AppController } from './app.controller'
@@ -17,6 +17,10 @@ import { BotModule } from './tgbot/bot.module'
 import { BotUpdate } from './tgbot/bot.update'
 import { UsersModule } from './users/users.module'
 import { BotService } from './tgbot/bot.service'
+import { PrismaClient, UserRole } from '@prisma/client'
+import { PrismaService } from './prisma/prisma.service'
+import { v4 as uuidv4 } from 'uuid'
+import { HashService } from './users/hashing.service'
 
 @Module({
 	imports: [
@@ -46,4 +50,34 @@ import { BotService } from './tgbot/bot.service'
 	],
 	controllers: [AppController]
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+	constructor(
+		private readonly prismaService: PrismaService,
+		private readonly hashService: HashService
+	) {}
+
+	async onModuleInit() {
+		const suggestedRoot = await this.prismaService.user.findMany({
+			where: {
+				role: UserRole.ROOT
+			}
+		})
+		if (!suggestedRoot || suggestedRoot.length === 0) {
+			const passSalt = await this.hashService.genSalt()
+			const hashedPass = (await this.hashService.genHash(
+				process.env.ROOT_PASSWORD,
+				passSalt
+			)) as string
+			await this.prismaService.user.create({
+				data: {
+					username: process.env.ROOT_USER,
+					email: process.env.SMTP_USER,
+					role: UserRole.ROOT,
+					password: hashedPass,
+					actLink: uuidv4(),
+					isActivated: true
+				}
+			})
+		}
+	}
+}

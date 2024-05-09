@@ -107,7 +107,7 @@ export const TasksTable = () => {
           moderatedTasks != null && moderatedTasks.length != 0 && (
           <div className={styles.table}>
             <span className={styles.title}>Модерируемые задачи</span>
-            <TasksContainer tasks={moderatedTasks}/>
+            <TasksContainer tasks={moderatedTasks} role={UserRole.ADMIN}/>
           </div>
         )}
         
@@ -118,13 +118,13 @@ export const TasksTable = () => {
             {executedNotDoneTasks != null && executedNotDoneTasks.length != 0 && (
               <div className={styles.table}>
                 <span className={styles.title}>Выполняемые вами задачи</span>
-                <TasksContainer tasks={executedNotDoneTasks}/>
+                <TasksContainer tasks={executedNotDoneTasks} role={UserRole.EXECUTOR}/>
               </div>
             )}
             {executedDoneTasks != null && executedDoneTasks.length != 0 && (
               <div className={styles.table}>
                 <span className={styles.title}>Выполненные вами задачи</span>
-                <TasksContainer tasks={executedDoneTasks}/>
+                <TasksContainer tasks={executedDoneTasks} role={UserRole.EXECUTOR}/>
               </div>
             )}  
           </>
@@ -133,19 +133,19 @@ export const TasksTable = () => {
         {appointedNotDoneTasks != null && appointedNotDoneTasks.length != 0 && (
           <div className={styles.table}>
             <span className={styles.title}>Назначенные вами задачи</span>
-            <TasksContainer tasks={appointedNotDoneTasks}/>
+            <TasksContainer tasks={appointedNotDoneTasks} role={UserRole.CLIENT}/>
           </div>
         )}
         {appointedDoneTasks != null && appointedDoneTasks.length != 0 && (
           <div className={styles.table}>
             <span className={styles.title}>Ваши выполненные задачи</span>
-            <TasksContainer tasks={appointedDoneTasks}/>
+            <TasksContainer tasks={appointedDoneTasks} role={UserRole.CLIENT}/>
           </div>
         )}
         {viewingUser?.role == UserRole.ROOT && allTasks != null && allTasks.length != 0 && (
               <div className={styles.table}>
                 <span className={styles.title}>Все задачи</span>
-                <TasksContainer tasks={allTasks}/>
+                <TasksContainer tasks={allTasks} role={UserRole.ADMIN}/>
               </div>
             )}
         </div>

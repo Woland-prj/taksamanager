@@ -18,6 +18,7 @@ type TTaskActionsProps = {
   userRole: UserRole
   isUserExecutor: boolean
   taskId: string
+  taskHasExecutor: boolean
 }
 
 export const enum Actions {
@@ -48,9 +49,9 @@ const euclid500 = localFont({
   }]
 })
 
-export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUserExecutor, taskId }) => {
+export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUserExecutor, taskId, taskHasExecutor }) => {
   const [isSelectionActive, setIsSelectionActive] = useState<boolean>(false)
-  const actionsType: Actions = roleAndStatusToActions(userRole, taskStatus, isUserExecutor)
+  const actionsType: Actions = roleAndStatusToActions(userRole, taskStatus, isUserExecutor, taskHasExecutor)
   return (<>
     <div className={cn(styles.actionsSet, euclid500.className)}>
       {actionsType == Actions.BLANK && (<></>)}

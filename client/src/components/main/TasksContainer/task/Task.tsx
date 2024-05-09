@@ -26,7 +26,7 @@ import { Status } from "@/types/login_and_register";
 // }
 
 // TODO: Реализовать просмотр задачи в зависмости от статуса пользователя (клиент, админ/исполнитель)
-export const Task: FC<{ task: ITask, user: TUser | null }> = ({ task, user }) => {
+export const Task: FC<{ task: ITask, user: TUser | null, role: UserRole }> = ({ task, user, role }) => {
   const router = useRouter()
   const type = stringToTagOption(task.type)
   const [tagOption, setTagOption] = useState<TagOption | null>(null) //stringToTagOption(task.status)
@@ -58,7 +58,7 @@ export const Task: FC<{ task: ITask, user: TUser | null }> = ({ task, user }) =>
   }, [])
   return (
     <div className={styles.task}>
-      <Link href={'dashboard/' + task.id} className={styles.link}>
+      <Link href={'dashboard/' + task.id + '=' + role} className={styles.link}>
         <span className={styles.taskText}>{task.name}</span>
       </Link>
       <div className={styles.taskInfo}>

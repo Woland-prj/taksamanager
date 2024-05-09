@@ -48,3 +48,6 @@
 .buttonWithText {
     user-select: 'text'
 }
+.message {
+    text-align: center;
+}

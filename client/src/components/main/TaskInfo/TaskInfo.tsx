@@ -16,11 +16,16 @@ import { useRouter } from "next/navigation"
 
 export const TaskInfo = () => {
   const router = useRouter()
+  const path = usePathname()
   const uuidLength = 36
-  const taskId = usePathname().substring('/dashboard/'.length, uuidLength + '/dashboard/'.length)
+
+  const taskId = path.substring('/dashboard/'.length, uuidLength + '/dashboard/'.length)
+  const userRole = path.search('=') >= 0 ? path.substring(path.search('=') + 1).toUpperCase() : null
+
   const [task, setTask] = useState<ITask | null>(null)
-  const [userRole, setUserRole] = useState<string>('')
+  const [jwtUserRole, setJwtUserRole] = useState<string>('')
   const [isUserExecutor, setIsUserExecutor] = useState<boolean>(false)
+
   const saveTask = async () => {
     try {
       let taskDb = await getTaskbyId(taskId)
@@ -33,13 +38,26 @@ export const TaskInfo = () => {
     try {
       const user = (await getUser()) as TUser
       setIsUserExecutor(task?.executorId == user?.id)
-      setUserRole(user.role)
+      setJwtUserRole(user.role)
     } catch {
       try { refreshJWT() }
       catch { router.replace('/auth/login') }
     }
   }
-  useEffect(() => {saveTask(); saveUser() }, [])
+  const checkUserRole = () => { // проверка ролей полученных из JWT и находящихся в строке. При найденном несоотвествии возвращает на прошлую страницу
+    console.log(userRole)
+    if (userRole == null) {
+      router.replace('/dashboard')
+    }
+    if (userRole == UserRole.EXECUTOR && jwtUserRole == UserRole.CLIENT) {
+      router.replace('/dashboard')
+    }
+    if ((userRole == UserRole.ADMIN || userRole == UserRole.ROOT) &&
+      (jwtUserRole == UserRole.CLIENT || jwtUserRole == UserRole.EXECUTOR)) {
+        router.replace('/dashboard')
+    }
+  }
+  useEffect(() => {saveTask(); saveUser(); checkUserRole() }, [])
   return (
     <main className={styles.taskContainer}>
       <header>
@@ -67,8 +85,9 @@ export const TaskInfo = () => {
         </div>
         <TaskActions
           taskStatus={task?.status}
-          userRole={userRole as UserRole}
+          userRole={userRole != null ? userRole as UserRole : UserRole.CLIENT /* userRole устроен так, что null здесь уже не будет */}
           isUserExecutor={isUserExecutor}
+          taskHasExecutor={task?.executorId ? true : false}
           taskId={taskId}
         />
       </div>

@@ -29,7 +29,7 @@ const CardTextField: React.FC<CardTextFieldProps> = ({ label, type, placeholder,
 
   return (
     <div className={cn(styles.card_field, type === CardFieldType.BLOCK ? styles.block : type == CardFieldType.PLAIN ? styles.plain : styles.inline)}>
-      {label && <label className={cn(styles.label, type === CardFieldType.BLOCK ? styles.block : type == CardFieldType.PLAIN ? styles.plain : styles.inline)}>{label}</label>}
+      {label && <label className={cn(styles.label, type === CardFieldType.BLOCK ? styles.block_label : type == CardFieldType.PLAIN ? styles.plain_label : styles.inline_label)}>{label}</label>}
       <input
         className={cn(styles.input, isActive ? styles.active : null, changeable ? styles.changeable : null, error ? styles.error : null, type == CardFieldType.PLAIN ? styles.plain_input : type == CardFieldType.INLINE ? styles.inline_input : null)}
         type="text"

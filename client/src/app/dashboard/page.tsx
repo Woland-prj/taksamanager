@@ -1,30 +1,10 @@
 'use client'
 import { PageHeader } from '@/components/main/PageHeader/PageHeader'
-import TasksContainer from '@/components/main/TasksContainer/TasksContainer'
 import styles from './page.module.css'
-import { ITask, TaskType, createTaskURL } from '@/types/tasks'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { TaskOption, getTasks } from '@/functions/getTasks'
-import { Status } from '@/types/login_and_register'
+import { createTaskURL } from '@/types/tasks'
+import { TasksTable } from '@/components/main/TasksTable/TasksTable'
 
 export default function Dashboard() {
-  const router = useRouter()
-  const [executedTasks, setExecutedTasks] = useState<ITask[] | null>(null)
-  const getExecuted = async () => {
-    try {
-      let tasksDb = await getTasks(TaskOption.EXECUTED)
-      if (!tasksDb) tasksDb = await getTasks(TaskOption.EXECUTED)
-      // console.log(tasksDb)
-      setExecutedTasks(tasksDb)
-    } catch (status) {
-      if (status === Status.FORBIDDEN) router.push('/auth/login')
-      console.log('eroroooor', status)
-    }
-  }
-  useEffect(() => {
-    getExecuted()
-  }, [])
   return (
     <main className={styles.workingField}>
       <header>
@@ -36,7 +16,7 @@ export default function Dashboard() {
         />
       </header>
       <div className={styles.scrollbar}>
-        <TasksContainer tasks={executedTasks} />
+        <TasksTable/>
       </div>
     </main>
   )

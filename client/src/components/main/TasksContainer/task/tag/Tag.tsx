@@ -6,10 +6,10 @@ import { TagOption } from "@/types/tasks"
 import { TagOptionToTagParameters } from "@/functions/TagOptionToTagProps"
 
 
-type TTagProps = {option: TagOption, className?: string } 
+type TTagProps = {option: TagOption | null, className?: string } 
 
 export const Tag: FC<TTagProps> = ({option, className}) => {
-    const { tagClassName, src, text } = TagOptionToTagParameters(option)
+    const { tagClassName, src, text } = TagOptionToTagParameters(option ? option : TagOption.UNDEFINED)
 
     return (
         <div className={cn(tagClassName, className, styles.layout)}>

@@ -51,7 +51,7 @@ export const ExecutorSelection: FC<TExecutorSelectionProps> = ({ className, task
         <Executor
           key={user.id}
           user={user}
-          onClick={async () => { changeTaskByAdmin(taskId, TaskStatus.WAITCONSENT, user.id) }}
+          onClick={async () => { changeTaskByAdmin(taskId, TaskStatus.WAITCONSENT, user.id); location.reload() }}
         />
       ))}
     </div>

@@ -2,17 +2,26 @@
 import { ITask } from '@/types/tasks'
 import styles from './TasksContainer.module.css'
 import { Task } from './task/Task'
+import { TUser } from '@/types/user'
+import { useEffect, useState } from 'react'
+import { getUser } from '@/functions/userOperations'
+import { Status } from '@/types/login_and_register'
+import { refreshWithThrow } from '@/functions/refreshWithThrow'
+import { useRouter } from 'next/navigation'
 type TasksContainerProps = {
   tasks: ITask[] | null
+  user?: TUser
+  isAdmin?: boolean
 }
 
-const TasksContainer: React.FC<TasksContainerProps> = ({ tasks }) => {
+const TasksContainer: React.FC<TasksContainerProps> = ({ tasks, user }) => {
+  const definedUser = user ? user : null
   return (
     <div className={styles.blockContainer}>
       <div className={styles.tasksContainer}>
         {tasks?.map(task => {
           return (
-            <Task task={task} key={task.id} />
+            <Task task={task} user={definedUser} key={task.id} />
           )
         })}
       </div>

@@ -13,7 +13,6 @@ import { TaskActions } from "./TaskActions/TaskActions"
 import { TUser, UserRole } from "@/types/user"
 import { getUser } from "@/functions/userOperations"
 import { useRouter } from "next/navigation"
-import redirectByJWT from "@/functions/redirectByJWT"
 
 export const TaskInfo = () => {
   const router = useRouter()
@@ -36,7 +35,7 @@ export const TaskInfo = () => {
       setUserRole(user.role)
     } catch {
       try { refreshJWT() }
-      catch { router.push('/auth/login') }
+      catch { router.replace('/auth/login') }
     }
   }
   useEffect(() => { saveTask(); saveUser() }, [])

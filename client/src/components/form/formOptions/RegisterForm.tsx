@@ -94,11 +94,20 @@ export const RegisterForm = () => {
 						}
 					}}
 				/>
-				<Button
-					type={ButtonType.PLAIN}
-					text={'Войти'}
-					action={() => redirectToPage('/auth/login')}
-				/>
+				<div className={styles.plain_text}>
+					<span className={styles.plain_text}>
+						Если у вас аккаунта, вы можете {''}
+					</span>
+					<Button
+						type={ButtonType.PLAIN}
+						className={styles.bold_text}
+						text={'войти'}
+						action={async () => {
+							console.log('redirection')
+							router.push('/auth/login')
+						}}
+					/>
+				</div>
 			</div>
 		</>
 	)

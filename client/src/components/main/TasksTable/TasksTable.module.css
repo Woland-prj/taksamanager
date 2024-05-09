@@ -1,0 +1,15 @@
+.table {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.title {
+    font-size: 30px;
+    letter-spacing: 2%;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+
+}

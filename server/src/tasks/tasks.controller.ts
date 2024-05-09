@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
 	Body,
 	Controller,
@@ -41,6 +42,20 @@ import { TasksService } from './tasks.service'
 @Controller({ path: 'tasks', version: '1' })
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
+
+	// ВНИМАНИЕ!!! КОД ДЕНИСА КИСТАНОВА
+	@JwtAuth()
+	@Get('/all')
+	@ApiOperation({
+		summary: 'Get all tasks from all users'
+	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
+	@ApiBearerAuth()
+	async getVeryAll(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getVeryAll()
+	}
+	// ВНИМАНИЕ!!! КОНЕЦ КОДА ДЕНИСА КИСТАНОВА
 
 	@JwtAuth()
 	@Get()

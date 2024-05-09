@@ -4,7 +4,7 @@ import styles from '../login.module.css'
 import redirectByJWT from '@/functions/redirectByJWT'
 
 export default function RegisterPage() {
-	redirectByJWT()
+	// redirectByJWT()
 	return (
 		<main className={styles.wrapper}>
 			<Form formOption='register' />

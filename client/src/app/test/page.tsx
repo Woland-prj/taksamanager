@@ -24,10 +24,11 @@ const testPage = () => {
     const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users`, {
       method: 'PATCH',
       credentials: 'include',
+      body: JSON.stringify({ avatar: base64Avatar }),
       headers: {
+        'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer ' + `${token}`
       },
-      body: JSON.stringify({ avatar: base64Avatar })
     })
     console.log(response)
     if (response.ok) {

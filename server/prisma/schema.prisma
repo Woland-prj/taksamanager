@@ -37,7 +37,7 @@ model User {
   team          Team?    @relation(fields: [teamId, teamColor], references: [id, color])
   teamId        String?  @db.Uuid
   teamColor     String?  @default("#808080") @db.VarChar(7)
-  avatar        Bytes?   @db.ByteA
+  avatar        String?
   class         Int?
 
   @@unique([id, username])

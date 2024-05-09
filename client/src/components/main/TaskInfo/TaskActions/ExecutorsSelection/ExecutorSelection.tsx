@@ -1,6 +1,6 @@
 import { FC, MutableRefObject, useRef, useState } from "react"
 import { Executor } from "./Executor/Executor"
-import { TUser } from "@/types/user"
+import { TUser, UserRole } from "@/types/user"
 import localFont from "next/font/local"
 import cn from 'clsx'
 import styles from './ExecutorSelection.module.css'
@@ -24,25 +24,27 @@ export const ExecutorSelection: FC<TExecutorSelectionProps> = ({ className, task
     id: '1',
     username: 'Denis',
     email: 'email',
-    role: 'ADMIN',
+    role: UserRole.ADMIN,
     isActivated: true,
     tgUsername: 'Osidron',
     tgChatId: 0,
     teamId: 'smth',
     teamColor: '#FF0000',
-    avatar: 'smth'
+    avatar: 'smth',
+    class: 11,
   },
   {
     id: '2',
     username: 'Denis',
     email: 'email',
-    role: 'ADMIN',
+    role: UserRole.ADMIN,
     isActivated: true,
     tgUsername: 'Osidron',
     tgChatId: 0,
     teamId: 'smth',
     teamColor: '#FF0000',
-    avatar: 'smth'
+    avatar: 'smth',
+    class: 11,
   }]
   return (
     <div className={cn(className, styles.menu)}>

@@ -15,7 +15,7 @@ export type TUser = {
 	teamId: string
 	teamColor: string // Цвет команды
 	avatar: string
-	class: string
+	class: number
 }
 // GET /api/v1/users/avatar
 type TProfileImageIn = {

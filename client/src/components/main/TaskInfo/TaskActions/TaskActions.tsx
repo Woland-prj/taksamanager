@@ -39,6 +39,8 @@ export const enum Actions {
   VERIFY_REJECTED = 'VERIFY_REJECTED',
   EXPIRED_IN_MODERATION = 'EXPIRED_IN_MODERATION',
   EXPIRED_IN_WORK = 'EXPIRED_IN_WORK',
+  EXPIRED = 'EXPIRED',
+  COMPLETED = 'COMPLETED',
   BLANK = 'BLANK'
 }
 const euclid500 = localFont({
@@ -48,7 +50,7 @@ const euclid500 = localFont({
   }]
 })
 
-export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUserExecutor, taskId }) => {
+export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole, isUserExecutor, taskId }) => {
   const [isSelectionActive, setIsSelectionActive] = useState<boolean>(false)
   const actionsType: Actions = roleAndStatusToActions(userRole, taskStatus, isUserExecutor)
   return (<>
@@ -75,7 +77,7 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
             text='Отказаться от выполнения задачи'
             fgColor="#FF5B5B"
             bgColor="#FFC5C5"
-            action={async () => { changeTaskByAdmin(taskId, TaskStatus.REJECTEDBYLEAD)} /*Отправить на создание задачи*/}
+            action={async () => { changeTaskByAdmin(taskId, TaskStatus.REJECTEDBYLEAD) } /*Отправить на создание задачи*/}
           ></Button>
           {isSelectionActive && (
             <ExecutorSelection className={cn(styles.actionsSet, euclid500.className)} taskId={taskId} />
@@ -103,7 +105,7 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
           <Button
             className={styles.button}
             text='Отклонить'
-            action={async () => { changeTaskByExecutor(taskId, TaskStatus.WAITCONSENT); location.reload() } 
+            action={async () => { changeTaskByExecutor(taskId, TaskStatus.WAITCONSENT); location.reload() }
             /* Перевести задачу в статус WAITCONSENT TODO: В будущем планируется несколько исполнителей */}
             fgColor="#FF5B5B"
             bgColor="#FFC5C5"
@@ -173,7 +175,7 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
         </div>
       )}
       {actionsType == Actions.EXPIRED_IN_MODERATION && (
-          <span className={styles.message}>Задача была просрочена</span>
+        <span className={styles.message}>Задача была просрочена</span>
       )}
     </div>
   </>)

@@ -2,10 +2,11 @@ import { TUser } from "@/types/user";
 import Image from "next/image";
 import styles from '../TeamContainer.module.css'
 import cn from 'clsx'
+import { redirectToPage } from "@/functions/redirectToPage";
 
 const UserBlock: React.FC<{ user: TUser }> = ({ user }) => {
   return (
-    <div className={styles.user_block}>
+    <div className={styles.user_block} onClick={() => redirectToPage(`/user/${user.id}`)}>
       <Image className={cn(user.avatar ? styles.user_avatar : null)} src={user.avatar ? user.avatar : '/default_avatar.svg'} alt={user.username} width={40} height={40} />
       <div className={styles.text_container}>
         <span>{user.username}</span>

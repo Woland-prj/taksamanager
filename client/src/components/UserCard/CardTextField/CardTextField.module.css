@@ -1,0 +1,37 @@
+.card_field {
+	margin-bottom: 1rem;
+}
+
+.input {
+	border: none;
+	outline: none;
+	color: #808080;
+	font-size: 1rem;
+}
+
+.plain_input {
+	font-size: 1.3rem;
+	width: calc(100% - 0.7rem);
+}
+
+.inline_input {
+	width: 2rem;
+	display: inline-block;
+	margin-left: 0.6rem;
+}
+
+.label {
+	display: block;
+	margin-bottom: 1rem;
+}
+
+.inline_label {
+	display: inline;
+}
+
+.changeable {
+	border: 1px solid black;
+	padding: 0.35rem;
+	border-radius: 0.5rem;
+	color: #000000;
+}

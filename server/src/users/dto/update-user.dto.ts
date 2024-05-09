@@ -5,6 +5,7 @@ import {
 	IsHexColor,
 	IsIn,
 	IsNotEmpty,
+	IsNumberString,
 	IsOptional
 } from 'class-validator'
 
@@ -32,6 +33,7 @@ export class UpdateAdminUserDto {
 
 	@IsOptional()
 	@IsNotEmpty()
+  @IsNumberString()
 	class: number
 
 	@IsOptional()
@@ -40,7 +42,7 @@ export class UpdateAdminUserDto {
 
 	@IsOptional()
 	@IsNotEmpty()
-	// @IsDataURI()
+	@IsDataURI()
 	avatar: string
 
 	@IsOptional()

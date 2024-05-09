@@ -1,6 +1,7 @@
 import { Status } from '@/types/login_and_register'
 import { getAccessToken } from './jwt'
-import { TUser, UserRole } from '@/types/user'
+import { TUpdateUser, TUser, UserRole } from '@/types/user'
+import { refreshWithThrow } from './refreshWithThrow'
 
 const exampleUser: TUser = {
 	id: '1',
@@ -60,11 +61,11 @@ export const changeUserInfo = async (
 	)
 	if (response.status == 401 || response.status == 403) throw Status.FORBIDDEN
 	if (response.status == 404) throw Status.NOTFOUND
-	return response.json()
+	return await response.json()
 }
 
 export const getUser = async () => {
-	const token = await getAccessToken()
+	const token = getAccessToken()
 	if (!token) {
 		throw Status.FORBIDDEN
 	}
@@ -83,11 +84,11 @@ export const getUser = async () => {
 	return await response.json()
 }
 
-export const getUserById = async (userId: string): Promise<TUser> => {
+export const getUserById = async (userId: string): Promise<TUser | null> => {
 	// TODO: протестировать после появления функции в бд
-	const token = await getAccessToken()
+	const token = getAccessToken()
 	if (!token) {
-		throw Status.FORBIDDEN
+		return refreshWithThrow()
 	}
 	const response = await fetch(
 		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users/${userId}`,
@@ -99,37 +100,36 @@ export const getUserById = async (userId: string): Promise<TUser> => {
 			credentials: 'include'
 		}
 	)
-	return exampleUser //response.json()
+	return response.json()
 }
 
 export const changeUserInfoById = async (
 	// TODO: протестировать после появления функции в бд
 	userId: string,
-	newEmail?: string,
-	newUsername?: string,
-	newTgName?: string
+	updateUser: TUpdateUser
 ): Promise<TUser> => {
 	const token = getAccessToken()
 	if (!token) {
 		throw Status.FORBIDDEN
 	}
-	let requestBody = {}
-	if (newEmail) requestBody = Object.assign(requestBody, { email: newEmail })
-	if (newUsername)
-		requestBody = Object.assign(requestBody, { username: newUsername })
-	if (newTgName) requestBody = Object.assign(requestBody, { tgName: newTgName })
+	// if (updateUser.email) requestBody = Object.assign(requestBody, { email: newEmail })
+	// if (newUsername)
+	// 	requestBody = Object.assign(requestBody, { username: newUsername })
+	// if (newTgName) requestBody = Object.assign(requestBody, { tgName: newTgName })
+	if (updateUser.class) updateUser.class = +updateUser.class
 	const response = await fetch(
 		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users/${userId}`,
 		{
 			method: 'PATCH',
 			headers: {
-				Authorization: 'Bearer ' + `${token}`
+				Authorization: 'Bearer ' + `${token}`,
+				'Content-Type': 'application/json'
 			},
-			credentials: 'include'
+			credentials: 'include',
+			body: JSON.stringify(updateUser)
 		}
 	)
 	if (response.status == 401 || response.status == 403) throw Status.FORBIDDEN
 	if (response.status == 404) throw Status.NOTFOUND
-	return exampleUser //response.json()
+	return (await response.json()) as TUser
 }
-

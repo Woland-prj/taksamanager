@@ -4,6 +4,12 @@ export const enum UserRole {
 	EXECUTOR = 'EXECUTOR',
 	CLIENT = 'CLIENT'
 }
+
+export type ListOption<T> = {
+	value: T
+	label: string
+}
+
 export type TUser = {
 	id: string // Также служит и для получения картинок
 	username: string
@@ -26,11 +32,13 @@ type TProfileImageOut = {
 }
 
 // PATCH /api/v1/users
-type TUpdateUserProfileIn = {
-	email: string
-	username: string
-	tgUsername: string
-	avatar: string //base 64 картинка
+export type TUpdateUser = {
+	username?: string
+	avatar?: string
+	role?: UserRole
+	class?: number
+	teamColor?: string
+	tgUsername?: string
 }
 // Output такой же, как и был
 

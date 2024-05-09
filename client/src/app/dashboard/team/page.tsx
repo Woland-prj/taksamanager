@@ -1,11 +1,11 @@
 'use client'
-import { PageHeader } from "@/components/main/PageHeader/PageHeader"
 import TeamContainer from "@/components/main/TeamContainer/TeamContainer"
+import PlainPageHeader from "@/components/ui/PlainPageHeader/PlainPageHeader"
 import { getAllUsers } from "@/functions/getAllUsers"
-import redirectByJWT from "@/functions/redirectByJWT"
 import { TUser } from "@/types/user"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import styles from './TeamPage.module.css'
 
 export default function TeamPage() {
   const router = useRouter()
@@ -24,6 +24,11 @@ export default function TeamPage() {
     getTeam()
   }, [])
   return (
-    <TeamContainer users={team} />
+    <>
+      <div className={styles.container}>
+        <PlainPageHeader headerText='Команда Таксы' />
+        <TeamContainer users={team} />
+      </div>
+    </>
   )
 }

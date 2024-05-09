@@ -1,0 +1,11 @@
+.user_card {
+	width: 30rem;
+	border: 1px solid black;
+	padding: 1.5rem;
+	border-radius: 1rem;
+}
+
+.user_card form {
+	display: flex;
+	gap: 1rem;
+}

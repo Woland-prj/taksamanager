@@ -15,15 +15,12 @@ export const TasksTable = () => {
   const getViewingUser = async () => {
     const user: TUser = await getUser()
     setViewingUser(user ? user : null)
-    if (viewingUser) {
-      throw Status.FORBIDDEN
-    }
   }
   const [appointedDoneTasks, setAppointedDoneTasks] = useState<ITask[] | null>(null)        // CLIENT
   const [appointedNotDoneTasks, setAppointedNotDoneTasks] = useState<ITask[] | null>(null)
 
-  const [executedDoneTasks, setDoneExecutedTasks] = useState<ITask[] | null>(null)          // EXECUTOR
-  const [executedNotDoneTasks, setNotDoneExecutedTasks] = useState<ITask[] | null>(null)
+  const [executedDoneTasks, setExecutedDoneTasks] = useState<ITask[] | null>(null)          // EXECUTOR
+  const [executedNotDoneTasks, setExecutedNotDoneTasks] = useState<ITask[] | null>(null)
 
   const [moderatedTasks, setModeratedTasks] = useState<ITask[] | null>(null)    // ADMIN
 
@@ -49,8 +46,8 @@ export const TasksTable = () => {
       if (task.status == TaskStatus.VERIFYCOMPLETED) doneTasks.push(task)
       else {notDoneTasks.push(task)}
     })
-    setDoneExecutedTasks(doneTasks)
-    setNotDoneExecutedTasks(notDoneTasks)
+    setExecutedDoneTasks(doneTasks)
+    setExecutedNotDoneTasks(notDoneTasks)
   }
   const getAdminAndRoot = async (userRole: string) => {
     const tasksDb = await getAllTasks()
@@ -75,11 +72,11 @@ export const TasksTable = () => {
   const fetchData = async () => {
       try {
         await getViewingUser()
-        getClient()
+        await getClient()
         if (viewingUser?.role != UserRole.CLIENT) {
-          getExecutor()
+          await getExecutor()
           if (viewingUser?.role != UserRole.EXECUTOR) {
-            getAdminAndRoot(viewingUser?.role ? viewingUser?.role : UserRole.ADMIN)
+            await getAdminAndRoot(viewingUser?.role ? viewingUser?.role : UserRole.ADMIN)
           }
         }
       }
@@ -87,11 +84,11 @@ export const TasksTable = () => {
         try {
           await refreshWithThrow()
           await getViewingUser()
-          getClient()
+          await getClient()
           if (viewingUser?.role != UserRole.CLIENT) {
-            getExecutor()
+            await getExecutor()
             if (viewingUser?.role != UserRole.EXECUTOR) {
-              getAdminAndRoot(viewingUser?.role ? viewingUser?.role : UserRole.ADMIN)
+              await getAdminAndRoot(viewingUser?.role ? viewingUser?.role : UserRole.ADMIN)
             }
           }
         }
@@ -100,49 +97,52 @@ export const TasksTable = () => {
         }
       }
   }
+
+
   useEffect(() => {fetchData()}, [])
     return (
       <div className={styles.tasksTable}>
         <div className={styles.container}>
-        {viewingUser?.role == UserRole.ADMIN || viewingUser?.role == UserRole.ROOT && moderatedTasks && (
-              <div className={styles.table}>
-                <span className={styles.title}>Модерируемые задачи</span>
-                <TasksContainer tasks={moderatedTasks}/>
-              </div>
-            )}
+        {(viewingUser?.role == UserRole.ADMIN || viewingUser?.role == UserRole.ROOT) && 
+          moderatedTasks != null && moderatedTasks.length != 0 && (
+          <div className={styles.table}>
+            <span className={styles.title}>Модерируемые задачи</span>
+            <TasksContainer tasks={moderatedTasks}/>
+          </div>
+        )}
         
-        {viewingUser?.role == UserRole.EXECUTOR || 
+        {(viewingUser?.role == UserRole.EXECUTOR || 
           viewingUser?.role == UserRole.ROOT || 
-          viewingUser?.role == UserRole.ADMIN && (
+          viewingUser?.role == UserRole.ADMIN) && (
           <>
-            {executedNotDoneTasks && (
+            {executedNotDoneTasks != null && executedNotDoneTasks.length != 0 && (
               <div className={styles.table}>
-                <span className={styles.title}>Ваши задачи</span>
+                <span className={styles.title}>Выполняемые вами задачи</span>
                 <TasksContainer tasks={executedNotDoneTasks}/>
               </div>
             )}
-            {executedDoneTasks && (
+            {executedDoneTasks != null && executedDoneTasks.length != 0 && (
               <div className={styles.table}>
-                <span className={styles.title}>Выполненные задачи</span>
+                <span className={styles.title}>Выполненные вами задачи</span>
                 <TasksContainer tasks={executedDoneTasks}/>
               </div>
             )}  
           </>
         )}
 
-        {appointedDoneTasks && (
+        {appointedNotDoneTasks != null && appointedNotDoneTasks.length != 0 && (
           <div className={styles.table}>
-            <span className={styles.title}>Ваши задачи</span>
+            <span className={styles.title}>Назначенные вами задачи</span>
             <TasksContainer tasks={appointedNotDoneTasks}/>
           </div>
         )}
-        {appointedNotDoneTasks && (
+        {appointedDoneTasks != null && appointedDoneTasks.length != 0 && (
           <div className={styles.table}>
             <span className={styles.title}>Ваши выполненные задачи</span>
             <TasksContainer tasks={appointedDoneTasks}/>
           </div>
         )}
-        {viewingUser?.role == UserRole.ROOT &&allTasks && (
+        {viewingUser?.role == UserRole.ROOT && allTasks != null && allTasks.length != 0 && (
               <div className={styles.table}>
                 <span className={styles.title}>Все задачи</span>
                 <TasksContainer tasks={allTasks}/>

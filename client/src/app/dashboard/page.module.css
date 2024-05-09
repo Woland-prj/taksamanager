@@ -9,7 +9,7 @@
     scrollbar-width: thin;
     scrollbar-color: hsl(0 0% 50%);
 
-    height: 70vh;
+    height: 80vh;
     padding: 40px 75px;
     display: flex;
     flex-direction: column;

@@ -16,7 +16,8 @@ import { useRouter } from "next/navigation"
 
 export const TaskInfo = () => {
   const router = useRouter()
-  const taskId = usePathname().substring('/dashboard/'.length)
+  const uuidLength = 36
+  const taskId = usePathname().substring('/dashboard/'.length, uuidLength + '/dashboard/'.length)
   const [task, setTask] = useState<ITask | null>(null)
   const [userRole, setUserRole] = useState<string>('')
   const [isUserExecutor, setIsUserExecutor] = useState<boolean>(false)
@@ -38,7 +39,7 @@ export const TaskInfo = () => {
       catch { router.replace('/auth/login') }
     }
   }
-  useEffect(() => { saveTask(); saveUser() }, [])
+  useEffect(() => {saveTask(); saveUser() }, [])
   return (
     <main className={styles.taskContainer}>
       <header>

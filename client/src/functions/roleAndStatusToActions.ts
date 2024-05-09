@@ -2,7 +2,7 @@ import { Actions } from "@/components/main/TaskInfo/TaskActions/TaskActions"
 import { TaskStatus } from "@/types/tasks"
 import { UserRole } from "@/types/user"
 
-export const roleAndStatusToActions = (role: UserRole, status: TaskStatus | undefined, isUserExecutor: boolean): Actions => {
+export const roleAndStatusToActions = (role: UserRole, status: TaskStatus | undefined, isUserExecutor: boolean, taskHasExecutor: boolean): Actions => {
     if ( status == TaskStatus.MODIFIED && role == UserRole.CLIENT )
         return Actions.MODIFIED_CLIENT
     if ( status == TaskStatus.MODIFIED && role == UserRole.ADMIN || UserRole.ROOT )
@@ -15,14 +15,18 @@ export const roleAndStatusToActions = (role: UserRole, status: TaskStatus | unde
         return Actions.IN_WORK_CLIENT_ADMIN
     if ( status == TaskStatus.INWORK && (role == UserRole.EXECUTOR || isUserExecutor) )
         return Actions.IN_WORK_EXECUTOR
-    if ( status == TaskStatus.COMPLETED )
-        return Actions.COMPLETED
+    if ( status == TaskStatus.COMPLETED && (role == UserRole.ADMIN || UserRole.ROOT) && !isUserExecutor )
+        return Actions.COMPLETED_ADMIN
+    if ( status == TaskStatus.COMPLETED && ((role == UserRole.ADMIN || UserRole.ROOT) && isUserExecutor || (role == UserRole.EXECUTOR)) ) 
+        return Actions.COMPLETED_EXECUTOR
     if ( status == TaskStatus.VERIFYCOMPLETED)
         return Actions.VERIFY_COMPLETED
     if ( status == TaskStatus.REJECTED )
         return Actions.REJECTED
-    if ( status == TaskStatus.EXPIRED )
-        return Actions.EXPIRED
+    if ( status == TaskStatus.EXPIRED && taskHasExecutor )
+        return Actions.EXPIRED_IN_WORK
+    if ( status == TaskStatus.EXPIRED && !taskHasExecutor )
+        return Actions.EXPIRED_IN_MODERATION
     return Actions.BLANK
 
 }

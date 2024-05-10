@@ -160,6 +160,7 @@ export class UsersController {
 		@Param('id') id: string,
 		@Body() updateUserDto: UpdateAdminUserDto
 	): Promise<GetUserResDto> {
+		console.log(updateUserDto)
 		return this.usersService.update(id, true, updateUserDto)
 	}
 }

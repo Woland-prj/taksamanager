@@ -113,32 +113,39 @@ export class UsersService {
 		const regExp = /\@| |\$/g
 		if (updateUserDto.tgUsername)
 			updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
-		// let avatar: Buffer | null = null
-		// if (updateUserDto.avatar) {
-		// 	console.log(updateUserDto.avatar)
-		// 	avatar = Buffer.from(updateUserDto.avatar, 'base64')
-		// 	console.log(avatar)
-		// }
+		let req = {
+			where: {
+				id: id
+			},
+			data: {}
+		}
+		let data = updateUserDto
+		if (
+			tg<UpdateAdminUserDto>(updateUserDto) &&
+			adminChange &&
+			updateUserDto.teamColor
+		) {
+			const { teamColor, ...other } = updateUserDto
+			data = other
+			let team = await this.teamsService.getTeamByColor(teamColor)
+			if (!team) team = await this.teamsService.createTeam(teamColor)
+			if (team) {
+				req.data['team'] = { connect: { id: team.id } }
+			}
+		}
+		if (
+			tg<UpdateAdminUserDto>(updateUserDto) &&
+			adminChange &&
+			updateUserDto.class
+		) {
+			updateUserDto.class = parseInt(updateUserDto.class.toString())
+		}
+		req.data = { ...data, ...req.data }
 		try {
-			const updetedUser = await this.prismaService.user.update({
-				where: {
-					id: id
-				},
-				data: {
-					...updateUserDto
-				}
-			})
+			const updetedUser = await this.prismaService.user.update(req)
 			if (!updetedUser)
 				throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-			let teamUpdatedUser = null
-			if (tg<UpdateAdminUserDto>(updateUserDto) && adminChange)
-				teamUpdatedUser = await this.teamsService.createOrUpdateTeam(
-					updateUserDto.teamColor,
-					updetedUser
-				)
-			const { password, actLink, ...other } = teamUpdatedUser
-				? teamUpdatedUser
-				: updetedUser
+			const { password, actLink, ...other } = updetedUser
 			return {
 				...other
 			}

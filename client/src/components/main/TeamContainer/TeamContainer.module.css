@@ -5,9 +5,8 @@
 	/* justify-content: space-between; */
 	align-items: start;
 	align-content: flex-start;
-	margin: 3rem;
 	column-gap: 3rem;
-	row-gap: 3rem;
+	row-gap: 2rem;
 }
 
 .user_block {

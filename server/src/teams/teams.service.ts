@@ -15,6 +15,14 @@ export class TeamsService {
 		})
 	}
 
+	async getTeamByColor(color: string) {
+		return this.prismaService.team.findUnique({
+			where: {
+				color
+			}
+		})
+	}
+
 	async createOrUpdateTeam(color: string, user: User) {
 		if (!color) return null
 		let team = await this.prismaService.team.findUnique({

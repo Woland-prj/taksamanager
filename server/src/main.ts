@@ -2,12 +2,15 @@ import { ValidationPipe, VersioningType } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
+import * as bodyParser from 'body-parser'
 
 async function bootstrap() {
 	// const envConfRes = config({ path: '.env' })
 	// if (envConfRes.error) throw envConfRes.error
 
 	const app = await NestFactory.create(AppModule)
+	app.use(bodyParser.json({ limit: '50mb' }))
+	app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 	app.setGlobalPrefix('/api')
 	app.enableVersioning({
 		type: VersioningType.URI

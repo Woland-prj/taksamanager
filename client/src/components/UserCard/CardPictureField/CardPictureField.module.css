@@ -1,0 +1,13 @@
+.avatar_img {
+	width: 15rem;
+	height: 15rem;
+	object-fit: cover;
+}
+
+.avatar_img_rounded {
+	border-radius: 50%;
+}
+
+.input {
+	display: none;
+}

@@ -1,10 +1,13 @@
 import { UserRole } from '@prisma/client'
+import { Transform } from 'class-transformer'
 import {
 	IsBase64,
 	IsDataURI,
 	IsHexColor,
 	IsIn,
+	IsInt,
 	IsNotEmpty,
+	IsNumberString,
 	IsOptional
 } from 'class-validator'
 
@@ -40,7 +43,7 @@ export class UpdateAdminUserDto {
 
 	@IsOptional()
 	@IsNotEmpty()
-	// @IsDataURI()
+	@IsDataURI()
 	avatar: string
 
 	@IsOptional()

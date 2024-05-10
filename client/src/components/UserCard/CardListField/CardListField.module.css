@@ -1,0 +1,19 @@
+.card_field select {
+	background: #ffffff;
+	margin-left: 0.5rem;
+	border: none;
+	outline: none;
+	color: #808080;
+	font-size: 1rem;
+}
+
+.card_field_changeable select {
+	border: 1px solid #000000;
+	border-radius: 0.5rem;
+	color: #000000;
+	padding: 0.35rem;
+}
+
+.card_field {
+	margin-bottom: 0.7rem;
+}

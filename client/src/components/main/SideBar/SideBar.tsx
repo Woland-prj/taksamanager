@@ -7,9 +7,7 @@ import { redirectToPage } from "@/functions/redirectToPage"
 export const SideBar = () => {
   return (
     <div className={styles.sideBar}>
-      <ProfileComponent
-        action={() => { return new Promise(() => { }) }}
-      />
+      <ProfileComponent />
       <SideBarButton
         iconName='dashboard.svg'
         text='Доска задач'

@@ -38,7 +38,7 @@ model User {
   teamId        String?  @db.Uuid
   teamColor     String?  @default("#808080") @db.VarChar(7)
   avatar        String?
-  class         Int?
+  class         String?
 
   @@unique([id, username])
 }

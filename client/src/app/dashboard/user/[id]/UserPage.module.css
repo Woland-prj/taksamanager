@@ -1,0 +1,32 @@
+.title {
+	font-size: 30px;
+	letter-spacing: 2%;
+	margin: 2rem 0;
+	display: block;
+}
+
+/* .scrollbar {
+	overflow-y: scroll;
+	scrollbar-width: thin;
+	scrollbar-color: hsl(0 0% 50%);
+	display: flex;
+	flex-direction: column;
+} */
+.scrollContainer {
+	overflow: scroll;
+	scrollbar-width: thin;
+	scrollbar-color: hsl(0 0% 50%);
+	display: flex;
+	flex-direction: column;
+	height: 80vh;
+	padding-top: 2rem;
+}
+.container {
+	display: flex;
+	flex-direction: column;
+	margin: 0 5rem;
+	margin-right: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}

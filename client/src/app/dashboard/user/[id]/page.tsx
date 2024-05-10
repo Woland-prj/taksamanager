@@ -3,17 +3,19 @@ import UserCard from '@/components/UserCard/UserCard'
 import TasksContainer from '@/components/main/TasksContainer/TasksContainer'
 import PlainPageHeader from '@/components/ui/PlainPageHeader/PlainPageHeader'
 import { TaskOption, getTasks } from '@/functions/getTasks'
-import { getUser } from '@/functions/userOperations'
+import { getUser, getUserById } from '@/functions/userOperations'
 import { Status } from '@/types/login_and_register'
 import { ITask, TaskStatus } from '@/types/tasks'
 import { TUser, UserRole } from '@/types/user'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from './UserPage.module.css'
 
 const UserPage = () => {
 	const router = useRouter()
+	const userId = usePathname().substring('/dashboard/user/'.length)
 	const [user, setUser] = useState<TUser | null>(null)
+	const [currUser, setCurrUser] = useState<TUser | null>(null)
 	const [userTasks, setUserTasks] = useState<{
 		executedTasks: ITask[]
 		doneTasks: ITask[]
@@ -23,10 +25,20 @@ const UserPage = () => {
 		doneTasks: [],
 		failedTasks: []
 	})
-	const fetchUser = async () => {
+	const fetchCurrUser = async () => {
 		try {
 			let user = await getUser()
 			if (!user) user = await getUser()
+			if (user) setCurrUser(user)
+		} catch (status) {
+			if (status == Status.FORBIDDEN) router.replace('/auth/login')
+			if (status == Status.NOTFOUND) router.replace('/dashboard')
+		}
+	}
+	const fetchUser = async () => {
+		try {
+			let user = await getUserById(userId)
+			if (!user) user = await getUserById(userId)
 			if (user) setUser(user)
 		} catch (status) {
 			if (status == Status.FORBIDDEN) router.replace('/auth/login')
@@ -61,11 +73,9 @@ const UserPage = () => {
 			failedTasks: failedTasks
 		})
 	}
-	const callBack = async () => {
-		await fetchUser()
-		getExecuted()
-	}
+
 	useEffect(() => {
+		fetchCurrUser()
 		fetchUser()
 	}, [])
 	useEffect(() => {
@@ -76,10 +86,10 @@ const UserPage = () => {
 			<PlainPageHeader
 				headerText={'Профиль пользователя ' + `${user?.username}`}
 			/>
-			<div>
-				{user && <UserCard user={user} />}
+			<div className={styles.scrollContainer}>
+				{user && currUser && <UserCard user={user} updater={currUser} />}
 				{user?.role != UserRole.CLIENT && (
-					<div className={styles.scrollbar}>
+					<div>
 						{userTasks.executedTasks.length > 0 && (
 							<div>
 								<span className={styles.title}>

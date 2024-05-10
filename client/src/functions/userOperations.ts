@@ -1,6 +1,6 @@
 import { Status } from '@/types/login_and_register'
-import { getAccessToken } from './jwt'
 import { TUpdateUser, TUser, UserClass, UserRole } from '@/types/user'
+import { getAccessToken } from './jwt'
 import { refreshWithThrow } from './refreshWithThrow'
 
 const exampleUser: TUser = {
@@ -19,8 +19,9 @@ const exampleUser: TUser = {
 
 export const activateUser = async (linkUuid: string): Promise<TUser> => {
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users/activate/` +
-			`${linkUuid}`,
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/users/activate/` + `${linkUuid}`,
 		{
 			method: 'PATCH',
 			credentials: 'include'
@@ -50,7 +51,9 @@ export const changeUserInfo = async (
 		requestBody = Object.assign(requestBody, { username: newUsername })
 	if (newTgName) requestBody = Object.assign(requestBody, { tgName: newTgName })
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users`,
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/users`,
 		{
 			method: 'PATCH',
 			headers: {
@@ -70,7 +73,9 @@ export const getUser = async () => {
 		throw Status.FORBIDDEN
 	}
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users`,
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/users`,
 		{
 			method: 'GET',
 			headers: {
@@ -91,7 +96,9 @@ export const getUserById = async (userId: string): Promise<TUser | null> => {
 		return refreshWithThrow()
 	}
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users/${userId}`,
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/users/${userId}`,
 		{
 			method: 'GET',
 			headers: {
@@ -117,7 +124,7 @@ export const changeUserInfoById = async (
 	if (updateUser.role && updateUser.role in UserRole)
 		requestBody = Object.assign(requestBody, { role: updateUser.role })
 	if (updateUser.class && updateUser.class in UserClass)
-		requestBody = Object.assign(requestBody, { class: +updateUser.class })
+		requestBody = Object.assign(requestBody, { class: updateUser.class })
 	if (updateUser.teamColor && colorRegExp.test(updateUser.teamColor))
 		requestBody = Object.assign(requestBody, {
 			teamColor: updateUser.teamColor
@@ -136,7 +143,9 @@ export const changeUserInfoById = async (
 		})
 	console.log(requestBody)
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users/${userId}`,
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/users/${userId}`,
 		{
 			method: 'PATCH',
 			headers: {

@@ -8,6 +8,7 @@ import {
 import { UserRole } from '@prisma/client'
 import { MailService } from 'src/mail/mail.service'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { TeamsService } from 'src/teams/teams.service'
 import { v4 as uuidv4 } from 'uuid'
 import {
 	CreateUserReqDto,
@@ -15,13 +16,11 @@ import {
 	GetUserResDto
 } from './dto/create-user.dto'
 import {
-	UpdateSelfUserDto,
 	UpdateAdminUserDto,
+	UpdateSelfUserDto,
 	tg
 } from './dto/update-user.dto'
 import { HashService } from './hashing.service'
-import { TeamsService } from 'src/teams/teams.service'
-import { IUser } from './entities/user.entity'
 
 @Injectable()
 export class UsersService {
@@ -73,7 +72,7 @@ export class UsersService {
 		const dbUsers = await this.prismaService.user.findMany()
 		dbUsers.forEach(user => {
 			if (user.role != UserRole.ROOT) {
-				let { password, actLink, ...other } = user
+				const { password, actLink, ...other } = user
 				res.push({
 					...other
 				})
@@ -89,7 +88,7 @@ export class UsersService {
 			}
 		})
 		if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-		let { password, actLink, ...other } = user
+		const { password, actLink, ...other } = user
 		return {
 			...other
 		}
@@ -113,7 +112,7 @@ export class UsersService {
 		const regExp = /\@| |\$/g
 		if (updateUserDto.tgUsername)
 			updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
-		let req = {
+		const req = {
 			where: {
 				id: id
 			},
@@ -132,13 +131,6 @@ export class UsersService {
 			if (team) {
 				req.data['team'] = { connect: { id: team.id } }
 			}
-		}
-		if (
-			tg<UpdateAdminUserDto>(updateUserDto) &&
-			adminChange &&
-			updateUserDto.class
-		) {
-			updateUserDto.class = parseInt(updateUserDto.class.toString())
 		}
 		req.data = { ...data, ...req.data }
 		try {

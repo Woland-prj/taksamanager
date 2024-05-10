@@ -1,7 +1,6 @@
 .sideBar {
 	position: static;
 	list-style: none;
-	position: fixed;
 	width: 330px;
 	min-height: 100%;
 	gap: 0px;
@@ -10,6 +9,8 @@
 	color: #ffffff;
 	list-style-type: none;
 	-webkit-font-smoothing: antialiased;
+	padding: 0;
+	margin: 0;
 }
 
 .buttons {

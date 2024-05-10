@@ -58,5 +58,5 @@ export class GetUserResDto {
 	teamColor: string | null
 
 	@ApiProperty()
-	class: number | null
+	class: string | null
 }

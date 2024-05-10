@@ -1,5 +1,20 @@
+/* body {
+	overflow-y: scroll;
+} */
+
 .container {
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: row-reverse;
+	display: flex;
+	justify-content: flex-end;
+	flex-direction: row-reverse;
+	overflow-y: scroll;
+}
+
+.wrapper {
+	min-width: 100%;
+	min-height: 100%;
+	position: relative;
+	top: 0;
+	bottom: 100%;
+	left: 0;
+	z-index: 1;
 }

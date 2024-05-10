@@ -1,14 +1,64 @@
 .sideBar {
-    width: 330px;
-    height: 100vh;
-    gap: 0px;
-    z-index: 2;
-
-    background-color: #4CA97A;
-    color: #FFFFFF
+	list-style: none;
+	position: fixed;
+	width: 330px;
+	min-height: 100%;
+	gap: 0px;
+	z-index: 2;
+	background-color: #4ca97a;
+	color: #ffffff;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 0;
+	margin-top: 0;
+	padding: 0;
 }
 
 .buttons {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
+}
+
+.trigger {
+	position: absolute;
+	clip: rect(0, 0, 0, 0);
+}
+
+.hidden_nav {
+}
+
+.label {
+	/*nav stays in the same spot as user scrolls*/
+	position: fixed;
+	/*position hamburger menu*/
+	top: 15px;
+	left: 15px;
+	/*z-index needs to be 1 higher than site-wrap*/
+	z-index: 2;
+	width: 30px;
+	height: 30px;
+	/*changing to pointer indicates interactivity*/
+	cursor: pointer;
+	color: #111111;
+}
+
+.hidden_nav:before {
+	content: '';
+	position: absolute;
+	top: 1em;
+	width: 2em;
+	height: 0.25em;
+	border-top: 0.7em double #000;
+	border-bottom: 0.25em solid #000;
+	z-index: 3;
+}
+
+.trigger:checked + label {
+	left: 200px;
+}
+
+.trigger:checked ~ div {
+	left: 180px;
 }

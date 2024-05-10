@@ -1,17 +1,14 @@
-import { SideBar } from "@/components/main/SideBar/SideBar"
-import styles from "./layout.module.css"
-import StoreProvider from "@/components/store/StoreProvider"
+import { SideBar } from '@/components/main/SideBar/SideBar'
+import styles from './layout.module.css'
 export default function DashboardLayout({
-  children
+	children
 }: Readonly<{
-  children: React.ReactNode
+	children: React.ReactNode
 }>) {
-  return (
-    <StoreProvider>
-      <div className={styles.container}>
-        {children}
-        <SideBar></SideBar>
-      </div>
-    </StoreProvider>
-  )
+	return (
+		<div className={styles.container}>
+			<div className={styles.wrapper}>{children}</div>
+			<SideBar></SideBar>
+		</div>
+	)
 }

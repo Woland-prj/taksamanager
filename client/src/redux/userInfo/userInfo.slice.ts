@@ -1,17 +1,18 @@
-import { TUser } from '@/types/user'
+import { TUser, UserRole } from '@/types/user'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState: TUser = {
 	id: '',
 	username: '',
 	email: '',
-	role: '',
+	role: UserRole.ADMIN,
 	isActivated: true,
 	tgUsername: '',
 	tgChatId: 0,
 	teamId: '',
 	teamColor: '',
-	avatar: ''
+	avatar: '',
+	class: 11
 }
 
 export const userSlice = createSlice({

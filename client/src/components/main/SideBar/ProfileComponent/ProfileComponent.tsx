@@ -8,39 +8,32 @@ import { TUser } from "@/types/user"
 import { refreshJWT } from "@/functions/jwt"
 import { useRouter } from "next/navigation"
 import { refreshWithThrow } from "@/functions/refreshWithThrow"
-type TProfileComponentProps = {
-    imageName: string
-	action: () => Promise<void>}
-export const ProfileComponent: FC<TProfileComponentProps> = ({
-    imageName,
-    action
-}) => {
-
-    const [username, setUsername] = useState<string>('')
-    const router = useRouter()
-    const getName = async () => {
-        try {
-            const user: TUser = await getUser()
-            setUsername(user.username)
-        }
-        catch (status) {
-            if (status == Status.FORBIDDEN) {
-                try {refreshWithThrow()}
-                catch {router.replace('/auth/login')}
-            }
-        }
+export const ProfileComponent: FC = () => {
+  const [user, setUser] = useState<TUser | null>(null)
+  const router = useRouter()
+  const getName = async () => {
+    try {
+      const user: TUser = await getUser()
+      setUser(user)
     }
-    useEffect(() => {getName()}, [])
-    return (
-        <div className={styles.profile}>
-            <Image
-                className={styles.image}
-                src={'/' + imageName}
-                alt='/taksa.png'
-                width='20'
-                height='20'
-            />
-            <h2 className={styles.username}>{username}</h2>
-        </div>
-    )
+    catch (status) {
+      if (status == Status.FORBIDDEN) {
+        try { refreshWithThrow() }
+        catch { router.replace('/auth/login') }
+      }
+    }
+  }
+  useEffect(() => { getName() }, [])
+  return (
+    <div className={styles.profile} onClick={() => router.push('/user/' + user?.id)}>
+      <Image
+        className={styles.image}
+        src={user?.avatar ? user?.avatar : '/default_avatar.svg'}
+        alt='avatar'
+        width={30}
+        height={30}
+      />
+      <h2 className={styles.username}>{user?.username}</h2>
+    </div>
+  )
 }

@@ -1,0 +1,41 @@
+.container {
+	width: 100%;
+	display: flex;
+	flex-flow: row wrap;
+	/* justify-content: space-between; */
+	align-items: start;
+	align-content: flex-start;
+	margin: 3rem;
+	column-gap: 3rem;
+	row-gap: 3rem;
+}
+
+.user_block {
+	width: 15rem;
+	/* height: 2rem; */
+	padding: 0.7rem 1.5rem;
+	border-radius: 1.75rem;
+	border: 1px solid #000000;
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.class_team_container {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.team_color {
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+}
+
+.user_avatar {
+	border-radius: 50%;
+}

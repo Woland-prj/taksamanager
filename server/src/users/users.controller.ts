@@ -115,6 +115,18 @@ export class UsersController {
 		return this.usersService.update(req.user.id, false, updateUserDto)
 	}
 
+	@Get('/all')
+	@JwtAuth()
+	@ApiOperation({ summary: 'Get all users' })
+	@ApiBearerAuth()
+	@ApiHeader({
+		name: 'Authorization',
+		description: 'Bearer <access_jwt>'
+	})
+	async getAll(): Promise<GetUserResDto[]> {
+		return this.usersService.findAll()
+	}
+
 	@Get('/:id')
 	@JwtAuth()
 	@ApiOperation({ summary: 'Get user profile by id' })

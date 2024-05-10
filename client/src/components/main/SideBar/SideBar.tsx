@@ -6,11 +6,11 @@ import { SideBarButton } from './SideBarButton/SideBarButton'
 
 export const SideBar = () => {
 	return (
-		<>
-			<input type='checkbox' id='nav-trigger' className={styles.trigger} />
-			<label htmlFor='nav-trigger' className={styles.label}>
-				<span className={styles.hidden_nav}></span>
-			</label>
+		<div className={styles.menu_toggle}>
+			<input type='checkbox' />
+			<span></span>
+			<span></span>
+			<span></span>
 			<ul className={styles.sideBar}>
 				<li className={styles.nav_item}>
 					<ProfileComponent />
@@ -36,6 +36,6 @@ export const SideBar = () => {
 					/>
 				</li>
 			</ul>
-		</>
+		</div>
 	)
 }

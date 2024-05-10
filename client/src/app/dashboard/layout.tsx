@@ -7,7 +7,7 @@ export default function DashboardLayout({
 }>) {
 	return (
 		<div className={styles.container}>
-			<div className={styles.wrapper}>{children}</div>
+			{children}
 			<SideBar></SideBar>
 		</div>
 	)

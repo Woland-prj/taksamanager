@@ -42,6 +42,7 @@ const CardTextField: React.FC<CardTextFieldProps> = ({ label, type, placeholder,
           setData(prev => ({ ...prev, [fieldName]: value }))
           checkError(value)
         }}
+        readOnly={!changeable}
       />
       {error && <div className={styles.error}>
         <Image

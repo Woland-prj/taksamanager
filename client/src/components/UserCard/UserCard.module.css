@@ -1,5 +1,5 @@
 .user_card {
-	width: 30rem;
+	width: 35rem;
 	border: 1px solid black;
 	padding: 1.5rem;
 	border-radius: 1rem;
@@ -7,5 +7,12 @@
 
 .user_card form {
 	display: flex;
+	justify-content: space-between;
 	gap: 1rem;
+}
+
+.avatar_block {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }

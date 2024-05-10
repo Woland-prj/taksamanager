@@ -1,8 +1,17 @@
-export const enum UserRole {
+export enum UserRole {
 	ROOT = 'ROOT',
 	ADMIN = 'ADMIN',
 	EXECUTOR = 'EXECUTOR',
 	CLIENT = 'CLIENT'
+}
+
+export enum UserClass {
+	VOID = 0,
+	SEVEN = 7,
+	EIGHT = 8,
+	NINE = 9,
+	TEN = 10,
+	ELEVEN = 11
 }
 
 export type ListOption<T> = {
@@ -36,7 +45,7 @@ export type TUpdateUser = {
 	username?: string
 	avatar?: string
 	role?: UserRole
-	class?: number
+	class?: UserClass
 	teamColor?: string
 	tgUsername?: string
 }

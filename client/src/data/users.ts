@@ -1,4 +1,4 @@
-import { ListOption, UserRole } from '@/types/user'
+import { ListOption, UserClass, UserRole } from '@/types/user'
 
 export const roleOptions: ListOption<UserRole>[] = [
 	{ value: UserRole.ADMIN, label: 'Модератор' },
@@ -20,3 +20,28 @@ export const teamColors: string[] = [
 	'#007528',
 	'#6e0700'
 ]
+
+export const classOptions: ListOption<UserClass>[] = [
+	{ value: UserClass.SEVEN, label: '7' },
+	{ value: UserClass.EIGHT, label: '8' },
+	{ value: UserClass.NINE, label: '9' },
+	{ value: UserClass.TEN, label: '10' },
+	{ value: UserClass.ELEVEN, label: '11' }
+]
+
+export const convertClassToEnum = (classNum: number): UserClass => {
+	switch (classNum) {
+		case 7:
+			return UserClass.SEVEN
+		case 8:
+			return UserClass.EIGHT
+		case 9:
+			return UserClass.NINE
+		case 10:
+			return UserClass.TEN
+		case 11:
+			return UserClass.ELEVEN
+		default:
+			return UserClass.VOID
+	}
+}

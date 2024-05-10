@@ -1,3 +1,6 @@
+import { changeUserInfoById } from "@/functions/userOperations"
+import styles from './CardButton.module.css'
+
 type CardButtonProps = {
   text: string
   action: () => void
@@ -5,7 +8,7 @@ type CardButtonProps = {
 
 const CardButton: React.FC<CardButtonProps> = ({ text, action }) => {
   return (
-    <button onClick={action}>{text}</button>
+    <button className={styles.button} onClick={async e => { e.preventDefault(); console.log(await action()) }} >{text}</button>
   )
 }
 

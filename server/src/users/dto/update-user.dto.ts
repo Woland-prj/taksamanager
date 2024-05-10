@@ -1,9 +1,11 @@
 import { UserRole } from '@prisma/client'
+import { Transform } from 'class-transformer'
 import {
 	IsBase64,
 	IsDataURI,
 	IsHexColor,
 	IsIn,
+	IsInt,
 	IsNotEmpty,
 	IsNumberString,
 	IsOptional
@@ -33,7 +35,6 @@ export class UpdateAdminUserDto {
 
 	@IsOptional()
 	@IsNotEmpty()
-  @IsNumberString()
 	class: number
 
 	@IsOptional()

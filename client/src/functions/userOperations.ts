@@ -1,6 +1,6 @@
 import { Status } from '@/types/login_and_register'
 import { getAccessToken } from './jwt'
-import { TUpdateUser, TUser, UserRole } from '@/types/user'
+import { TUpdateUser, TUser, UserClass, UserRole } from '@/types/user'
 import { refreshWithThrow } from './refreshWithThrow'
 
 const exampleUser: TUser = {
@@ -112,11 +112,29 @@ export const changeUserInfoById = async (
 	if (!token) {
 		throw Status.FORBIDDEN
 	}
-	// if (updateUser.email) requestBody = Object.assign(requestBody, { email: newEmail })
-	// if (newUsername)
-	// 	requestBody = Object.assign(requestBody, { username: newUsername })
-	// if (newTgName) requestBody = Object.assign(requestBody, { tgName: newTgName })
-	if (updateUser.class) updateUser.class = +updateUser.class
+	const colorRegExp = /#[0-9A-Fa-f]{6} /
+	let requestBody = {}
+	if (updateUser.role && updateUser.role in UserRole)
+		requestBody = Object.assign(requestBody, { role: updateUser.role })
+	if (updateUser.class && updateUser.class in UserClass)
+		requestBody = Object.assign(requestBody, { class: +updateUser.class })
+	if (updateUser.teamColor && colorRegExp.test(updateUser.teamColor))
+		requestBody = Object.assign(requestBody, {
+			teamColor: updateUser.teamColor
+		})
+	if (updateUser.tgUsername && updateUser.tgUsername.length > 0)
+		requestBody = Object.assign(requestBody, {
+			tgUsername: updateUser.tgUsername
+		})
+	if (updateUser.username && updateUser.username.length > 0)
+		requestBody = Object.assign(requestBody, {
+			username: updateUser.username
+		})
+	if (updateUser.avatar && updateUser.avatar.length > 0)
+		requestBody = Object.assign(requestBody, {
+			avatar: updateUser.avatar
+		})
+	console.log(requestBody)
 	const response = await fetch(
 		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/users/${userId}`,
 		{

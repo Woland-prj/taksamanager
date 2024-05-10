@@ -133,6 +133,13 @@ export class UsersService {
 				req.data['team'] = { connect: { id: team.id } }
 			}
 		}
+		if (
+			tg<UpdateAdminUserDto>(updateUserDto) &&
+			adminChange &&
+			updateUserDto.class
+		) {
+			updateUserDto.class = parseInt(updateUserDto.class.toString())
+		}
 		req.data = { ...data, ...req.data }
 		try {
 			const updetedUser = await this.prismaService.user.update(req)

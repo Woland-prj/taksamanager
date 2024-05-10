@@ -12,7 +12,7 @@ const CardColorField: React.FC<CardTextFieldProps> = ({ label, type, placeholder
       {label && <label className={styles.label}>{label}</label>}
       {!isOpen && <div className={styles.color} onClick={() => changeable ? setIsOpen(true) : null} style={{ backgroundColor: value }} />}
       {isOpen &&
-        <div>
+        <div className={styles.color_picker}>
           {teamColors.map(color => (
             <div
               key={color}

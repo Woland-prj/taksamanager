@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { TaskType, TaskStatus } from '@prisma/client'
+import { TaskStatus, TaskType } from '@prisma/client'
 import { IsIn, IsOptional, IsUUID } from 'class-validator'
 
 class TaskQ {
@@ -11,7 +11,7 @@ class TaskQ {
 export enum ClientStatus {
 	INWORK = 'INWORK',
 	VERIFYCOMPLETED = 'VERIFYCOMPLETED',
-	VERIFIYREJECTED = 'VERIFYREJECTED'
+	VERIFYREJECTED = 'VERIFYREJECTED'
 }
 
 export class GetTaskDto {
@@ -53,7 +53,7 @@ export class SetStatusDto {
 		'COMPLETED',
 		'VERIFYCOMPLETED',
 		'REJECTED',
-		'VERIFIYREJECTED'
+		'VERIFYREJECTED'
 	])
 	status: string
 }
@@ -67,7 +67,7 @@ export class TaskAdminUpdateDto {
 		'COMPLETED',
 		'VERIFYCOMPLETED',
 		'REJECTED',
-		'VERIFIYREJECTED'
+		'VERIFYREJECTED'
 	])
 	status: string
 

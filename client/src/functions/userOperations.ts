@@ -3,20 +3,6 @@ import { TUpdateUser, TUser, UserClass, UserRole } from '@/types/user'
 import { getAccessToken } from './jwt'
 import { refreshWithThrow } from './refreshWithThrow'
 
-const exampleUser: TUser = {
-	id: '1',
-	username: 'Super user',
-	email: 'superUser@gmail.com',
-	role: UserRole.ADMIN,
-	isActivated: true,
-	tgUsername: '@superUser',
-	tgChatId: 0,
-	teamId: 'red',
-	teamColor: 'red',
-	avatar: 'avatar',
-	class: 11
-}
-
 export const activateUser = async (linkUuid: string): Promise<TUser> => {
 	const response = await fetch(
 		`http://${

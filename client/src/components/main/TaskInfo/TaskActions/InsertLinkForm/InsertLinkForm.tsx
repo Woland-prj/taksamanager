@@ -35,7 +35,8 @@ export const InsertLinkForm: FC<TInsertLinkFormProps> = ({taskId}) => {
                     if (isNotEmpty(formData)) {
                         setIsEmpty(false)
                         try {/* При заполнении и подтверждении переводит в статус COMPLETED */
-                            changeTaskByExecutor(taskId, TaskStatus.COMPLETED)
+                            changeTaskByExecutor(taskId, TaskStatus.COMPLETED, formData)
+                            location.reload()
                         } catch (status) {
                             if (status === Status.FORBIDDEN) {
                                 setStatus(Status.FORBIDDEN)

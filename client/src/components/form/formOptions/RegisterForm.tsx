@@ -83,11 +83,24 @@ export const RegisterForm = () => {
 								setStatus(Status.CREATED)
 								saveLoggedInToken('true')
 								router.replace('/dashboard')
-							} catch (status) {
-								console.log(status)
-								saveLoggedInToken('false')
-								if (status === Status.BADREQUEST) setStatus(Status.BADREQUEST)
-								if (status === Status.EXIST) setStatus(Status.EXIST)
+							} catch  {
+								try {
+									const jwt = await getTokensFromDb({
+										email: formData.email,
+										password: formData.password
+									})
+									await createUser(formData)
+									await saveAccessToken(jwt)
+									setStatus(Status.CREATED)
+									saveLoggedInToken('true')
+									router.replace('/dashboard')
+								}
+								catch (error) {
+									saveLoggedInToken('false')
+									if (status === Status.BADREQUEST) setStatus(Status.BADREQUEST)
+									if (status === Status.EXIST) setStatus(Status.EXIST)
+								}
+								
 							}
 						} else {
 							setIsEmpty(true)

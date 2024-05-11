@@ -12,6 +12,7 @@ import { PageHeader } from '../PageHeader/PageHeader'
 import { Info } from './Info/Info'
 import { TaskActions } from './TaskActions/TaskActions'
 import styles from './TaskInfo.module.css'
+import { Scrollbar } from '@/components/Scrollbar/Scrollbar'
 
 export const TaskInfo = () => {
   const router = useRouter()
@@ -29,7 +30,6 @@ export const TaskInfo = () => {
 
   const [task, setTask] = useState<ITask | null>(null)
   const [jwtUserRole, setJwtUserRole] = useState<string>('')
-  const [isUserExecutor, setIsUserExecutor] = useState<boolean>(false)
 
   const saveTask = async () => {
     try {
@@ -37,6 +37,7 @@ export const TaskInfo = () => {
       if (!taskDb) taskDb = await getTaskbyId(taskId)
       console.log(taskDb)
       setTask(taskDb)
+      if (!taskDb) { router.replace('/404') }
     } catch {
       console.log('Такой задачи не существует')
     }
@@ -44,7 +45,6 @@ export const TaskInfo = () => {
   const saveUser = async () => {
     try {
       const user = (await getUser()) as TUser
-      setIsUserExecutor(task?.executorId == user?.id)
       setJwtUserRole(user.role)
     } catch {
       try {
@@ -56,7 +56,6 @@ export const TaskInfo = () => {
   }
   const checkUserRole = () => {
     // проверка ролей полученных из JWT и находящихся в строке. При найденном несоотвествии возвращает на прошлую страницу
-    console.log(userRole)
     if (userRole == null) {
       router.replace('/dashboard')
     }
@@ -72,11 +71,8 @@ export const TaskInfo = () => {
   }
   useEffect(() => {
     saveTask()
-    console.log('saveTask()')
     saveUser()
-    console.log('saveUser()')
     checkUserRole()
-    console.log('checkUserRole()')
   }, [])
   return (
     <main className={styles.taskContainer}>
@@ -91,27 +87,29 @@ export const TaskInfo = () => {
           buttonAction={async () => { }}
         />
       </header>
-      <div className={styles.infoAndAction}>
-        <div className={styles.infoContainer}>
-          {task?.questions.map(question => {
-            return (
-              <Info
-                key={question.id}
-                title={question.questionText}
-                text={question.answerText}
-              />
-            )
-          })}
+      <Scrollbar>
+        <div className={styles.infoAndAction}>
+          <div className={styles.infoContainer}>
+            {task?.questions.map(question => {
+              return (
+                <Info
+                  key={question.id}
+                  title={question.questionText}
+                  text={question.answerText}
+                />
+              )
+            })}
+          </div>
+          {task && <TaskActions
+            userRole={
+              userRole != null
+                ? (userRole as UserRole)
+                : UserRole.CLIENT /* userRole устроен так, что null здесь уже не будет */
+            }
+            task={task}
+          />}
         </div>
-        {task && <TaskActions
-          userRole={
-            userRole != null
-              ? (userRole as UserRole)
-              : UserRole.CLIENT /* userRole устроен так, что null здесь уже не будет */
-          }
-          task={task}
-        />}
-      </div>
+      </Scrollbar>
       <Image
         className={styles.taksa}
         src='/task_info_taksa.svg'

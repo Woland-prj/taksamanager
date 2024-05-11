@@ -5,6 +5,9 @@
 	outline: none;
 	color: #808080;
 	font-size: 1rem;
+	-moz-appearance: none;
+	-webkit-appearane: none;
+	appearance: none;
 }
 
 .card_field_changeable select {
@@ -12,7 +15,14 @@
 	border-radius: 0.5rem;
 	color: #000000;
 	padding: 0.35rem;
+	-moz-appearance: auto;
+	-webkit-appearane: auto;
+	appearance: auto;
 }
+
+/* .card_field_changeable select::-ms-expand { */
+/* 	display: none; */
+/* } */
 
 .card_field {
 	margin-bottom: 0.7rem;

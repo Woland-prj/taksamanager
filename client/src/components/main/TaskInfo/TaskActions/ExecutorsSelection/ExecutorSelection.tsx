@@ -12,56 +12,58 @@ import { changeTaskByAdmin } from '@/functions/taskOperations'
 import { TaskStatus } from '@/types/tasks'
 
 type TExecutorSelectionProps = {
-	className: string
-	taskId: string
+  className: string
+  taskId: string
+  style?: React.CSSProperties
 }
 const euclid400 = localFont({
-	src: [
-		{
-			path: '../../../../../fonts/EuclidCircularBLight.ttf',
-			weight: '400'
-		}
-	]
+  src: [
+    {
+      path: '../../../../../fonts/EuclidCircularBLight.ttf',
+      weight: '400'
+    }
+  ]
 })
 export const ExecutorSelection: FC<TExecutorSelectionProps> = ({
-	className,
-	taskId
+  className,
+  taskId,
+  style
 }) => {
-	const [users, setUsers] = useState<TUser[] | null>(null)
-	const router = useRouter()
-	const fetchUsers = async () => {
-		try {
-			const valUsers: TUser[] = []
-			let users = await getAllUsers()
-			if (!users) users = await getAllUsers()
-			if (users) {
-				users.forEach(user => {
-					if (user.role === UserRole.ADMIN || user.role === UserRole.EXECUTOR)
-						valUsers.push(user)
-				})
-				setUsers(valUsers)
-			}
-		} catch (status) {
-			if (status == Status.FORBIDDEN) router.replace('/auth/login')
-			if (status == Status.NOTFOUND) router.replace('/dashboard')
-		}
-	}
-	useEffect(() => {
-		fetchUsers()
-	}, [])
-	return (
-		<div className={cn(className, styles.menu)}>
-			<span className={euclid400.className}>Выбери исполнителя</span>
-			{users &&
-				users.map(user => (
-					<UserBlock
-						user={user}
-						clickAction={async () => {
-							await changeTaskByAdmin(taskId, TaskStatus.WAITCONSENT, user.id)
-							location.reload()
-						}}
-					/>
-				))}
-		</div>
-	)
+  const [users, setUsers] = useState<TUser[] | null>(null)
+  const router = useRouter()
+  const fetchUsers = async () => {
+    try {
+      const valUsers: TUser[] = []
+      let users = await getAllUsers()
+      if (!users) users = await getAllUsers()
+      if (users) {
+        users.forEach(user => {
+          if (user.role === UserRole.ADMIN || user.role === UserRole.EXECUTOR)
+            valUsers.push(user)
+        })
+        setUsers(valUsers)
+      }
+    } catch (status) {
+      if (status == Status.FORBIDDEN) router.replace('/auth/login')
+      if (status == Status.NOTFOUND) router.replace('/dashboard')
+    }
+  }
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+  return (
+    <div className={cn(className, styles.menu)} style={style}>
+      <span className={euclid400.className}>Выбери исполнителя</span>
+      {users &&
+        users.map(user => (
+          <UserBlock
+            user={user}
+            clickAction={async () => {
+              await changeTaskByAdmin(taskId, TaskStatus.WAITCONSENT, user.id)
+              location.reload()
+            }}
+          />
+        ))}
+    </div>
+  )
 }

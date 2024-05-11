@@ -44,7 +44,7 @@ export class UpdateAdminUserDto {
 
 	@IsOptional()
 	@IsNotEmpty()
-	@IsIn(['ADMIN', 'CLIENT', 'EXECUTOR'])
+	@IsIn(['ADMIN', 'CLIENT', 'EXECUTOR', 'NOTDEFINED'])
 	role: UserRole
 
 	@IsOptional()

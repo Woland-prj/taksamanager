@@ -1,6 +1,7 @@
 import { ListOption, UserClass, UserRole } from '@/types/user'
 
 export const roleOptions: ListOption<UserRole>[] = [
+	{ value: UserRole.NOTDEFINED, label: 'Неизвестна' },
 	{ value: UserRole.ADMIN, label: 'Модератор' },
 	{ value: UserRole.EXECUTOR, label: 'Исполнитель' },
 	{ value: UserRole.CLIENT, label: 'Заказчик' }
@@ -22,6 +23,7 @@ export const teamColors: string[] = [
 ]
 
 export const classOptions: ListOption<UserClass>[] = [
+	{ value: UserClass.VOID, label: '__' },
 	{ value: UserClass.SEVEN, label: '7' },
 	{ value: UserClass.EIGHT, label: '8' },
 	{ value: UserClass.NINE, label: '9' },
@@ -29,17 +31,17 @@ export const classOptions: ListOption<UserClass>[] = [
 	{ value: UserClass.ELEVEN, label: '11' }
 ]
 
-export const convertClassToEnum = (classNum: number): UserClass => {
+export const convertClassToEnum = (classNum: string): UserClass => {
 	switch (classNum) {
-		case 7:
+		case '7':
 			return UserClass.SEVEN
-		case 8:
+		case '8':
 			return UserClass.EIGHT
-		case 9:
+		case '9':
 			return UserClass.NINE
-		case 10:
+		case '10':
 			return UserClass.TEN
-		case 11:
+		case '11':
 			return UserClass.ELEVEN
 		default:
 			return UserClass.VOID

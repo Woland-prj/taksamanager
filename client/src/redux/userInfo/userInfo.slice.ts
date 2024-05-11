@@ -12,7 +12,7 @@ const initialState: TUser = {
 	teamId: '',
 	teamColor: '',
 	avatar: '',
-	class: 11
+	class: '11'
 }
 
 export const userSlice = createSlice({

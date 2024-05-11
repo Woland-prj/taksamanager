@@ -73,6 +73,7 @@ export const changeTaskByExecutor = async (
 			credentials: 'include'
 		}
 	)
+	console.log(response)
 	if (response.status == 400) throw Status.BADREQUEST // Incorrect status value
 	if (response.status == 401) throw Status.FORBIDDEN // User should be an executor or admin
 	if (response.status == 404) throw Status.NOTFOUND // Task with this uuid is not exist

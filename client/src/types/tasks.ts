@@ -32,7 +32,7 @@ export interface ITask {
 	clientId?: string
 	clientName?: string
 	questions: ITaskQuestion[]
-	//result: string 				// Готовый результат по задаче (ссылка на работу)
+	result: string // Готовый результат по задаче (ссылка на работу)
 }
 
 export interface ITaskQuestion {

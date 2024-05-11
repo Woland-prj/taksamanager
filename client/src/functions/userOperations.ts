@@ -37,19 +37,25 @@ export const activateUser = async (linkUuid: string): Promise<TUser> => {
 }
 
 export const changeUserInfo = async (
-	newEmail?: string,
-	newUsername?: string,
-	newTgName?: string
-): Promise<TUser> => {
+	updateUser: TUpdateUser
+): Promise<TUser | null> => {
 	const token = getAccessToken()
 	if (!token) {
-		throw Status.FORBIDDEN
+		return refreshWithThrow()
 	}
 	let requestBody = {}
-	if (newEmail) requestBody = Object.assign(requestBody, { email: newEmail })
-	if (newUsername)
-		requestBody = Object.assign(requestBody, { username: newUsername })
-	if (newTgName) requestBody = Object.assign(requestBody, { tgName: newTgName })
+	if (updateUser.tgUsername && updateUser.tgUsername.length > 0)
+		requestBody = Object.assign(requestBody, {
+			tgUsername: updateUser.tgUsername
+		})
+	if (updateUser.username && updateUser.username.length > 0)
+		requestBody = Object.assign(requestBody, {
+			username: updateUser.username
+		})
+	if (updateUser.avatar && updateUser.avatar.length > 0)
+		requestBody = Object.assign(requestBody, {
+			avatar: updateUser.avatar
+		})
 	const response = await fetch(
 		`http://${
 			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
@@ -57,9 +63,11 @@ export const changeUserInfo = async (
 		{
 			method: 'PATCH',
 			headers: {
-				Authorization: 'Bearer ' + `${token}`
+				Authorization: 'Bearer ' + `${token}`,
+				'Content-Type': 'application/json'
 			},
-			credentials: 'include'
+			credentials: 'include',
+			body: JSON.stringify(updateUser)
 		}
 	)
 	if (response.status == 401 || response.status == 403) throw Status.FORBIDDEN
@@ -114,10 +122,10 @@ export const changeUserInfoById = async (
 	// TODO: протестировать после появления функции в бд
 	userId: string,
 	updateUser: TUpdateUser
-): Promise<TUser> => {
+): Promise<TUser | null> => {
 	const token = getAccessToken()
 	if (!token) {
-		throw Status.FORBIDDEN
+		return refreshWithThrow()
 	}
 	const colorRegExp = /#[0-9A-Fa-f]{6} /
 	let requestBody = {}

@@ -2,7 +2,8 @@ export enum UserRole {
 	ROOT = 'ROOT',
 	ADMIN = 'ADMIN',
 	EXECUTOR = 'EXECUTOR',
-	CLIENT = 'CLIENT'
+	CLIENT = 'CLIENT',
+	NOTDEFINED = 'NOTDEFINED'
 }
 
 export enum UserClass {
@@ -30,7 +31,7 @@ export type TUser = {
 	teamId: string
 	teamColor: string // Цвет команды
 	avatar: string
-	class: number
+	class: string
 }
 // GET /api/v1/users/avatar
 type TProfileImageIn = {

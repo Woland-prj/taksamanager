@@ -1,13 +1,15 @@
 'use client'
 import { TaskOption, getTasks } from "@/functions/getTasks"
 import TasksContainer from "../TasksContainer/TasksContainer"
-import styles from './User.module.css'
 import { useEffect, useState } from "react"
 import { ITask, TaskStatus } from "@/types/tasks"
 import { TUser, UserRole } from "@/types/user"
 import { getUser, getUserById } from "@/functions/userOperations"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { Status } from "@/types/login_and_register"
+import { Scrollbar } from "@/components/Scrollbar/Scrollbar"
 export const User = () => {
+  const router = useRouter()
   const [userTasks, setUserTasks] = useState<{ executedTasks: ITask[], doneTasks: ITask[], failedTasks: ITask[] }>(
     {
       executedTasks: [],
@@ -18,8 +20,14 @@ export const User = () => {
   const userId = usePathname().substring('/user/'.length)
   const [user, setUser] = useState<TUser | null>(null) // Пользователь, информация о котором отображается на странице
   const saveUser = async () => {
-    const userDb = await getUserById(userId)
+    try{
+    let userDb = await getUserById(userId)
+    if (!userDb)  userDb = await getUserById(userId)
     setUser(userDb)
+    } catch (status) {
+      if (status == Status.FORBIDDEN) router.replace('/auth/login')
+      if (status == Status.NOTFOUND) router.replace('/404')
+    }
   }
 
   const [viewingUser, setViewingUser] = useState<TUser | null>(null) // Пользователь, просматривающий страницу
@@ -49,7 +57,7 @@ export const User = () => {
       <div>
         {/* <UserCard user={user}/> */}
         {user?.role != UserRole.CLIENT && (
-          <div className={styles.scrollbar}>
+          <Scrollbar>
             {userTasks.executedTasks.length > 0 &&
               <div>
                 <span>Задачи, выполняемые этим пользователем</span>
@@ -68,7 +76,7 @@ export const User = () => {
                 <TasksContainer tasks={userTasks.failedTasks} role={UserRole.CLIENT} />
               </div>
             }
-          </div>
+          </Scrollbar>
         )}
       </div>
     </main>

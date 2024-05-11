@@ -77,8 +77,8 @@ export const TagOptionToTagParameters = (
 		case TagOption.VERIFY_COMPLETED:
 			return {
 				tagClassName: styles.greenTag,
-				src: '/verify_completed_tag.svg',
-				text: 'Выполнено, просмотрено'
+				src: '/completed.svg',
+				text: 'Выполнено'
 			}
 		case TagOption.REJECTED:
 			return {
@@ -89,8 +89,8 @@ export const TagOptionToTagParameters = (
 		case TagOption.REJECTED_BY_ADMIN:
 			return {
 				tagClassName: styles.redTag,
-				src: '/rejected_by_admin.svg',
-				text: 'Отклонено, просмотрено'
+				src: '/rejected.svg',
+				text: 'Отклонено'
 			}
 		default:
 			return {

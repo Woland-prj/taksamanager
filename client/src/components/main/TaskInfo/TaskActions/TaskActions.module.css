@@ -49,7 +49,7 @@
 }
 
 .buttonWithText {
-	user-select: 'text';
+	user-select: all;
 }
 .message {
 	text-align: center;
@@ -67,4 +67,3 @@
 	margin: 0;
 	word-wrap: break-word;
 }
-

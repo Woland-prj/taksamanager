@@ -1,18 +1,24 @@
 .sideBar {
 	position: static;
-	list-style: none;
-	width: 330px;
-	min-height: 100%;
-	gap: 0px;
+	height: 100vh;
 	z-index: 2;
 	background-color: #4ca97a;
 	color: #ffffff;
+
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.nav {
 	list-style-type: none;
 	-webkit-font-smoothing: antialiased;
+	list-style: none;
+	width: 330px;
+	gap: 0px;
 	padding: 0;
 	margin: 0;
 }
-
 .buttons {
 	display: flex;
 	flex-direction: column;
@@ -135,4 +141,7 @@
 	.menu_toggle input:checked ~ ul {
 		transform: none;
 	}
+}
+.exit {
+	border-top: 1px solid #FFFFFF;
 }

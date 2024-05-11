@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/main/PageHeader/PageHeader'
 import styles from './page.module.css'
 import { createTaskURL } from '@/types/tasks'
 import { TasksTable } from '@/components/main/TasksTable/TasksTable'
+import { Scrollbar } from '@/components/Scrollbar/Scrollbar'
 
 export default function Dashboard() {
   return (
@@ -15,8 +16,10 @@ export default function Dashboard() {
           href={createTaskURL}
         />
       </header>
-      <div className={styles.scrollbar}>
-        <TasksTable/>
+      <div className={styles.container}>
+        <Scrollbar>
+          <TasksTable />
+        </Scrollbar>
       </div>
     </main>
   )

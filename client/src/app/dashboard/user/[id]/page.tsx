@@ -39,6 +39,7 @@ const UserPage = () => {
 		try {
 			let user = await getUserById(userId)
 			if (!user) user = await getUserById(userId)
+			if (!user) router.replace('/404')
 			if (user) setUser(user)
 		} catch (status) {
 			if (status == Status.FORBIDDEN) router.replace('/auth/login')

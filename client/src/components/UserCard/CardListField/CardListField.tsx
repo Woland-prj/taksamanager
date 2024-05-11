@@ -14,7 +14,7 @@ export default function CardListField<T>({ label, type, placeholder, setData, fi
       changeable ? styles.card_field_changeable : null
     )}>
       {label && <label className={styles.label}>{label}</label>}
-      <select className={styles.select} onChange={handleChange} defaultValue={placeholder}>
+      <select className={styles.select} onChange={handleChange} defaultValue={placeholder} disabled={!changeable}>
         {options.map((option) => (
           <option value={option.value as string} key={option.value as string}>{option.label}</option>
         ))}

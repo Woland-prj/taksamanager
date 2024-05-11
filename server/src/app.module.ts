@@ -21,6 +21,7 @@ import { PrismaClient, UserRole } from '@prisma/client'
 import { PrismaService } from './prisma/prisma.service'
 import { v4 as uuidv4 } from 'uuid'
 import { HashService } from './users/hashing.service'
+import { base64root } from './base64root'
 
 @Module({
 	imports: [
@@ -75,7 +76,8 @@ export class AppModule implements OnModuleInit {
 					role: UserRole.ROOT,
 					password: hashedPass,
 					actLink: uuidv4(),
-					isActivated: true
+					isActivated: true,
+					avatar: base64root
 				}
 			})
 		}

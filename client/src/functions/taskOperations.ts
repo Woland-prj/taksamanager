@@ -1,6 +1,7 @@
 import { Status } from '@/types/login_and_register'
 import { getAccessToken } from './jwt'
 import { TaskStatus } from '@/types/tasks'
+import { refreshWithThrow } from './refreshWithThrow'
 
 export const changeTaskByAdmin = async (
 	taskId: string,
@@ -9,7 +10,7 @@ export const changeTaskByAdmin = async (
 ) => {
 	const token = getAccessToken()
 	if (!token) {
-		throw Status.FORBIDDEN
+		refreshWithThrow()
 	}
 	let requestBody: unknown
 	if (newStatus && newExecutorId) {
@@ -29,13 +30,15 @@ export const changeTaskByAdmin = async (
 			executorId: newExecutorId
 		}
 	} else requestBody = {}
+	console.log(taskId)
 	const response = await fetch(
 		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/admin/` +
 			`${taskId}`,
 		{
 			method: 'PATCH',
 			headers: {
-				Authorization: token
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(requestBody),
 			credentials: 'include'
@@ -48,11 +51,12 @@ export const changeTaskByAdmin = async (
 
 export const changeTaskByExecutor = async (
 	taskId: string,
-	newStatus: TaskStatus
+	newStatus: TaskStatus,
+	result?: string
 ) => {
 	const token = getAccessToken()
 	if (!token) {
-		throw Status.FORBIDDEN
+		return refreshWithThrow()
 	}
 	const response = await fetch(
 		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/executor/` +
@@ -60,9 +64,10 @@ export const changeTaskByExecutor = async (
 		{
 			method: 'PATCH',
 			headers: {
-				Authorization: token
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ status: newStatus }),
+			body: JSON.stringify({ status: newStatus, result: result }),
 			credentials: 'include'
 		}
 	)

@@ -12,6 +12,7 @@ export class BotService {
 	}
 
 	async sendMessage(userId: string, text: string) {
+		if (!userId) return
 		const user = await this.usersService.findOne(userId)
 		if (!user) return
 		await this.tg.sendMessage(user.tgChatId, text, {

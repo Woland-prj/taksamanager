@@ -1,24 +1,24 @@
 'use client'
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styles from './TaskActions.module.css'
 import Button from "@/components/ui/Button/Button";
-import { Executors } from "./Executors/Executors";
 import { InsertLinkForm } from "./InsertLinkForm/InsertLinkForm";
-import { TaskStatus } from "@/types/tasks";
-import { UserRole } from "@/types/user";
-import { roleAndStatusToActions } from "@/functions/roleAndStatusToActions";
+import { ITask, TaskStatus } from "@/types/tasks";
+import { TUser, UserRole } from "@/types/user";
+import { roleAndStatusToActions, roleAndStatusToActions2 } from "@/functions/roleAndStatusToActions";
 import localFont from "next/font/local";
 import cn from 'clsx'
 import { redirectToTaskForm } from "@/functions/taskActions";
 import { ExecutorSelection } from "./ExecutorsSelection/ExecutorSelection";
 import { changeTaskByAdmin, changeTaskByExecutor } from "@/functions/taskOperations";
+import UserBlock from "../../TeamContainer/UserBlock/UserBlock";
+import { getUserById } from "@/functions/userOperations";
+import { Status } from "@/types/login_and_register";
+import { useRouter } from "next/navigation";
 
 type TTaskActionsProps = {
-  taskStatus: TaskStatus | undefined
   userRole: UserRole
-  isUserExecutor: boolean
-  taskId: string
-  taskHasExecutor: boolean
+  task: ITask
 }
 
 export const enum Actions {
@@ -51,9 +51,26 @@ const euclid500 = localFont({
   }]
 })
 
-export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUserExecutor, taskId, taskHasExecutor }) => {
+export const TaskActions: FC<TTaskActionsProps> = ({ task, userRole }) => {
+  const router = useRouter()
   const [isSelectionActive, setIsSelectionActive] = useState<boolean>(false)
-  const actionsType: Actions = roleAndStatusToActions(userRole, taskStatus, isUserExecutor, taskHasExecutor)
+  const actionsType: Actions = roleAndStatusToActions2(userRole, task.status, task.executorId ? true : false)
+  const [executor, setExecutor] = useState<TUser | null>(null)
+  const fetchUser = async (userId: string) => {
+    try {
+      let user = await getUserById(userId)
+      if (!user) user = await getUserById(userId)
+      console.log(user)
+      console.log(actionsType)
+      if (user) setExecutor(user)
+    } catch (status) {
+      if (status == Status.FORBIDDEN) router.replace('/auth/login')
+      if (status == Status.NOTFOUND) router.replace('/dashboard')
+    }
+  }
+  useEffect(() => {
+    if (task.executorId) fetchUser(task.executorId)
+  }, [])
   return (<>
     <div className={cn(styles.actionsSet, euclid500.className)}>
       {actionsType == Actions.BLANK && (<></>)}
@@ -78,10 +95,10 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
             text='Отказаться от выполнения задачи'
             fgColor="#FF5B5B"
             bgColor="#FFC5C5"
-            action={async () => { changeTaskByAdmin(taskId, TaskStatus.REJECTEDBYLEAD) } /*Отправить на создание задачи*/}
+            action={async () => { changeTaskByAdmin(task.id, TaskStatus.VERIFYREJECTED) } /*Отправить на создание задачи*/}
           ></Button>
           {isSelectionActive && (
-            <ExecutorSelection className={cn(styles.actionsSet, euclid500.className)} taskId={taskId} />
+            <ExecutorSelection className={cn(styles.actionsSet, euclid500.className)} taskId={task.id} />
           )}
         </div>
       )}
@@ -91,7 +108,7 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
       {actionsType == Actions.WAITCONSENT_CLIENT_ADMIN && (
         <div className={styles.executors}>
           <span>Задача ожидает подтверждения от следующих исполнителей:</span>
-          <Executors />
+          {executor && <UserBlock user={executor} />}
         </div>
       )}
       {actionsType == Actions.WAITCONSENT_EXECUTOR && (
@@ -99,34 +116,34 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
           <Button
             className={styles.button}
             text='Принять'
-            action={async () => { changeTaskByExecutor(taskId, TaskStatus.INWORK); location.reload() } /* Перевести задачу в статус IN_WORK */}
+            action={async () => { changeTaskByExecutor(task.id, TaskStatus.INWORK); location.reload() } /* Перевести задачу в статус IN_WORK */}
             fgColor="#338D5F"
             bgColor="#C8FFE3"
           />
           <Button
             className={styles.button}
             text='Отклонить'
-            action={async () => { changeTaskByExecutor(taskId, TaskStatus.WAITCONSENT); location.reload() }
+            action={async () => { changeTaskByExecutor(task.id, TaskStatus.MODIFIED); location.reload() }
             /* Перевести задачу в статус WAITCONSENT TODO: В будущем планируется несколько исполнителей */}
             fgColor="#FF5B5B"
             bgColor="#FFC5C5"
           />
         </div>
       )}
-      {actionsType == Actions.IN_WORK_CLIENT_ADMIN || actionsType == Actions.COMPLETED_CLIENT && (
+      {(actionsType == Actions.IN_WORK_CLIENT_ADMIN || actionsType == Actions.COMPLETED_CLIENT) && (
         <div className={styles.executors}>
           <span>Задача в данный момент выполняется следующими исполнителями:</span>
-          <Executors />
+          {executor && <UserBlock user={executor} />}
         </div>
       )}
       {actionsType == Actions.IN_WORK_EXECUTOR && (
-        <InsertLinkForm taskId={taskId} />
+        <InsertLinkForm taskId={task.id} />
       ) /* При заполнении и подтверждении переводит в статус COMPLETED */}
       {actionsType == Actions.COMPLETED_ADMIN && (
         <>
           <div className={styles.executors}>
             <span>Задача выполнена следующими исполнителями:</span>
-            <Executors />
+            {executor && <UserBlock user={executor} />}
           </div>
           <div className={styles.completed_consent}>
             <span className={styles.span}>Проверьте соответствие проделанной работы с изначальным заказом:</span>
@@ -142,14 +159,14 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
               <Button
                 className={styles.button}
                 text='Подтвердить выполнение работы'
-                action={async () => { changeTaskByExecutor(taskId, TaskStatus.VERIFYCOMPLETED); location.reload() } /* Перевести задачу в статус VERIFY_COMPLETED */}
+                action={async () => { changeTaskByExecutor(task.id, TaskStatus.VERIFYCOMPLETED); location.reload() } /* Перевести задачу в статус VERIFY_COMPLETED */}
                 fgColor="#338D5F"
                 bgColor="#C8FFE3"
               />
               <Button
                 className={styles.button}
                 text='Вернуть задачу в работу'
-                action={async () => { changeTaskByExecutor(taskId, TaskStatus.INWORK); location.reload() } /* Перевести задачу в статус INWORK*/}
+                action={async () => { changeTaskByExecutor(task.id, TaskStatus.INWORK); location.reload() } /* Перевести задачу в статус INWORK*/}
                 fgColor="#FF5B5B"
                 bgColor="#FFC5C5"
               />
@@ -157,10 +174,15 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
           </div>
         </>
       )}
+      {actionsType == Actions.COMPLETED_EXECUTOR && (
+        <div className={styles.message}>
+          <span>Задача находмится на прверке у администратора. Вас оповестят о результате</span>
+        </div>
+      )}
       {actionsType == Actions.VERIFY_COMPLETED && (
         <div className={styles.executors}>
           <span>Задача выполнена следующими исполнителями:</span>
-          <Executors />
+          {executor && <UserBlock user={executor} />}
         </div>
       )}
       {actionsType == Actions.VERIFY_REJECTED && (
@@ -170,9 +192,9 @@ export const TaskActions: FC<TTaskActionsProps> = ({ taskStatus, userRole,  isUs
         </span>
       )}
       {actionsType == Actions.EXPIRED_IN_WORK && (
-        <div>
+        <div className={styles.executors}>
           <span>Задача просрочена следующими исполнителями:</span>
-          <Executors />
+          {executor && <UserBlock user={executor} />}
         </div>
       )}
       {actionsType == Actions.EXPIRED_IN_MODERATION && (

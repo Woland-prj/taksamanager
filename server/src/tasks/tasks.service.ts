@@ -156,7 +156,7 @@ export class TasksService {
 		})
 	}
 	// ВНИМАНИЕ!!! КОНЕЦ КОДА ДЕНИСА КИСТАНОВА
-	
+
 	async getById(id: string): Promise<GetTaskDto> {
 		return this.prismaService.task.findUnique({
 			where: {
@@ -366,6 +366,7 @@ export class TasksService {
 			},
 			data: {}
 		}
+		console.log(id, adminId, dto)
 		const admin = await this.prismaService.user.findUnique({
 			where: {
 				id: adminId
@@ -423,14 +424,30 @@ export class TasksService {
 			}
 		})
 		if (!task) throw new NotFoundException()
-		return this.prismaService.task.update({
+		const req = {
 			where: {
 				id: id
 			},
-			data: {
-				status: dto.status as TaskStatus
+			data: {}
+		}
+		if (dto.status) {
+			req.data['status'] = dto.status
+			if (dto.status === TaskStatus.MODIFIED) {
+				req.data['executorId'] = null
+				req.data['executorName'] = null
 			}
-		})
+		}
+		if (dto.result) {
+			req.data['result'] = dto.result
+		}
+		const result = await this.prismaService.task.update(req)
+		if (dto.status) {
+			this.botService.sendMessage(
+				task.clientId,
+				getNewStatusTaskMessage(result as unknown as Task)
+			)
+		}
+		return result
 	}
 
 	async setExpiredStatus() {

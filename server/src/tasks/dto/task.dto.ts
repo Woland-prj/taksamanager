@@ -81,7 +81,7 @@ export class TaskAdminUpdateDto {
 
 export class TaskExecutorUpdateDto {
 	@IsOptional()
-	@IsIn(['INWORK', 'COMPLETED', 'REJECTED'])
+	@IsIn(['INWORK', 'COMPLETED', 'REJECTED', 'MODIFIED'])
 	status: string
 
 	@IsOptional()

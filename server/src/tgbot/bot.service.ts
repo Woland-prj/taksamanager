@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common'
 import { UsersService } from 'src/users/users.service'
-import { getNewExecutedTaskMessage } from './messages.template'
-import { Task } from '@prisma/client'
 import { Telegram } from 'telegraf'
 
 @Injectable()
@@ -15,6 +13,7 @@ export class BotService {
 		if (!userId) return
 		const user = await this.usersService.findOne(userId)
 		if (!user) return
+		if (!user.tgChatId) return
 		await this.tg.sendMessage(user.tgChatId, text, {
 			parse_mode: 'HTML'
 		})

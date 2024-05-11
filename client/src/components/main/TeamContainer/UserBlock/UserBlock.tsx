@@ -1,15 +1,18 @@
-import { redirectToPage } from '@/functions/redirectToPage'
 import { TUser } from '@/types/user'
 import cn from 'clsx'
 import Image from 'next/image'
 import styles from '../TeamContainer.module.css'
 
-const UserBlock: React.FC<{ user: TUser }> = ({ user }) => {
+type UserBlockProps = {
+	user: TUser
+	clickAction: (() => Promise<unknown>) | (() => void)
+}
+
+// () => redirectToPage(`/dashboard/user/${user.id}`)
+// async () => { changeTaskByAdmin(task.id, TaskStatus.WAITCONSENT, )}
+const UserBlock: React.FC<UserBlockProps> = ({ user, clickAction }) => {
 	return (
-		<div
-			className={styles.user_block}
-			onClick={() => redirectToPage(`/dashboard/user/${user.id}`)}
-		>
+		<div className={styles.user_block} onClick={clickAction}>
 			<Image
 				className={cn(user.avatar ? styles.user_avatar : null)}
 				src={user.avatar ? user.avatar : '/default_avatar.svg'}

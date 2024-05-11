@@ -1,9 +1,9 @@
 'use client'
 
-import redirectByJWT from "@/functions/redirectByJWT"
+import useRedirectByJWT from '@/functions/redirectByJWT'
 
 export default function Home() {
-	redirectByJWT()
+	useRedirectByJWT()
 	return (
 		<main>
 			<div>Redirecting to another page</div>

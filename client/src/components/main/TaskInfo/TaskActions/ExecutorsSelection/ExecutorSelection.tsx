@@ -1,61 +1,67 @@
-import { FC, MutableRefObject, useRef, useState } from "react"
-import { Executor } from "./Executor/Executor"
-import { TUser, UserRole } from "@/types/user"
-import localFont from "next/font/local"
+import UserBlock from '@/components/main/TeamContainer/UserBlock/UserBlock'
+import { getAllUsers } from '@/functions/getAllUsers'
+import { Status } from '@/types/login_and_register'
+import { TUser, UserRole } from '@/types/user'
 import cn from 'clsx'
+import localFont from 'next/font/local'
+import { useRouter } from 'next/navigation'
+import { FC, useEffect, useState } from 'react'
 import styles from './ExecutorSelection.module.css'
-import { changeTaskByAdmin } from "@/functions/taskOperations"
-import { Status } from "@/types/login_and_register"
-import { TaskStatus } from "@/types/tasks"
+
+import { changeTaskByAdmin } from '@/functions/taskOperations'
+import { TaskStatus } from '@/types/tasks'
 
 type TExecutorSelectionProps = {
-  className: string
-  taskId: string
+	className: string
+	taskId: string
 }
 const euclid400 = localFont({
-  src: [{
-    path: '../../../../../fonts/EuclidCircularBLight.ttf',
-    weight: '400',
-  }]
+	src: [
+		{
+			path: '../../../../../fonts/EuclidCircularBLight.ttf',
+			weight: '400'
+		}
+	]
 })
-export const ExecutorSelection: FC<TExecutorSelectionProps> = ({ className, taskId }) => {
-  //const executorRef: MutableRefObject<HTMLDivElement | undefined> = useRef<HTMLDivElement>()
-  const users: TUser[] = [{
-    id: '1',
-    username: 'Denis',
-    email: 'email',
-    role: UserRole.ADMIN,
-    isActivated: true,
-    tgUsername: 'Osidron',
-    tgChatId: 0,
-    teamId: 'smth',
-    teamColor: '#FF0000',
-    avatar: 'smth',
-    class: 11,
-  },
-  {
-    id: '2',
-    username: 'Denis',
-    email: 'email',
-    role: UserRole.ADMIN,
-    isActivated: true,
-    tgUsername: 'Osidron',
-    tgChatId: 0,
-    teamId: 'smth',
-    teamColor: '#FF0000',
-    avatar: 'smth',
-    class: 11,
-  }]
-  return (
-    <div className={cn(className, styles.menu)}>
-      <span className={euclid400.className}>Выбери исполнителя</span>
-      {users.map((user) => (
-        <Executor
-          key={user.id}
-          user={user}
-          onClick={async () => { changeTaskByAdmin(taskId, TaskStatus.WAITCONSENT, user.id); location.reload() }}
-        />
-      ))}
-    </div>
-  )
+export const ExecutorSelection: FC<TExecutorSelectionProps> = ({
+	className,
+	taskId
+}) => {
+	const [users, setUsers] = useState<TUser[] | null>(null)
+	const router = useRouter()
+	const fetchUsers = async () => {
+		try {
+			const valUsers: TUser[] = []
+			let users = await getAllUsers()
+			if (!users) users = await getAllUsers()
+			if (users) {
+				users.forEach(user => {
+					if (user.role === UserRole.ADMIN || user.role === UserRole.EXECUTOR)
+						valUsers.push(user)
+				})
+				setUsers(valUsers)
+			}
+		} catch (status) {
+			if (status == Status.FORBIDDEN) router.replace('/auth/login')
+			if (status == Status.NOTFOUND) router.replace('/dashboard')
+		}
+	}
+	useEffect(() => {
+		fetchUsers()
+	}, [])
+	return (
+		<div className={cn(className, styles.menu)}>
+			<span className={euclid400.className}>Выбери исполнителя</span>
+			{users &&
+				users.map(user => (
+					<UserBlock
+						user={user}
+						clickAction={async () => {
+							await changeTaskByAdmin(taskId, TaskStatus.WAITCONSENT, user.id)
+							location.reload()
+						}}
+					/>
+				))}
+		</div>
+	)
 }

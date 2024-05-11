@@ -1,11 +1,11 @@
 import { Status } from '@/types/login_and_register'
-import { getAccessToken } from './jwt'
 import { TaskStatus } from '@/types/tasks'
+import { getAccessToken } from './jwt'
 import { refreshWithThrow } from './refreshWithThrow'
 
 export const changeTaskByAdmin = async (
 	taskId: string,
-	newStatus?: TaskStatus,
+	newStatus: TaskStatus,
 	newExecutorId?: string
 ) => {
 	const token = getAccessToken()
@@ -32,8 +32,9 @@ export const changeTaskByAdmin = async (
 	} else requestBody = {}
 	console.log(taskId)
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/admin/` +
-			`${taskId}`,
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/tasks/admin/` + `${taskId}`,
 		{
 			method: 'PATCH',
 			headers: {
@@ -59,8 +60,9 @@ export const changeTaskByExecutor = async (
 		return refreshWithThrow()
 	}
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/executor/` +
-			`${taskId}`,
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/tasks/executor/` + `${taskId}`,
 		{
 			method: 'PATCH',
 			headers: {

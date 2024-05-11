@@ -1,7 +1,6 @@
 import { Status } from '@/types/login_and_register'
 import { ITask } from '@/types/tasks'
-import { renewTasks } from './renewTasks'
-import { getAccessToken, refreshJWT } from './jwt'
+import { getAccessToken } from './jwt'
 import { refreshWithThrow } from './refreshWithThrow'
 
 export enum TaskOption {
@@ -9,18 +8,17 @@ export enum TaskOption {
 	APPOINTED = 'appointed'
 }
 
-export const getTasks = async (
-	type: TaskOption
-): Promise<ITask[] | null> => {
+export const getTasks = async (type: TaskOption): Promise<ITask[] | null> => {
 	const token = getAccessToken()
 	if (!token) {
 		console.log(token)
 		return await refreshWithThrow()
 	}
 	const urlType: string = type
-	renewTasks()
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/` +
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/tasks/` +
 			urlType +
 			'/',
 		{
@@ -38,15 +36,17 @@ export const getTasks = async (
 	} else throw new Error(Status.NOTFOUND)
 }
 
-export const getAllTasks = async (): Promise<ITask[] | null> => { // Достает все-все-все задачи из БД
+export const getAllTasks = async (): Promise<ITask[] | null> => {
+	// Достает все-все-все задачи из БД
 	const token = getAccessToken()
 	if (!token) {
 		console.log(token)
 		return await refreshWithThrow()
 	}
-	renewTasks()
 	const response = await fetch(
-		`http://${process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'}/api/v1/tasks/all/`,
+		`http://${
+			process.env.NEXT_PUBLIC_API_HOST || 'localhost:3200'
+		}/api/v1/tasks/all/`,
 		{
 			method: 'GET',
 			headers: {

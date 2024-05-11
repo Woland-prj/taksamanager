@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
 	Body,
 	Controller,
@@ -13,6 +14,7 @@ import {
 	ApiBearerAuth,
 	ApiForbiddenResponse,
 	ApiHeader,
+	ApiNoContentResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
@@ -41,6 +43,20 @@ import { TasksService } from './tasks.service'
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
 
+	// ВНИМАНИЕ!!! КОД ДЕНИСА КИСТАНОВА
+	@JwtAuth()
+	@Get('/all')
+	@ApiOperation({
+		summary: 'Get all tasks from all users'
+	})
+	@ApiForbiddenResponse({ description: 'Forbidden' })
+	@ApiOkResponse({ type: [GetTaskDto] })
+	@ApiBearerAuth()
+	async getVeryAll(@Request() req: ValidatedRequest): Promise<GetTaskDto[]> {
+		return this.tasksService.getVeryAll()
+	}
+	// ВНИМАНИЕ!!! КОНЕЦ КОДА ДЕНИСА КИСТАНОВА
+
 	@JwtAuth()
 	@Get()
 	@ApiOperation({
@@ -56,7 +72,7 @@ export class TasksController {
 	@Patch('/templates')
 	@HttpCode(204)
 	@ApiOperation({
-		summary: 'Forced renew tempates for questions'
+		summary: 'Forced renew templates for questions'
 	})
 	async updateTemplates() {
 		await this.tasksService.updateTemplatesClient()
@@ -95,6 +111,17 @@ export class TasksController {
 		return this.tasksService.getAllAppointed(req.user)
 	}
 
+	@JwtAdminAuth()
+	@Patch('/status/expired')
+	@ApiOperation({
+		summary: 'Set expired tasks status (only by admin)'
+	})
+	@HttpCode(204)
+	@ApiNoContentResponse({ description: 'Data updated successfuly' })
+	async setExpiredStatus() {
+		await this.tasksService.setExpiredStatus()
+	}
+
 	@JwtAuth()
 	@Get(':id')
 	@ApiOperation({
@@ -128,10 +155,11 @@ export class TasksController {
 	@JwtAdminAuth()
 	@Patch('/admin/:id')
 	async updateByAdmin(
+		@Request() req: ValidatedRequest,
 		@Body() taskAdminUpdateDto: TaskAdminUpdateDto,
 		@Param('id', new ParseUUIDPipe()) id: string
 	) {
-		return this.tasksService.updateByAdmin(id, taskAdminUpdateDto)
+		return this.tasksService.updateByAdmin(req.user.id, id, taskAdminUpdateDto)
 	}
 
 	@ApiOperation({

@@ -6,8 +6,9 @@ import { Dispatch, FC, SetStateAction, useState } from 'react'
 import ErrorBlock from '../error/Error'
 import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
-import Field from './field/field'
+import Field from '../Field/field'
 import { useRouter } from 'next/navigation'
+import { saveLoggedInToken } from '@/functions/isLoggedIn'
 
 // 201 - Tokens generated succesfully
 // 401 - Unauthorized
@@ -61,6 +62,7 @@ export const LogInForm = () => {
 								const jwt = await getTokensFromDb(formData)
 								await saveAccessToken(jwt)
 								setStatus(Status.CREATED)
+								saveLoggedInToken('true')
 								router.replace('/dashboard')
 							} catch (status) {
 								if (status === Status.FORBIDDEN) {setStatus(Status.FORBIDDEN)}
@@ -70,7 +72,7 @@ export const LogInForm = () => {
 						}
 					}}
 				/>
-				<div>
+				<div className={styles.plain_text}>
 					<span className={styles.plain_text}>
 						Если у вас нет аккаунта, то для начала вам нужно
 					</span>
@@ -80,7 +82,7 @@ export const LogInForm = () => {
 						text={'зарегистрироваться'}
 						action={async () => {
 							console.log('redirection')
-							redirectToPage('/auth/register')
+							router.push('/auth/register')
 						}}
 					/>
 				</div>

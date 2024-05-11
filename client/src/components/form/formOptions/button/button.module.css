@@ -1,10 +1,9 @@
 .plain {
-	width: 253px;
 	height: 38px;
 	padding: 0;
 
-	font-size: 25px;
-	font-weight: 500;
+	/* font-size: 25px;
+	font-weight: 500; */
 	line-height: 38px;
 	letter-spacing: 0em;
 	text-align: left;

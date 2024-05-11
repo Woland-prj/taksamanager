@@ -36,13 +36,13 @@ export class TokenService {
 				token: token
 			}
 		})
-		return await tokenData
+		return tokenData
 	}
 
 	getTokenFromCookie(req: Request): string | null {
 		let token = null
 		const cookies = cookie.parse(req.headers.cookie)
-		if (cookies) {
+		if (cookies && cookies.refreshJwt) {
 			token = cookies.refreshJwt as string
 		}
 		return token

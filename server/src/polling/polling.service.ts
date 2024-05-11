@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Cron, CronExpression } from '@nestjs/schedule'
+import { TaskStatus } from '@prisma/client'
 import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { TasksService } from 'src/tasks/tasks.service'
@@ -24,5 +25,10 @@ export class PollingService {
 		console.log('Ping form responses...')
 		await this.tasksService.updateResponses()
 		console.log('Ping success!')
+	}
+
+	@Cron('0 0 4 * * 1-7')
+	async pollingExpiredTasks() {
+		await this.tasksService.setExpiredStatus()
 	}
 }

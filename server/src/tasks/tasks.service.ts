@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
 	BadRequestException,
 	Injectable,
@@ -9,6 +10,7 @@ import { FormsService } from 'src/forms/forms.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { IUser } from 'src/users/entities/user.entity'
 import {
+	ClientStatus,
 	GetTaskDto,
 	SetExecutorDto,
 	TaskAdminUpdateDto,
@@ -20,17 +22,21 @@ import {
 	TaskFormType,
 	TaskQ
 } from './entities/task.entity'
-// import { BotService } from 'src/tgbot/bot.service'
-// import { InjectBot } from 'nestjs-telegraf'
-// import { Context, Telegraf } from 'telegraf'
+import { BotService } from 'src/tgbot/bot.service'
+import {
+	getNewAppointedTaskMessage,
+	getNewExecutedTaskMessage,
+	getNewStatusTaskMessage
+} from 'src/tgbot/messages.template'
 
 @Injectable()
 export class TasksService {
 	pollingInterval: number = 1000
+
 	constructor(
 		private readonly prismaService: PrismaService,
-		private readonly formsService: FormsService
-		// @InjectBot() private readonly botService: Telegraf<Context>
+		private readonly formsService: FormsService,
+		private readonly botService: BotService
 	) {}
 
 	async getAllExecuted(user: IUser): Promise<GetTaskDto[]> {
@@ -48,6 +54,8 @@ export class TasksService {
 				deadline: true,
 				status: true,
 				type: true,
+				result: true,
+				formClientName: true,
 				questions: {
 					select: {
 						id: true,
@@ -74,6 +82,8 @@ export class TasksService {
 				deadline: true,
 				status: true,
 				type: true,
+				result: true,
+				formClientName: true,
 				questions: {
 					select: {
 						id: true,
@@ -106,7 +116,9 @@ export class TasksService {
 				name: true,
 				deadline: true,
 				status: true,
+				result: true,
 				type: true,
+				formClientName: true,
 				questions: {
 					select: {
 						id: true,
@@ -117,6 +129,33 @@ export class TasksService {
 			}
 		})
 	}
+
+	// ВНИМАНИЕ!!! КОД ДЕНИСА КИСТАНОВА
+	async getVeryAll(): Promise<GetTaskDto[]> {
+		return this.prismaService.task.findMany({
+			select: {
+				id: true,
+				clientId: true,
+				executorId: true,
+				clientName: true,
+				executorName: true,
+				name: true,
+				deadline: true,
+				status: true,
+				result: true,
+				type: true,
+				formClientName: true,
+				questions: {
+					select: {
+						id: true,
+						questionText: true,
+						answerText: true
+					}
+				}
+			}
+		})
+	}
+	// ВНИМАНИЕ!!! КОНЕЦ КОДА ДЕНИСА КИСТАНОВА
 
 	async getById(id: string): Promise<GetTaskDto> {
 		return this.prismaService.task.findUnique({
@@ -129,10 +168,12 @@ export class TasksService {
 				executorId: true,
 				clientName: true,
 				executorName: true,
+				formClientName: true,
 				name: true,
 				deadline: true,
 				status: true,
 				type: true,
+				result: true,
 				questions: {
 					select: {
 						id: true,
@@ -316,16 +357,25 @@ export class TasksService {
 		await this.updateClient(res.respondentEmail, task.id)
 	}
 
-	async updateByAdmin(id: string, dto: TaskAdminUpdateDto) {
+	async updateByAdmin(adminId: string, id: string, dto: TaskAdminUpdateDto) {
 		const task = await this.getById(id)
 		if (!task) throw new NotFoundException()
 		let query = {
 			where: {
 				id: id
 			},
-			data: {
-				status: dto.status as TaskStatus
+			data: {}
+		}
+		console.log(id, adminId, dto)
+		const admin = await this.prismaService.user.findUnique({
+			where: {
+				id: adminId
 			}
+		})
+		if (!admin) throw new BadRequestException('admin with this id is not exist')
+
+		if (dto.status) {
+			query.data['status'] = dto.status
 		}
 		if (dto.executorId) {
 			const suggestedExecutor = await this.prismaService.user.findUnique({
@@ -340,12 +390,31 @@ export class TasksService {
 					id: dto.executorId
 				}
 			}
-			// this.botService.sendNewExecutedTaskMessage(
-			// 	suggestedExecutor.id,
-			// 	task as unknown as Task
-			// )
 		}
-		return this.prismaService.task.update(query)
+		const result = await this.prismaService.task.update(query)
+		if (dto.executorId) {
+			this.botService.sendMessage(
+				dto.executorId,
+				getNewExecutedTaskMessage(result as unknown as Task)
+			)
+			this.botService.sendMessage(
+				admin.id,
+				getNewAppointedTaskMessage(result as unknown as Task)
+			)
+		}
+		if (dto.status) {
+			this.botService.sendMessage(
+				result.executorId,
+				getNewStatusTaskMessage(result as unknown as Task)
+			)
+			if (dto.status in ClientStatus) {
+				this.botService.sendMessage(
+					result.clientId,
+					getNewStatusTaskMessage(result as unknown as Task)
+				)
+			}
+		}
+		return result
 	}
 
 	async updateByExecutor(id: string, dto: TaskExecutorUpdateDto) {
@@ -355,12 +424,55 @@ export class TasksService {
 			}
 		})
 		if (!task) throw new NotFoundException()
-		return this.prismaService.task.update({
+		const req = {
 			where: {
 				id: id
 			},
+			data: {}
+		}
+		if (dto.status) {
+			req.data['status'] = dto.status
+			if (dto.status === TaskStatus.MODIFIED) {
+				req.data['executorId'] = null
+				req.data['executorName'] = null
+			}
+		}
+		if (dto.result) {
+			req.data['result'] = dto.result
+		}
+		const result = await this.prismaService.task.update(req)
+		if (dto.status) {
+			this.botService.sendMessage(
+				task.clientId,
+				getNewStatusTaskMessage(result as unknown as Task)
+			)
+		}
+		return result
+	}
+
+	async setExpiredStatus() {
+		const checkedTasks = await this.prismaService.task.findMany({
+			where: {
+				status: {
+					in: [TaskStatus.WAITCONSENT, TaskStatus.INWORK, TaskStatus.MODIFIED]
+				}
+			}
+		})
+		const taskIdsForUpdate = []
+		if (!checkedTasks) return
+		checkedTasks.forEach(task => {
+			if (task.deadline.getTime() < new Date().getTime()) {
+				taskIdsForUpdate.push(task.id)
+			}
+		})
+		await this.prismaService.task.updateMany({
+			where: {
+				id: {
+					in: taskIdsForUpdate
+				}
+			},
 			data: {
-				status: dto.status as TaskStatus
+				status: TaskStatus.EXPIRED
 			}
 		})
 	}

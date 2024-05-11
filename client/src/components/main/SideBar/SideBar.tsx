@@ -1,26 +1,41 @@
 'use client'
-import { ProfileComponent } from "./ProfileComponent/ProfileComponent"
-import styles from "./SideBar.module.css"
-import { SideBarButton } from "./SideBarButton/SideBarButton"
-import { redirectToPage } from "@/functions/redirectToPage"
+import { redirectToPage } from '@/functions/redirectToPage'
+import { ProfileComponent } from './ProfileComponent/ProfileComponent'
+import styles from './SideBar.module.css'
+import { SideBarButton } from './SideBarButton/SideBarButton'
 
 export const SideBar = () => {
-    return (
-        <div className={styles.sideBar}>
-            <ProfileComponent
-                username='EXAMPLE'
-                imageName='taksa.png'
-                action={() => {return new Promise(() => {})}}
-            />
-            <SideBarButton
-                iconName='dashboard.png'
-                text='Доска задач'
-                action={async () => {console.log('кнопка'); redirectToPage('/dashboard')}}
-            />
-            <SideBarButton
-                iconName='team.png'
-                text='Команда'
-                action={() => {return new Promise(() => {})}}
-            />
-        </div>)
+	return (
+		<div className={styles.menu_toggle}>
+			<input type='checkbox' />
+			<span></span>
+			<span></span>
+			<span></span>
+			<ul className={styles.sideBar}>
+				<li className={styles.nav_item}>
+					<ProfileComponent />
+				</li>
+				<li className={styles.nav_item}>
+					<SideBarButton
+						iconName='dashboard.svg'
+						text='Доска задач'
+						action={async () => {
+							console.log('кнопка')
+							redirectToPage('/dashboard')
+						}}
+					/>
+				</li>
+				<li className={styles.nav_item}>
+					<SideBarButton
+						iconName='team.svg'
+						text='Команда'
+						action={async () => {
+							console.log('кнопка')
+							redirectToPage('/dashboard/team')
+						}}
+					/>
+				</li>
+			</ul>
+		</div>
+	)
 }

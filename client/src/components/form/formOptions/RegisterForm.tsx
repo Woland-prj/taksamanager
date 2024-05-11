@@ -1,4 +1,4 @@
-'useclient'
+'use client'
 import { createUser } from '@/functions/createUser'
 import { saveAccessToken, getTokensFromDb } from '@/functions/jwt'
 import { redirectToPage } from '@/functions/redirectToPage'
@@ -7,8 +7,9 @@ import { useState } from 'react'
 import ErrorBlock from '../error/Error'
 import styles from './LogInForm.module.css'
 import Button, { ButtonType } from './button/button'
-import Field from './field/field'
+import Field from '../Field/field'
 import { useRouter } from 'next/navigation'
+import { saveLoggedInToken } from '@/functions/isLoggedIn'
 
 
 export const RegisterForm = () => {
@@ -80,22 +81,46 @@ export const RegisterForm = () => {
 								})
 								await saveAccessToken(jwt)
 								setStatus(Status.CREATED)
+								saveLoggedInToken('true')
 								router.replace('/dashboard')
-							} catch (status) {
-								console.log(status)
-								if (status === Status.BADREQUEST) setStatus(Status.BADREQUEST)
-								if (status === Status.EXIST) setStatus(Status.EXIST)
+							} catch  {
+								try {
+									const jwt = await getTokensFromDb({
+										email: formData.email,
+										password: formData.password
+									})
+									await createUser(formData)
+									await saveAccessToken(jwt)
+									setStatus(Status.CREATED)
+									saveLoggedInToken('true')
+									router.replace('/dashboard')
+								}
+								catch (error) {
+									saveLoggedInToken('false')
+									if (status === Status.BADREQUEST) setStatus(Status.BADREQUEST)
+									if (status === Status.EXIST) setStatus(Status.EXIST)
+								}
+								
 							}
 						} else {
 							setIsEmpty(true)
 						}
 					}}
 				/>
-				<Button
-					type={ButtonType.PLAIN}
-					text={'Войти'}
-					action={() => redirectToPage('/auth/login')}
-				/>
+				<div className={styles.plain_text}>
+					<span className={styles.plain_text}>
+						Если у вас аккаунта, вы можете {''}
+					</span>
+					<Button
+						type={ButtonType.PLAIN}
+						className={styles.bold_text}
+						text={'войти'}
+						action={async () => {
+							console.log('redirection')
+							router.push('/auth/login')
+						}}
+					/>
+				</div>
 			</div>
 		</>
 	)

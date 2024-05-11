@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { $Enums } from '@prisma/client'
+import { TaskStatus, TaskType } from '@prisma/client'
 import { IsIn, IsOptional, IsUUID } from 'class-validator'
 
 class TaskQ {
@@ -8,27 +8,24 @@ class TaskQ {
 	answerText: string
 }
 
-// export const enum TaskStatus {
-// MODIFIED = 'MODIFIED',
-// CREATED = 'CREATED',
-// INWORK = 'INWORK',
-// COMPLETED = 'COMPLETED',
-// VERIFYCOMPLETED = 'VERIFYCOMPLETED',
-// REJECTED = 'REJECTED',
-// REJECTEDBYLEAD = 'REJECTEDBYLEAD',
-// REJECTEDBYADMIN = 'REJECTEDBYADMIN'
-// }
+export enum ClientStatus {
+	INWORK = 'INWORK',
+	VERIFYCOMPLETED = 'VERIFYCOMPLETED',
+	VERIFYREJECTED = 'VERIFYREJECTED'
+}
 
 export class GetTaskDto {
 	id: string
 	name: string
-	status: $Enums.TaskStatus
-	type: $Enums.TaskType
+	status: TaskStatus
+	type: TaskType
 	deadline: Date
 	executorId: string
 	executorName: string
 	clientId: string
 	clientName: string
+	formClientName: string
+	result: string | null
 	@ApiProperty({ type: () => [TaskQ] })
 	questions: {
 		id: string
@@ -56,7 +53,7 @@ export class SetStatusDto {
 		'COMPLETED',
 		'VERIFYCOMPLETED',
 		'REJECTED',
-		'VERIFIYREJECTED'
+		'VERIFYREJECTED'
 	])
 	status: string
 }
@@ -70,17 +67,23 @@ export class TaskAdminUpdateDto {
 		'COMPLETED',
 		'VERIFYCOMPLETED',
 		'REJECTED',
-		'VERIFIYREJECTED'
+		'VERIFYREJECTED'
 	])
 	status: string
 
 	@IsOptional()
 	@IsUUID()
 	executorId: string
+
+	@IsOptional()
+	result: string
 }
 
 export class TaskExecutorUpdateDto {
 	@IsOptional()
-	@IsIn(['INWORK', 'COMPLETED', 'REJECTED'])
+	@IsIn(['INWORK', 'COMPLETED', 'REJECTED', 'MODIFIED'])
 	status: string
+
+	@IsOptional()
+	result: string
 }

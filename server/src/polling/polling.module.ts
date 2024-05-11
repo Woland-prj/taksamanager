@@ -7,10 +7,27 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { TasksModule } from 'src/tasks/tasks.module'
 import { TasksService } from 'src/tasks/tasks.service'
 import { PollingService } from './polling.service'
+import { BotModule } from 'src/tgbot/bot.module'
+import { BotService } from 'src/tgbot/bot.service'
+import { UsersModule } from 'src/users/users.module'
 
 @Module({
-	imports: [ScheduleModule.forRoot(), FormsModule, TasksModule, PrismaModule],
-	providers: [PollingService, FormsService, TasksService, PrismaService],
+	imports: [
+		ScheduleModule.forRoot(),
+		FormsModule,
+		TasksModule,
+		PrismaModule,
+		BotModule,
+		UsersModule
+	],
+	providers: [
+		PollingService,
+		FormsService,
+		TasksService,
+		PrismaService,
+		BotService,
+		UsersModule
+	],
 	exports: [PollingService]
 })
 export class PollingModule {}

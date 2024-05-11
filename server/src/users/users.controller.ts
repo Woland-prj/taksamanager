@@ -27,9 +27,9 @@ import {
 	GetUserResDto
 } from './dto/create-user.dto'
 import { UsersService } from './users.service'
-import { JwtAuth } from 'src/auth/decorators/auth.decorator'
+import { JwtAdminAuth, JwtAuth } from 'src/auth/decorators/auth.decorator'
 import { ValidatedRequest } from 'src/auth/types/request.types'
-import { UpdateUserDto } from './dto/update-user.dto'
+import { UpdateAdminUserDto, UpdateSelfUserDto } from './dto/update-user.dto'
 
 @ApiBearerAuth()
 @ApiTags('CRUD users operations')
@@ -97,7 +97,7 @@ export class UsersController {
 
 	@Patch()
 	@JwtAuth()
-	@ApiOperation({ summary: 'Update user profile' })
+	@ApiOperation({ summary: 'Update user profile by JwtToken' })
 	@ApiOkResponse({ type: GetUserResDto })
 	@ApiNotFoundResponse({
 		description: 'Account not found'
@@ -107,25 +107,60 @@ export class UsersController {
 		name: 'Authorization',
 		description: 'Bearer <access_jwt>'
 	})
-	async update(
+	@ApiBody({ type: UpdateSelfUserDto })
+	async updateSelf(
 		@Req() req: ValidatedRequest,
-		@Body() updateUserDto: UpdateUserDto
-	) {
-		return this.usersService.update(req.user.id, updateUserDto)
+		@Body() updateUserDto: UpdateSelfUserDto
+	): Promise<GetUserResDto> {
+		return this.usersService.update(req.user.id, false, updateUserDto)
 	}
-	//
-	// @Get(':id')
-	// findOne(@Param('id') id: string) {
-	// 	return this.usersService.findOne(id)
-	// }
-	//
-	// @Patch(':id')
-	// update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-	// 	return this.usersService.update(id, updateUserDto)
-	// }
-	//
-	// @Delete(':id')
-	// remove(@Param('id') id: string) {
-	// 	return this.usersService.remove(id)
-	// }
+
+	@Get('/all')
+	@JwtAuth()
+	@ApiOperation({ summary: 'Get all users' })
+	@ApiBearerAuth()
+	@ApiHeader({
+		name: 'Authorization',
+		description: 'Bearer <access_jwt>'
+	})
+	async getAll(): Promise<GetUserResDto[]> {
+		return this.usersService.findAll()
+	}
+
+	@Get('/:id')
+	@JwtAuth()
+	@ApiOperation({ summary: 'Get user profile by id' })
+	@ApiOkResponse({ type: GetUserResDto })
+	@ApiNotFoundResponse({
+		description: 'Account not found'
+	})
+	@ApiBearerAuth()
+	@ApiHeader({
+		name: 'Authorization',
+		description: 'Bearer <access_jwt>'
+	})
+	async getById(@Param('id') id: string): Promise<GetUserResDto> {
+		return this.usersService.findOne(id)
+	}
+
+	@Patch('/:id')
+	@JwtAdminAuth()
+	@ApiOperation({ summary: 'Update user profile by id' })
+	@ApiOkResponse({ type: GetUserResDto })
+	@ApiNotFoundResponse({
+		description: 'Account not found'
+	})
+	@ApiBearerAuth()
+	@ApiHeader({
+		name: 'Authorization',
+		description: 'Bearer <access_jwt>'
+	})
+	@ApiBody({ type: UpdateAdminUserDto })
+	async updateById(
+		@Param('id') id: string,
+		@Body() updateUserDto: UpdateAdminUserDto
+	): Promise<GetUserResDto> {
+		console.log(updateUserDto)
+		return this.usersService.update(id, true, updateUserDto)
+	}
 }

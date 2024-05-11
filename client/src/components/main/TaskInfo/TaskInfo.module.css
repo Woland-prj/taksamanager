@@ -1,41 +1,49 @@
 .taskContainer {
-    overflow-y: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: hsl(0 0% 50%);
+	overflow-y: scroll;
+	scrollbar-width: thin;
+	scrollbar-color: hsl(0 0% 50%);
 
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    flex-grow: 1;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	flex-grow: 1;
+	min-height: 100%;
 }
 
 .infoAndAction {
-    padding: 40px 75px 40px 75px;
-    gap: 0px;
-    justify-content: space-between;
-    opacity: 0px;
+	padding: 40px 75px 40px 75px;
+	gap: 0px;
+	justify-content: space-between;
+	opacity: 0px;
 
+	display: flex;
 }
 
 .infoContainer {
-    width: min-content
+	width: max-content;
 }
 
 .taksa {
-    position: absolute;
-    top: 236px;
-    left: 1069px
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	z-index: -1;
 }
-
+.taksa::selection {
+	background: transparent;
+}
 .headerText {
-    font-size: 30px;
-    font-weight: 300;
-    line-height: 38.04px;
-    letter-spacing: 0.02em;
-    text-align: left;
+	font-size: 30px;
+	font-weight: 300;
+	line-height: 38.04px;
+	letter-spacing: 0.02em;
+	text-align: left;
 }
 
 .headerButton {
-    border: 2px solid #000000;
-    background: #FFFFFF;
+	border: 2px solid #000000;
+	background-color: #ffffff;
+
+	width: 274px;
+	height: 59px;
 }

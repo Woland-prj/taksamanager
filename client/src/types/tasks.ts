@@ -1,3 +1,5 @@
+export const createTaskURL = 'https://forms.gle/aevQapAyVCtDbPsSA'
+
 export const enum TaskStatus {
 	MODIFIED = 'MODIFIED',
 	WAITCONSENT = 'WAITCONSENT',
@@ -5,17 +7,18 @@ export const enum TaskStatus {
 	COMPLETED = 'COMPLETED',
 	VERIFYCOMPLETED = 'VERIFYCOMPLETED',
 	REJECTED = 'REJECTED',
-	REJECTEDBYLEAD = 'REJECTEDBYADMIN',
-	EXPIRED = 'EXPIRED',
+	VERIFYREJECTED = 'VERIFYREJECTED',
+	EXPIRED = 'EXPIRED'
 }
 
 export const enum TaskType {
 	POST = 'POST',
-    DESIGN = 'DESIGN',
-    VIDEO = 'VIDEO',
-    MONTAGE = 'MONTAGE',
-    PHOTO = 'PHOTO',
-	ANIMATION = 'ANIMATION'
+	DESIGN = 'DESIGN',
+	VIDEO = 'VIDEO',
+	MONTAGE = 'MONTAGE',
+	PHOTO = 'PHOTO',
+	ANIMATION = 'ANIMATION',
+	EXECUTED = 'EXECUTED'
 }
 
 export interface ITask {
@@ -29,6 +32,7 @@ export interface ITask {
 	clientId?: string
 	clientName?: string
 	questions: ITaskQuestion[]
+	//result: string 				// Готовый результат по задаче (ссылка на работу)
 }
 
 export interface ITaskQuestion {
@@ -38,15 +42,15 @@ export interface ITaskQuestion {
 }
 
 export const enum TagOption {
-    POST = 'POST',
-    DESIGN = 'DESIGN',
-    VIDEO = 'VIDEO',
-    MONTAGE = 'MONTAGE',
-    PHOTO = 'PHOTO',
+	POST = 'POST',
+	DESIGN = 'DESIGN',
+	VIDEO = 'VIDEO',
+	MONTAGE = 'MONTAGE',
+	PHOTO = 'PHOTO',
 	ANIMATION = 'ANIMATION',
 
 	MODIFIED = 'MODIFIED', // В процессе модерации
-	WAIT_CONSENT = 'WAIT_CONSENT',   // Задача ожидает подтверждения исполнителя
+	WAIT_CONSENT = 'WAIT_CONSENT', // Задача ожидает подтверждения исполнителя
 	IN_WORK = 'INWORK',
 	COMPLETED = 'COMPLETED',
 	VERIFY_COMPLETED = 'VERIFYCOMPLETED',
@@ -54,5 +58,5 @@ export const enum TagOption {
 	REJECTED_BY_ADMIN = 'REJECTEDBYADMIN',
 	EXPIRED = 'EXPIRED',
 
-    UNDEFINED = 'UNDEFINED',
+	UNDEFINED = 'UNDEFINED'
 }

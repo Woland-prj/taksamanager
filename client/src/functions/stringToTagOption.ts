@@ -1,5 +1,5 @@
 import { TagOption, TaskStatus, TaskType } from '@/types/tasks'
-export const stringToTagOption = (text: string): TagOption => {
+export const stringToTagOption = (text: string | null): TagOption => {
 	switch (text) {
 		case TaskStatus.MODIFIED:
 			return TagOption.MODIFIED
@@ -13,7 +13,7 @@ export const stringToTagOption = (text: string): TagOption => {
 			return TagOption.VERIFY_COMPLETED
 		case TaskStatus.REJECTED:
 			return TagOption.REJECTED
-		case TaskStatus.REJECTEDBYLEAD:
+		case TaskStatus.VERIFYREJECTED:
 			return TagOption.REJECTED_BY_ADMIN
 		case TaskStatus.EXPIRED:
 			return TagOption.EXPIRED

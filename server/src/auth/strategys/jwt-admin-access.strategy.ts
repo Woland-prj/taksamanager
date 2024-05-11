@@ -23,7 +23,7 @@ export class JwtAdminAccessStrategy extends PassportStrategy(
 
 	async validate(payload: { sub: string; email: string }) {
 		const user = await this.userService.findOne(payload.sub)
-		if (user.role === UserRole.ADMIN) return user
+		if (user.role === UserRole.ADMIN || user.role === UserRole.ROOT) return user
 		// If user is not admin
 		return null
 	}

@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	ForbiddenException,
 	HttpException,
 	HttpStatus,
@@ -7,13 +8,18 @@ import {
 import { UserRole } from '@prisma/client'
 import { MailService } from 'src/mail/mail.service'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { TeamsService } from 'src/teams/teams.service'
 import { v4 as uuidv4 } from 'uuid'
 import {
 	CreateUserReqDto,
 	CreateUserResDto,
 	GetUserResDto
 } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
+import {
+	UpdateAdminUserDto,
+	UpdateSelfUserDto,
+	tg
+} from './dto/update-user.dto'
 import { HashService } from './hashing.service'
 
 @Injectable()
@@ -21,7 +27,8 @@ export class UsersService {
 	constructor(
 		private prismaService: PrismaService,
 		private hashService: HashService,
-		private mailService: MailService
+		private mailService: MailService,
+		private teamsService: TeamsService
 	) {}
 
 	async create(createUserDto: CreateUserReqDto): Promise<CreateUserResDto> {
@@ -60,8 +67,18 @@ export class UsersService {
 		return { id, username, email }
 	}
 
-	findAll() {
-		return `This action returns all users`
+	async findAll(): Promise<GetUserResDto[]> {
+		const res: GetUserResDto[] = []
+		const dbUsers = await this.prismaService.user.findMany()
+		dbUsers.forEach(user => {
+			if (user.role != UserRole.ROOT) {
+				const { password, actLink, ...other } = user
+				res.push({
+					...other
+				})
+			}
+		})
+		return res
 	}
 
 	async findOne(id: string): Promise<GetUserResDto> {
@@ -70,29 +87,64 @@ export class UsersService {
 				id: id
 			}
 		})
-		const { password, actLink, ...other } = user
 		if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-		return other
+		const { password, actLink, ...other } = user
+		return {
+			...other
+		}
 	}
+
+	// private async toBinary(base64: string): Promise<Buffer> {
+	//   const binS = atob(base64)
+	//   const bytes = new Uint8Array(binS.length)
+	//   for (let i = 0; i < binS.length; i++) {
+	//     bytes[i] = binS.charCodeAt(i)
+	//   }
+	//   return bytes.buffer
+	// }
 
 	async update(
 		id: string,
-		updateUserDto: UpdateUserDto
+		adminChange: boolean,
+		updateUserDto: UpdateSelfUserDto | UpdateAdminUserDto
 	): Promise<GetUserResDto> {
+		console.log(updateUserDto)
 		const regExp = /\@| |\$/g
-		updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
-		const updetedUser = await this.prismaService.user.update({
+		if (updateUserDto.tgUsername)
+			updateUserDto.tgUsername = updateUserDto.tgUsername.replace(regExp, '')
+		const req = {
 			where: {
 				id: id
 			},
-			data: {
-				...updateUserDto
+			data: {}
+		}
+		let data = updateUserDto
+		if (
+			tg<UpdateAdminUserDto>(updateUserDto) &&
+			adminChange &&
+			updateUserDto.teamColor
+		) {
+			const { teamColor, ...other } = updateUserDto
+			data = other
+			let team = await this.teamsService.getTeamByColor(teamColor)
+			if (!team) team = await this.teamsService.createTeam(teamColor)
+			if (team) {
+				req.data['team'] = { connect: { id: team.id } }
 			}
-		})
-		if (!updetedUser)
-			throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-		const { password, actLink, ...other } = updetedUser
-		return other
+		}
+		req.data = { ...data, ...req.data }
+		try {
+			const updetedUser = await this.prismaService.user.update(req)
+			if (!updetedUser)
+				throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+			const { password, actLink, ...other } = updetedUser
+			return {
+				...other
+			}
+		} catch (error) {
+			console.log(error)
+			throw new BadRequestException()
+		}
 	}
 
 	remove(id: string) {

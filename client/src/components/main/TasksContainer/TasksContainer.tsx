@@ -15,7 +15,6 @@ type TasksContainerProps = {
   role: UserRole
 }
 
-
 const TasksContainer: React.FC<TasksContainerProps> = ({ tasks, user, role }) => {
   const definedUser = user ? user : null
   return (

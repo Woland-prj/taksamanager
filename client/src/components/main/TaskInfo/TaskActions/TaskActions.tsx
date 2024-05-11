@@ -261,7 +261,7 @@ export const TaskActions: FC<TTaskActionsProps> = ({ task, userRole }) => {
 				)}
 				{actionsType == Actions.VERIFY_COMPLETED && (
 					<div className={styles.executors}>
-						<span>Задача выполнена следующими исполнителями:</span>
+						<span>Задача выполнена следующим исполнителем:</span>
 						{executor && (
 							<UserBlock
 								user={executor}

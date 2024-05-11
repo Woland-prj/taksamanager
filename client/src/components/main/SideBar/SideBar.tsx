@@ -3,39 +3,47 @@ import { redirectToPage } from '@/functions/redirectToPage'
 import { ProfileComponent } from './ProfileComponent/ProfileComponent'
 import styles from './SideBar.module.css'
 import { SideBarButton } from './SideBarButton/SideBarButton'
+import { useRouter } from 'next/navigation'
 
 export const SideBar = () => {
+	const router = useRouter()
 	return (
 		<div className={styles.menu_toggle}>
-			<input type='checkbox' />
-			<span></span>
-			<span></span>
-			<span></span>
-			<ul className={styles.sideBar}>
-				<li className={styles.nav_item}>
-					<ProfileComponent />
-				</li>
-				<li className={styles.nav_item}>
+			<div className={styles.sideBar}>
+				<ul className={styles.nav}>
+					<li className={styles.nav_item}>
+						<ProfileComponent />
+					</li>
+					<li className={styles.nav_item}>
+						<SideBarButton
+							iconName='dashboard.svg'
+							text='Доска задач'
+							action={async () => {
+								redirectToPage('/dashboard')
+							}}
+						/>
+					</li>
+					<li className={styles.nav_item}>
+						<SideBarButton
+							iconName='team.svg'
+							text='Команда'
+							action={async () => {
+								redirectToPage('/dashboard/team')
+							}}
+						/>
+					</li>
+				</ul>
+				<div className={styles.exit}>
 					<SideBarButton
-						iconName='dashboard.svg'
-						text='Доска задач'
+						iconName='exit.svg'
+						text='Выйти из аккаунта'
 						action={async () => {
-							console.log('кнопка')
-							redirectToPage('/dashboard')
+							// deleteAllTokens()
+							router.replace('/auth/login')
 						}}
 					/>
-				</li>
-				<li className={styles.nav_item}>
-					<SideBarButton
-						iconName='team.svg'
-						text='Команда'
-						action={async () => {
-							console.log('кнопка')
-							redirectToPage('/dashboard/team')
-						}}
-					/>
-				</li>
-			</ul>
+				</div>
+			</div>	
 		</div>
 	)
 }
